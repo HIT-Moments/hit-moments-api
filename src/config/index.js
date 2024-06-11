@@ -1,1 +1,1 @@
-module.exports.env = require("./env.config");
+module.exports.env = require('./env.config');
