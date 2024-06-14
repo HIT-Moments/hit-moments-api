@@ -2,12 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 
 const { env } = require('./config');
+const { errorHandler } = require('./middlewares');
 
 const app = express();
 
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
+
+app.use(errorHandler);
 
 mongoose
   .connect(env.mongoURI)
