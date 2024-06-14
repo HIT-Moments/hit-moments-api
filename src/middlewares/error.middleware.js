@@ -13,7 +13,7 @@ const errorHandler = async (err, req, res, next) => {
   res.locals.errorMessage = err.message;
 
   const response = {
-    code: statusCode,
+    statusCode,
     message,
     ...(env.nodeEnv === 'development' && { stack: err.stack }),
   };
