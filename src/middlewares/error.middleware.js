@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
-const { env } = require('../config');
 const { ApiError } = require('../utils');
+const { env, i18n } = require('../config');
 
 const errorConverter = (err, req, res, next) => {
   let error = err;
@@ -22,7 +22,7 @@ const errorHandler = async (err, req, res, next) => {
 
   if (env.nodeEnv === 'production' && !err.isOperational) {
     statusCode = httpStatus.INTERNAL_SERVER_ERROR;
-    message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
+    message = i18n.translate('system.internalServerError');
   }
 
   res.locals.errorMessage = err.message;
