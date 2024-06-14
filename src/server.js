@@ -10,6 +10,7 @@ const app = express();
 
 if (env.nodeEnv === 'development') {
   app.use(morgan('dev'));
+  mongoose.set('debug', true);
 }
 
 app.get('/', (req, res) => {
