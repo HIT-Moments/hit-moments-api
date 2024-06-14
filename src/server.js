@@ -1,4 +1,5 @@
 const express = require('express');
+const mongoose = require('mongoose');
 
 const { env } = require('./config');
 
@@ -8,6 +9,16 @@ app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
 
-app.listen(env.port, () => {
-  console.log(`Server listening on port ${env.port}`);
-});
+mongoose
+  .connect(env.mongoURI)
+  .then(() => {
+    console.log('Connected to MongoDB successfully!');
+  })
+  .then(() => {
+    app.listen(env.port, () => {
+      console.log(`Server is running on port ${env.port}!`);
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
