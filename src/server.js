@@ -3,7 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
-const { env } = require('./config');
+const { env, i18n } = require('./config');
 const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
@@ -13,6 +13,10 @@ if (env.nodeEnv === 'development') {
   mongoose.set('debug', true);
 }
 
+app.use((req, res, next) => {
+  next(i18n.setLocale(req));
+});
+
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
@@ -20,7 +24,7 @@ app.get('/', (req, res) => {
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
     statusCode: httpStatus.NOT_FOUND,
-    message: 'Resource not found',
+    message: i18n.translate('system.resourceNotFound'),
   });
 });
 

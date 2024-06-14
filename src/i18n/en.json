@@ -1,0 +1,6 @@
+{
+  "system": {
+    "resourceNotFound": "Resource not found",
+    "internalServerError": "Internal server error"
+  }
+}
