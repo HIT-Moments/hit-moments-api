@@ -8,6 +8,8 @@ const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
 
+app.use(express.json());
+
 if (env.nodeEnv === 'development') {
   app.use(morgan('dev'));
   mongoose.set('debug', true);
