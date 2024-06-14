@@ -1,10 +1,16 @@
+const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
+const httpStatus = require('http-status');
 
 const { env } = require('./config');
 const { errorHandler } = require('./middlewares');
 
 const app = express();
+
+if (env.nodeEnv === 'development') {
+  app.use(morgan('dev'));
+}
 
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
