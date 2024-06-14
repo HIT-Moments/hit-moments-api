@@ -24,7 +24,6 @@ class I18nService {
         : LANGUAGE_DEFAULT;
 
     if (req.query.lang) delete req.query.lang;
-
     i18n.setLocale(lang);
   }
 
