@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
 const { env } = require('./config');
-const { errorHandler } = require('./middlewares');
+const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
 
@@ -24,6 +24,7 @@ app.all('*', (req, res) => {
   });
 });
 
+app.use(errorConverter);
 app.use(errorHandler);
 
 mongoose
