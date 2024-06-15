@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
 const { env, i18n } = require('./config');
+const { userRoute } = require('./routes/');
 const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
@@ -14,6 +15,8 @@ if (env.nodeEnv === 'development') {
   app.use(morgan('dev'));
   mongoose.set('debug', true);
 }
+
+app.use('/api/v1/users', userRoute);
 
 app.use((req, res, next) => {
   next(i18n.setLocale(req));

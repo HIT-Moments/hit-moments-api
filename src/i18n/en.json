@@ -2,5 +2,9 @@
   "system": {
     "resourceNotFound": "Resource not found",
     "internalServerError": "Internal server error"
+  },
+  "user": {
+    "createSuccess": "User created successfully",
+    "emailExists": "Email already exists"
   }
 }

@@ -2,5 +2,9 @@
   "system": {
     "resourceNotFound": "Không tìm thấy tài nguyên yêu cầu",
     "internalServerError": "Server đã xảy ra lỗi, vui lòng thử lại sau"
+  },
+  "user": {
+    "createSuccess": "Tạo tài khoản thành công",
+    "emailExists": "Email đã tồn tại"
   }
 }
