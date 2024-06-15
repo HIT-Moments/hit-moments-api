@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./ApiError'),
-  ...require('./catchAsync'),
+  ApiError: require('./ApiError'),
+  catchAsync: require('./catchAsync'),
 };
