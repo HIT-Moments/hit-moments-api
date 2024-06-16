@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
+const apiRoute = require('./routes/api');
 const { env, i18n } = require('./config');
 const { errorConverter, errorHandler } = require('./middlewares');
 
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
+
+app.use('/api/v1', apiRoute);
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
