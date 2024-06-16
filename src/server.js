@@ -3,8 +3,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
+const apiRoute = require('./routes/api');
 const { env, i18n } = require('./config');
-const { userRoute } = require('./routes/');
 const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
@@ -16,8 +16,6 @@ if (env.nodeEnv === 'development') {
   mongoose.set('debug', true);
 }
 
-app.use('/api/v1/users', userRoute);
-
 app.use((req, res, next) => {
   next(i18n.setLocale(req));
 });
@@ -25,6 +23,8 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
+
+app.use('/api/v1', apiRoute);
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
