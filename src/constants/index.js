@@ -1,4 +1,4 @@
 module.exports = {
-  ...require('./system.constant'),
   ...require('./user.constant'),
+  ...require('./system.constant'),
 };
