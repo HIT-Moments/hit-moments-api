@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
-const { USER_AVATAR_DEFAULT } = require('../constants');
+const { SALT_WORK_FACTOR, USER_AVATAR_DEFAULT } = require('../constants');
 
 const userSchema = new mongoose.Schema(
   {
@@ -54,7 +54,7 @@ userSchema.pre('save', async function (next) {
   const user = this;
 
   if (!user.isModified('password')) {
-    user.password = await bcrypt.hash(user.password, 8);
+    user.password = await bcrypt.hash(user.password, SALT_WORK_FACTOR);
   }
 
   next();
