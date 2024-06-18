@@ -6,5 +6,12 @@
   "user": {
     "createSuccess": "User created successfully",
     "emailExists": "Email already exists"
+  },
+  "report": {
+    "createSuccess": "Report created successfully",
+    "notFound": "Report not found",
+    "getDetail": "Get details successfully",
+    "getList": "Get list reports successfully",
+    "deleteSuccess": "Delete reports successfully"
   }
 }
