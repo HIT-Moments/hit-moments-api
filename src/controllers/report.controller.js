@@ -13,7 +13,7 @@ const createReport = catchAsync(async (req, res, next) => {
     message: i18n.translate('report.createSuccess'),
     data: {
       report,
-    }
+    },
   });
 });
 
