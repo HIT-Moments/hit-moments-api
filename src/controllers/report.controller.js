@@ -11,7 +11,9 @@ const createReport = catchAsync(async (req, res, next) => {
   return res.status(https.CREATED).json({
     statusCode: https.CREATED,
     message: i18n.translate('report.createSuccess'),
-    data: report,
+    data: {
+      report,
+    }
   });
 });
 
@@ -49,7 +51,6 @@ const deleteReport = catchAsync(async (req, res, next) => {
   res.json({
     message: i18n.translate('report.deleteSuccess'),
     statusCode: https.OK,
-    // data : report
   });
 });
 
