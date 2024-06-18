@@ -26,6 +26,8 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1', apiRoute);
 
+app.use('api/v1/reports', apiRoute);
+
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
     statusCode: httpStatus.NOT_FOUND,
