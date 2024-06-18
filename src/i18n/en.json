@@ -12,6 +12,6 @@
     "notFound": "Report not found",
     "getDetail": "Get details successfully",
     "getList": "Get list reports successfully",
-    "deleteSuccess" : "Delete reports successfully"
+    "deleteSuccess": "Delete reports successfully"
   }
 }
