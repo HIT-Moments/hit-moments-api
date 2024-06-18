@@ -1,10 +1,18 @@
 {
-  "system": {
-    "resourceNotFound": "Không tìm thấy tài nguyên yêu cầu",
-    "internalServerError": "Server đã xảy ra lỗi, vui lòng thử lại sau"
-  },
-  "user": {
-    "createSuccess": "Tạo tài khoản thành công",
-    "emailExists": "Email đã tồn tại"
-  }
+	"system": {
+		"resourceNotFound": "Không tìm thấy tài nguyên yêu cầu",
+		"internalServerError": "Server đã xảy ra lỗi, vui lòng thử lại sau"
+	},
+	"user": {
+		"createSuccess": "Tạo tài khoản thành công",
+		"emailExists": "Email đã tồn tại"
+	},
+	"report": {
+		"createSuccess": "Tạo report thành công",
+		"notFound": "Không tìm thấy Id khiếu nại",
+		"getList": "Lấy danh sách khiếu nại thành công",
+		"getDetail": "Lấy đơn khiếu nại thành công",
+		"deleteSuccess" : "Xoá đơn khiếu nại thành công"
+	},
+	"reports": "reports"
 }
