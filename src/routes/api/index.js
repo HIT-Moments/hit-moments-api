@@ -7,6 +7,10 @@ const routesApi = [
     path: '/users',
     route: require('./user.route'),
   },
+  {
+    path: '/reports',
+    route: require('./report.route'),
+  },
 ];
 
 routesApi.forEach((route) => {
