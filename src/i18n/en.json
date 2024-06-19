@@ -13,5 +13,17 @@
     "getDetail": "Get details successfully",
     "getList": "Get list reports successfully",
     "deleteSuccess": "Delete reports successfully"
+  },
+  "upload": {
+    "unsupported": "Unsupported file format",
+    "imgRequired": "Img is required"
+  },
+  "feedback" :{
+    "createSuccess": "Feedback created successfully",
+    "notFound": "Feedback not found",
+    "getAll": "Get all feedback successfully",
+    "getFeedback": "Get feedback successfully",
+    "updateSuccess": "Update feedback successfully",
+    "deleteSuccess": "Delete feedback successfully"
   }
 }
