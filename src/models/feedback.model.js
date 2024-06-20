@@ -9,7 +9,7 @@ const feedbackSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    img: {
+    image: {
       type: String,
       require: true,
     },
