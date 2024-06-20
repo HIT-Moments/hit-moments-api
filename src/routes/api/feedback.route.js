@@ -8,14 +8,14 @@ const userRoute = express.Router();
 
 userRoute
   .route('/')
-  .post(upload.single('img'), feedbackController.createFeedback)
+  .post(upload.single('image'), feedbackController.createFeedback)
   .get(feedbackController.getallFeedback);
   
 
 userRoute
   .route('/:feedbackId')
   .get(validate(feedbackValidation.getFeedback), feedbackController.getFeedback)
-  .put(validate(feedbackValidation.updateFeedbackById), upload.single('img'),feedbackController.updateFeedbackById)
+  .put(validate(feedbackValidation.updateFeedbackById), upload.single('image'),feedbackController.updateFeedbackById)
   .delete(validate(feedbackValidation.deleteFeedbackById), feedbackController.deleteFeedbackById);
 
 module.exports = userRoute;
