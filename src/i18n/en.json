@@ -5,7 +5,8 @@
   },
   "user": {
     "createSuccess": "User created successfully",
-    "emailExists": "Email already exists"
+    "emailExists": "Email already exists",
+    "getUsersSuccess": "Get users successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",

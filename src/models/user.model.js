@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema(
     },
     dob: {
       type: Date,
+      default: 01 / 01 / 2000,
     },
     lastActive: {
       type: Date,

@@ -6,6 +6,9 @@ const { userController } = require('../../controllers');
 
 const userRoute = express.Router();
 
-userRoute.route('/').post(validate(userValidation.createUser), userController.createUser);
+userRoute
+  .route('/')
+  .post(validate(userValidation.createUser), userController.createUser)
+  .get(validate(userValidation.getUsers), userController.getUsers);
 
 module.exports = userRoute;

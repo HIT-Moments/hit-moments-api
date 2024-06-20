@@ -5,7 +5,8 @@
   },
   "user": {
     "createSuccess": "Tạo tài khoản thành công",
-    "emailExists": "Email đã tồn tại"
+    "emailExists": "Email đã tồn tại",
+    "getUsersSuccess": "Lấy danh sách người dùng thành công"
   },
   "report": {
     "createSuccess": "Tạo report thành công",
