@@ -15,7 +15,8 @@
     "passwordLetter": "Password must have at least 1 letter",
     "getUserSuccess": "Get user successfully",
     "userNotFound": "User not found",
-    "updateSuccess": "User updated successfully"
+    "updateSuccess": "User updated successfully",
+    "deleteSuccess": "User deleted successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",

@@ -46,9 +46,16 @@ const updateUser = {
     .min(1),
 };
 
+const deleteUser = {
+  params: joi.object({
+    userId: joi.string().required().custom(objectId),
+  }),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
+  deleteUser,
 };

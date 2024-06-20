@@ -80,9 +80,25 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+const deleteUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findByIdAndDelete(userId);
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('user.userNotFound'));
+  }
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('user.deleteSuccess'),
+  });
+});
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
   updateUser,
+  deleteUser,
 };

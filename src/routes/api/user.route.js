@@ -14,6 +14,7 @@ userRoute
 userRoute
   .route('/:userId')
   .get(validate(userValidation.getUser), userController.getUser)
-  .put(validate(userValidation.updateUser), userController.updateUser);
+  .put(validate(userValidation.updateUser), userController.updateUser)
+  .delete(validate(userValidation.deleteUser), userController.deleteUser);
 
 module.exports = userRoute;
