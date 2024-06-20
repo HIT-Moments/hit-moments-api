@@ -3,10 +3,16 @@
     "resourceNotFound": "Không tìm thấy tài nguyên yêu cầu",
     "internalServerError": "Server đã xảy ra lỗi, vui lòng thử lại sau"
   },
+  "model": {
+    "invalidObjectId": "Id không hợp lệ"
+  },
   "user": {
     "createSuccess": "Tạo tài khoản thành công",
     "emailExists": "Email đã tồn tại",
-    "getUsersSuccess": "Lấy danh sách người dùng thành công"
+    "getUsersSuccess": "Lấy danh sách người dùng thành công",
+    "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
+    "passwordDigit": "Mật khẩu phải có ít nhất 1 chữ số",
+    "passwordLetter": "Mật khẩu phải có ít nhất 1 chữ cái"
   },
   "report": {
     "createSuccess": "Tạo report thành công",
