@@ -3,9 +3,20 @@
     "resourceNotFound": "Resource not found",
     "internalServerError": "Internal server error"
   },
+  "model": {
+    "invalidObjectId": "Invalid ObjectId"
+  },
   "user": {
     "createSuccess": "User created successfully",
-    "emailExists": "Email already exists"
+    "emailExists": "Email already exists",
+    "getUsersSuccess": "Get users successfully",
+    "passwordLength": "Password must have at least 8 characters",
+    "passwordDigit": "Password must have at least 1 digit",
+    "passwordLetter": "Password must have at least 1 letter",
+    "getUserSuccess": "Get user successfully",
+    "userNotFound": "User not found",
+    "updateSuccess": "User updated successfully",
+    "deleteSuccess": "User deleted successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",

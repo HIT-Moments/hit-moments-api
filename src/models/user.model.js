@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema(
     },
     dob: {
       type: Date,
+      default: 01 / 01 / 2000,
     },
     lastActive: {
       type: Date,
@@ -53,7 +54,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre('save', async function (next) {
   const user = this;
 
-  if (!user.isModified('password')) {
+  if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, SALT_WORK_FACTOR);
   }
 
