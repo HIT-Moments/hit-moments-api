@@ -12,7 +12,9 @@
     "getUsersSuccess": "Lấy danh sách người dùng thành công",
     "passwordLength": "Mật khẩu phải có ít nhất 8 ký tự",
     "passwordDigit": "Mật khẩu phải có ít nhất 1 chữ số",
-    "passwordLetter": "Mật khẩu phải có ít nhất 1 chữ cái"
+    "passwordLetter": "Mật khẩu phải có ít nhất 1 chữ cái",
+    "getUserSuccess": "Lấy thông tin người dùng thành công",
+    "userNotFound": "Không tìm thấy người dùng"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

@@ -12,7 +12,9 @@
     "getUsersSuccess": "Get users successfully",
     "passwordLength": "Password must have at least 8 characters",
     "passwordDigit": "Password must have at least 1 digit",
-    "passwordLetter": "Password must have at least 1 letter"
+    "passwordLetter": "Password must have at least 1 letter",
+    "getUserSuccess": "Get user successfully",
+    "userNotFound": "User not found"
   },
   "report": {
     "createSuccess": "Report created successfully",
