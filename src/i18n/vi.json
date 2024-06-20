@@ -14,7 +14,8 @@
     "passwordDigit": "Mật khẩu phải có ít nhất 1 chữ số",
     "passwordLetter": "Mật khẩu phải có ít nhất 1 chữ cái",
     "getUserSuccess": "Lấy thông tin người dùng thành công",
-    "userNotFound": "Không tìm thấy người dùng"
+    "userNotFound": "Không tìm thấy người dùng",
+    "updateSuccess": "Cập nhật thông tin người dùng thành công"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

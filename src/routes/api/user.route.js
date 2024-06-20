@@ -11,6 +11,9 @@ userRoute
   .post(validate(userValidation.createUser), userController.createUser)
   .get(validate(userValidation.getUsers), userController.getUsers);
 
-userRoute.route('/:userId').get(validate(userValidation.getUser), userController.getUser);
+userRoute
+  .route('/:userId')
+  .get(validate(userValidation.getUser), userController.getUser)
+  .put(validate(userValidation.updateUser), userController.updateUser);
 
 module.exports = userRoute;

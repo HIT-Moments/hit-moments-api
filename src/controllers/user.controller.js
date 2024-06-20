@@ -59,8 +59,30 @@ const getUser = catchAsync(async (req, res) => {
   });
 });
 
+const updateUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const user = await User.findById(userId);
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('user.userNotFound'));
+  }
+
+  Object.assign(user, req.body);
+  await user.save();
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('user.updateSuccess'),
+    data: {
+      user,
+    },
+  });
+});
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
+  updateUser,
 };

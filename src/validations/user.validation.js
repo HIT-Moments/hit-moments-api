@@ -28,8 +28,27 @@ const getUser = {
   }),
 };
 
+const updateUser = {
+  params: joi.object({
+    userId: joi.string().required().custom(objectId),
+  }),
+  body: joi
+    .object({
+      fullname: joi.string(),
+      email: joi.string().email(),
+      password: joi.string().custom(password),
+      phoneNumber: joi.string(),
+      dob: joi.date().less('now'),
+      avatar: joi.string(),
+      isLocked: joi.boolean().valid(true, false),
+      isVerified: joi.boolean().valid(true, false),
+    })
+    .min(1),
+};
+
 module.exports = {
   createUser,
   getUsers,
   getUser,
+  updateUser,
 };
