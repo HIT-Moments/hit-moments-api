@@ -1,8 +1,8 @@
 const multer = require('multer');
 const httpStatus = require('http-status');
 
-const { ApiError } = require('../utils');
 const { i18n } = require('../config');
+const { ApiError } = require('../utils');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
