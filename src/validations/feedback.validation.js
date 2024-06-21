@@ -3,7 +3,6 @@ const joi = require('joi');
 const createFeedback = {
   body: joi.object({
     content: joi.string().min(10).max(500).required(),
-    image: joi.string().required(),
   }),
 };
 
