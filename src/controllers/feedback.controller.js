@@ -1,6 +1,5 @@
 const httpStatus = require('http-status');
 
-
 const { i18n } = require('../config');
 const { Feedback } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
@@ -52,7 +51,7 @@ const getallFeedback = catchAsync(async(req, res, next) => {
   const totalResults = await Feedback.countDocuments(query);
 
   res.json({
-    message: i18n.translate('feedback.getAll'),
+    message: i18n.translate('feedback.getList'),
     statusCode: httpStatus.OK,
     data: {
       feedbacks,
@@ -76,7 +75,7 @@ const updateFeedbackById = catchAsync(async(req, res, next) => {
   Object.assign(feedback, updateBody);
 
   if (req.file) {
-    feedback.img = req.file.path;
+    feedback.image = req.file.path;
   }
 
   await feedback.save();
