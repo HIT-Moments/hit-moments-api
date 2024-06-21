@@ -3,6 +3,7 @@ const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
 const { ApiError } = require('../utils');
+const { MAX_FILE_SIZE, TYPES_IMAGE_ALLOWED } = require('../constants');
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -15,20 +16,18 @@ const storage = multer.diskStorage({
 });
 
 const fileFilter = (req, file, cb) => {
-  if (['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype)) {
+  if (TYPES_IMAGE_ALLOWED.includes(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new ApiError(httpStatus.BAD_REQUEST, i18n.translate('upload.unsupported')), false);
   }
 };
 
-const limitFileSize = 0.5 * 1024 * 1024;
-
 const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: limitFileSize,
+    fileSize: MAX_FILE_SIZE,
   },
 });
 
