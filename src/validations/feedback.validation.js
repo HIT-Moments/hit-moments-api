@@ -2,7 +2,8 @@ const joi = require('joi');
 
 const createFeedback = {
   body: joi.object({
-    content: joi.string().required(),
+    content: joi.string().min(10).max(500).required(),
+    image: joi.string().required(),
   }),
 };
 
@@ -17,8 +18,8 @@ const updateFeedbackById = {
     feedbackId: joi.string().required(),
   }),
   body: joi.object({
-    content: joi.string().required(),
-    img: joi.string().required(),
+    content: joi.string().min(10).max(500).required(),
+    image: joi.string().required(),
   }),
 };
 
