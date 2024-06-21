@@ -21,7 +21,7 @@
   "feedback": {
     "createSuccess": "Tạo nhận xét thành công",
     "notFound": "Không tìm thấy nhận xét",
-    "getAll": "Lấy danh sách nhận xét thành công",
+    "getList": "Lấy danh sách nhận xét thành công",
     "getFeedback": "Lấy nhận xét thành công",
     "updateFeedback": "Cập nhập nhận xét thành công",
     "deleteSuccess": "Xóa nhận xét thành công"

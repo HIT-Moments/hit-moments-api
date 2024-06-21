@@ -21,7 +21,7 @@
   "feedback" :{
     "createSuccess": "Feedback created successfully",
     "notFound": "Feedback not found",
-    "getAll": "Get all feedback successfully",
+    "getList": "Get all feedback successfully",
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
     "deleteSuccess": "Delete feedback successfully"
