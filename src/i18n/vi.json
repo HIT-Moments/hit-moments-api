@@ -25,5 +25,7 @@
     "getDetail": "Lấy đơn khiếu nại thành công",
     "deleteSuccess": "Xoá đơn khiếu nại thành công"
   },
-  "reports": "reports"
+  "custom": {
+    "regexObjectId": "Id không đúng định dạng mongo"
+  }
 }

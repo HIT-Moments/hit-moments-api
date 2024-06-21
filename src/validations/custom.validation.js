@@ -2,8 +2,9 @@ const { i18n } = require('../config');
 
 const objectId = (value, helpers) => {
   if (!value.match(/^[0-9a-fA-F]{24}$/)) {
-    return helpers.message(i18n.translate('model.invalidObjectId'));
+    return helpers.message(i18n.translate('custom.regexObjectId'));
   }
+  return value;
 };
 
 const password = (value, helpers) => {
@@ -21,4 +22,5 @@ const password = (value, helpers) => {
 module.exports = {
   objectId,
   password,
+  objectId,
 };

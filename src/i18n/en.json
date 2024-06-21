@@ -24,5 +24,8 @@
     "getDetail": "Get details successfully",
     "getList": "Get list reports successfully",
     "deleteSuccess": "Delete reports successfully"
+  },
+  "custom": {
+    "regexObjectId": "Mongo format id is incorrect"
   }
 }
