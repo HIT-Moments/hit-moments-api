@@ -12,4 +12,6 @@ authRoute.post('/login', validate(authValidation.login), authController.login);
 
 authRoute.get('/me', auth, authController.getMe);
 
+authRoute.put('/me', auth, validate(authValidation.updateProfile), authController.updateProfile);
+
 module.exports = authRoute;

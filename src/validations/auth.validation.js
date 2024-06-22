@@ -18,7 +18,21 @@ const login = {
   }),
 };
 
+const updateProfile = {
+  body: joi
+    .object({
+      fullname: joi.string(),
+      email: joi.string().email(),
+      password: joi.string().custom(password),
+      phoneNumber: joi.string(),
+      dob: joi.date().less('now'),
+      avatar: joi.string(),
+    })
+    .min(1),
+};
+
 module.exports = {
   register,
   login,
+  updateProfile,
 };

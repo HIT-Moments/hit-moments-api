@@ -51,6 +51,22 @@ const getMe = async (req, res) => {
   });
 };
 
+const updateProfile = catchAsync(async (req, res) => {
+  const { user } = req;
+
+  Object.assign(user, req.body);
+
+  await user.save();
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('auth.updateProfileSuccess'),
+    data: {
+      user,
+    },
+  });
+});
+
 const generateToken = (payload) => {
   const token = jwt.sign(payload, env.jwtSecret, {
     expiresIn: env.jwtExpire,
@@ -62,4 +78,5 @@ module.exports = {
   register,
   login,
   getMe,
+  updateProfile,
 };
