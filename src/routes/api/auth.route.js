@@ -8,4 +8,6 @@ const authRoute = express.Router();
 
 authRoute.post('/register', validate(authValidation.register), authController.register);
 
+authRoute.post('/login', validate(authValidation.login), authController.login);
+
 module.exports = authRoute;

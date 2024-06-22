@@ -20,7 +20,9 @@
   },
   "auth": {
     "emailExists": "Email already exists",
-    "registerSuccess": "Register successfully"
+    "registerSuccess": "Register successfully",
+    "invalidCredentials": "Wrong email or password",
+    "loginSuccess": "Login successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",

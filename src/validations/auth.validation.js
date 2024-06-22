@@ -11,6 +11,14 @@ const register = {
   }),
 };
 
+const login = {
+  body: joi.object({
+    email: joi.string().email().required(),
+    password: joi.string().required(),
+  }),
+};
+
 module.exports = {
   register,
+  login,
 };

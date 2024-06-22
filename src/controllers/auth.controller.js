@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
-const { i18n } = require('../config');
+const { i18n, env } = require('../config');
 const { User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
@@ -20,6 +20,35 @@ const register = catchAsync(async (req, res) => {
   });
 });
 
+const login = catchAsync(async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user || !(await user.isPasswordMatch(password))) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidCredentials'));
+  }
+
+  const accessToken = generateToken({ id: user._id });
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('auth.loginSuccess'),
+    data: {
+      user,
+      accessToken,
+    },
+  });
+});
+
+const generateToken = (payload) => {
+  const token = jwt.sign(payload, env.jwtSecret, {
+    expiresIn: env.jwtExpire,
+  });
+  return token;
+};
+
 module.exports = {
   register,
+  login,
 };

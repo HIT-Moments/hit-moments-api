@@ -7,6 +7,8 @@ const env = {
   adminFullname: process.env.ADMIN_FULLNAME || 'Admin',
   adminPassword: process.env.ADMIN_PASSWORD || 'admin',
   adminEmail: process.env.ADMIN_EMAIL || 'admin@hitmoments.com',
+  jwtSecret: process.env.JWT_SECRET || 'hitmoments.com',
+  jwtExpire: process.env.JWT_EXPIRE || '1d',
 };
 
 module.exports = env;
