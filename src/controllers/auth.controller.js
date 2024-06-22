@@ -74,9 +74,32 @@ const generateToken = (payload) => {
   return token;
 };
 
+const changePassword = catchAsync(async (req, res) => {
+  const user = await User.findById(req.user.id).select('+password');
+
+  const { oldPassword, newPassword } = req.body;
+
+  if (!(await user.isPasswordMatch(oldPassword))) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidPassword'));
+  }
+
+  Object.assign(user, { password: newPassword });
+
+  await user.save();
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('auth.changePasswordSuccess'),
+    data: {
+      user,
+    },
+  });
+});
+
 module.exports = {
   register,
   login,
   getMe,
   updateProfile,
+  changePassword,
 };

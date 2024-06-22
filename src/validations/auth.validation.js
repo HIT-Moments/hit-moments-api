@@ -31,8 +31,16 @@ const updateProfile = {
     .min(1),
 };
 
+const changePassword = {
+  body: joi.object({
+    oldPassword: joi.string().required(),
+    newPassword: joi.string().custom(password).required(),
+  }),
+};
+
 module.exports = {
   register,
   login,
   updateProfile,
+  changePassword,
 };

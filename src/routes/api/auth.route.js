@@ -14,4 +14,6 @@ authRoute.get('/me', auth, authController.getMe);
 
 authRoute.put('/me', auth, validate(authValidation.updateProfile), authController.updateProfile);
 
+authRoute.put('/change-password', auth, validate(authValidation.changePassword), authController.changePassword);
+
 module.exports = authRoute;

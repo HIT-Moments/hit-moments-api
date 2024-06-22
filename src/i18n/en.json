@@ -24,7 +24,9 @@
     "invalidCredentials": "Wrong email or password",
     "loginSuccess": "Login successfully",
     "unauthorized": "Please login first",
-    "updateProfileSuccess": "Update profile successfully"
+    "updateProfileSuccess": "Update profile successfully",
+    "invalidPassword": "Invalid password",
+    "changePasswordSuccess": "Change password successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",
