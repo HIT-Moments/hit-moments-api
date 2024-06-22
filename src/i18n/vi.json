@@ -18,6 +18,10 @@
     "updateSuccess": "Cập nhật thông tin người dùng thành công",
     "deleteSuccess": "Xoá người dùng thành công"
   },
+  "auth": {
+    "emailExists": "Email đã tồn tại",
+    "registerSuccess": "Đăng ký thành công"
+  },
   "report": {
     "createSuccess": "Tạo report thành công",
     "notFound": "Không tìm thấy Id khiếu nại",

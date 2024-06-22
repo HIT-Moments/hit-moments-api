@@ -18,6 +18,10 @@
     "updateSuccess": "User updated successfully",
     "deleteSuccess": "User deleted successfully"
   },
+  "auth": {
+    "emailExists": "Email already exists",
+    "registerSuccess": "Register successfully"
+  },
   "report": {
     "createSuccess": "Report created successfully",
     "notFound": "Report not found",
