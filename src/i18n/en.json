@@ -22,7 +22,8 @@
     "emailExists": "Email already exists",
     "registerSuccess": "Register successfully",
     "invalidCredentials": "Wrong email or password",
-    "loginSuccess": "Login successfully"
+    "loginSuccess": "Login successfully",
+    "unauthorized": "Please login first"
   },
   "report": {
     "createSuccess": "Report created successfully",

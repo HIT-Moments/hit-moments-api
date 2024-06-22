@@ -41,6 +41,16 @@ const login = catchAsync(async (req, res) => {
   });
 });
 
+const getMe = async (req, res) => {
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('auth.getMeSuccess'),
+    data: {
+      user: req.user,
+    },
+  });
+};
+
 const generateToken = (payload) => {
   const token = jwt.sign(payload, env.jwtSecret, {
     expiresIn: env.jwtExpire,
@@ -51,4 +61,5 @@ const generateToken = (payload) => {
 module.exports = {
   register,
   login,
+  getMe,
 };
