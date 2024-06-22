@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
 const apiRoute = require('./routes/api');
+const { initAdmin } = require('./utils');
 const { env, i18n } = require('./config');
 const { errorConverter, errorHandler } = require('./middlewares');
 
@@ -38,7 +39,8 @@ app.use(errorHandler);
 
 mongoose
   .connect(env.mongoURI)
-  .then(() => {
+  .then(async () => {
+    await initAdmin();
     console.log('Connected to MongoDB successfully!');
   })
   .then(() => {

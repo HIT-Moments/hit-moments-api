@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
-const { SALT_WORK_FACTOR, USER_AVATAR_DEFAULT } = require('../constants');
+const { USER_ROLE, SALT_WORK_FACTOR, USER_AVATAR_DEFAULT } = require('../constants');
 
 const userSchema = new mongoose.Schema(
   {
@@ -44,6 +44,11 @@ const userSchema = new mongoose.Schema(
     isVerified: {
       type: Boolean,
       default: false,
+    },
+    role: {
+      type: String,
+      enum: USER_ROLE,
+      default: USER_ROLE.USER,
     },
   },
   {
