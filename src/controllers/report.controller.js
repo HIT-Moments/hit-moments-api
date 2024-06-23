@@ -6,7 +6,10 @@ const { ApiError, catchAsync } = require('../utils');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createReport = catchAsync(async (req, res, next) => {
-  // #TODO check exist report
+  const reportExisting = await Report.findById(req.params.reportId);
+  if(reportExisting){
+    throw new ApiError(https.CONFLICT, i18n.translate('report.existed'));
+  }
   req.body.userId = '662cf6c351d7d3424baea277';
   const report = await Report.create(req.body);
   return res.status(https.CREATED).json({
