@@ -14,6 +14,26 @@ const errorConverter = (err, req, res, next) => {
     error = new ApiError(statusCode, message, false, err.stack);
   }
 
+  switch (error.message) {
+    case 'jwt expired':
+      error = new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.tokenExpired'));
+      break;
+    case 'jwt malformed':
+      error = new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidToken'));
+      break;
+    case 'jwt must be provided':
+      error = new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.tokenRequired'));
+      break;
+    case 'invalid signature':
+      error = new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidSignature'));
+      break;
+    case 'invalid token':
+      error = new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidToken'));
+      break;
+    default:
+      break;
+  }
+
   next(error);
 };
 

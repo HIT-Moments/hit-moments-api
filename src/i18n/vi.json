@@ -18,6 +18,20 @@
     "updateSuccess": "Cập nhật thông tin người dùng thành công",
     "deleteSuccess": "Xoá người dùng thành công"
   },
+  "auth": {
+    "emailExists": "Email đã tồn tại",
+    "registerSuccess": "Đăng ký thành công",
+    "invalidCredentials": "Email hoặc mật khẩu không đúng",
+    "loginSuccess": "Đăng nhập thành công",
+    "unauthorized": "Vui lòng đăng nhập",
+    "updateProfileSuccess": "Cập nhật thông tin thành công",
+    "invalidPassword": "Mật khẩu không đúng",
+    "changePasswordSuccess": "Đổi mật khẩu thành công",
+    "tokenExpired": "Phiên đăng nhập đã hết hạn",
+    "tokenInvalid": "Token không hợp lệ",
+    "tokenRequired": "Token không được để trống",
+    "invalidSignature": "Chữ ký không hợp lệ"
+  },
   "report": {
     "createSuccess": "Tạo report thành công",
     "notFound": "Không tìm thấy Id khiếu nại",

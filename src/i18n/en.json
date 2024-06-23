@@ -18,6 +18,20 @@
     "updateSuccess": "User updated successfully",
     "deleteSuccess": "User deleted successfully"
   },
+  "auth": {
+    "emailExists": "Email already exists",
+    "registerSuccess": "Register successfully",
+    "invalidCredentials": "Wrong email or password",
+    "loginSuccess": "Login successfully",
+    "unauthorized": "Please login first",
+    "updateProfileSuccess": "Update profile successfully",
+    "invalidPassword": "Invalid password",
+    "changePasswordSuccess": "Change password successfully",
+    "tokenExpired": "Token expired",
+    "tokenInvalid": "Token invalid",
+    "tokenRequired": "Token required",
+    "invalidSignature": "Invalid signature"
+  },
   "report": {
     "createSuccess": "Report created successfully",
     "notFound": "Report not found",
