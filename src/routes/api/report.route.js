@@ -14,6 +14,6 @@ userRoute
 userRoute
   .route('/:reportId')
   .get(validate(reportValidation.getDetail), reportController.getDetail)
-  .post(validate(reportValidation.deleteReport), reportController.deleteReport);
+  .delete(validate(reportValidation.deleteReport), reportController.deleteReport);
 
 module.exports = userRoute;
