@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
-const { i18n, env } = require('../config');
 const { User } = require('../models');
+const { i18n, env } = require('../config');
 const { ApiError, catchAsync } = require('../utils');
 
 const register = catchAsync(async (req, res) => {

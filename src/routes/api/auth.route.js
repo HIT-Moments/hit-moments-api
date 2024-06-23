@@ -10,9 +10,9 @@ authRoute.post('/register', validate(authValidation.register), authController.re
 
 authRoute.post('/login', validate(authValidation.login), authController.login);
 
-authRoute.get('/me', auth, authController.getMe);
-
-authRoute.put('/me', auth, validate(authValidation.updateProfile), authController.updateProfile);
+authRoute
+  .get('/me', auth, authController.getMe)
+  .put('/me', auth, validate(authValidation.updateProfile), authController.updateProfile);
 
 authRoute.put('/change-password', auth, validate(authValidation.changePassword), authController.changePassword);
 

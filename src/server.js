@@ -42,6 +42,7 @@ mongoose
   .then(async () => {
     await initAdmin();
     console.log('Connected to MongoDB successfully!');
+    console.log('Initializing admin user successfully!');
   })
   .then(() => {
     app.listen(env.port, () => {
