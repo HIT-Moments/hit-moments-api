@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 
-const { SALT_WORK_FACTOR, USER_AVATAR_DEFAULT } = require('../constants');
+const { USER_ROLE, DEFAULT_BIRTHDAY, SALT_WORK_FACTOR, USER_AVATAR_DEFAULT } = require('../constants');
 
 const userSchema = new mongoose.Schema(
   {
@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema(
     },
     dob: {
       type: Date,
+      default: DEFAULT_BIRTHDAY,
     },
     lastActive: {
       type: Date,
@@ -44,6 +45,11 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    role: {
+      type: String,
+      enum: USER_ROLE,
+      default: USER_ROLE.USER,
+    },
   },
   {
     timestamps: true,
@@ -53,11 +59,16 @@ const userSchema = new mongoose.Schema(
 userSchema.pre('save', async function (next) {
   const user = this;
 
-  if (!user.isModified('password')) {
+  if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, SALT_WORK_FACTOR);
   }
 
   next();
 });
+
+userSchema.methods.isPasswordMatch = async function (password) {
+  const user = this;
+  return await bcrypt.compare(password, user.password);
+};
 
 module.exports = mongoose.model('User', userSchema);

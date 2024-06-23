@@ -1,4 +1,3 @@
-const joi = require('joi');
 const httpStatus = require('http-status');
 
 const { ApiError } = require('../utils/');
@@ -17,9 +16,8 @@ const validate = (schema) => (req, res, next) => {
 
       return next(new ApiError(httpStatus.BAD_REQUEST, messages));
     }
-
-    return next();
   }
+  return next();
 };
 
 module.exports = validate;

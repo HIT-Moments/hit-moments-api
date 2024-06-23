@@ -3,6 +3,7 @@ const https = require('http-status');
 const { i18n } = require('../config');
 const { Report } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
+const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createReport = catchAsync(async (req, res, next) => {
   // #TODO check exist report
@@ -13,7 +14,7 @@ const createReport = catchAsync(async (req, res, next) => {
     message: i18n.translate('report.createSuccess'),
     data: {
       report,
-    }
+    },
   });
 });
 
@@ -32,12 +33,23 @@ const getDetail = catchAsync(async (req, res, next) => {
 });
 
 const getList = catchAsync(async (req, res, next) => {
-  const reports = await Report.find();
+  const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
+
+  const skip = (+page - 1) * limit;
+  const query = {};
+
+  const reports = await Report.find().limit(limit).skip(skip);
+  const totalResults = await Report.countDocuments(query);
+
   res.json({
     message: i18n.translate('report.getList'),
     statusCode: https.OK,
     data: {
       reports,
+      page: +page,
+      limit: +limit,
+      totalPages: Math.ceil(totalResults / +limit),
+      totalResults,
     },
   });
 });

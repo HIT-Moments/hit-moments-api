@@ -3,9 +3,34 @@
     "resourceNotFound": "Resource not found",
     "internalServerError": "Internal server error"
   },
+  "model": {
+    "invalidObjectId": "Invalid ObjectId"
+  },
   "user": {
     "createSuccess": "User created successfully",
-    "emailExists": "Email already exists"
+    "emailExists": "Email already exists",
+    "getUsersSuccess": "Get users successfully",
+    "passwordLength": "Password must have at least 8 characters",
+    "passwordDigit": "Password must have at least 1 digit",
+    "passwordLetter": "Password must have at least 1 letter",
+    "getUserSuccess": "Get user successfully",
+    "userNotFound": "User not found",
+    "updateSuccess": "User updated successfully",
+    "deleteSuccess": "User deleted successfully"
+  },
+  "auth": {
+    "emailExists": "Email already exists",
+    "registerSuccess": "Register successfully",
+    "invalidCredentials": "Wrong email or password",
+    "loginSuccess": "Login successfully",
+    "unauthorized": "Please login first",
+    "updateProfileSuccess": "Update profile successfully",
+    "invalidPassword": "Invalid password",
+    "changePasswordSuccess": "Change password successfully",
+    "tokenExpired": "Token expired",
+    "tokenInvalid": "Token invalid",
+    "tokenRequired": "Token required",
+    "invalidSignature": "Invalid signature"
   },
   "report": {
     "createSuccess": "Report created successfully",
@@ -25,5 +50,8 @@
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
     "deleteSuccess": "Delete feedback successfully"
+  },  
+  "custom": {
+    "regexObjectId": "Mongo format id is incorrect"
   }
 }

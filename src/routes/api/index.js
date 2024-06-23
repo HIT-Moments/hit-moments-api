@@ -8,6 +8,10 @@ const routesApi = [
     route: require('./user.route'),
   },
   {
+    path: '/auth',
+    route: require('./auth.route'),
+  },
+  {
     path: '/reports',
     route: require('./report.route'),
   },
