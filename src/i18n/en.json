@@ -23,7 +23,8 @@
     "notFound": "Report not found",
     "getDetail": "Get details successfully",
     "getList": "Get list reports successfully",
-    "deleteSuccess": "Delete reports successfully"
+    "deleteSuccess": "Delete reports successfully",
+    "existed": "Report already exists"
   },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"

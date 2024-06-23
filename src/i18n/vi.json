@@ -23,7 +23,8 @@
     "notFound": "Không tìm thấy Id khiếu nại",
     "getList": "Lấy danh sách khiếu nại thành công",
     "getDetail": "Lấy đơn khiếu nại thành công",
-    "deleteSuccess": "Xoá đơn khiếu nại thành công"
+    "deleteSuccess": "Xoá đơn khiếu nại thành công",
+    "existed" : "Đơn khiếu nại đã tồn tại"
   },
   "custom": {
     "regexObjectId": "Id không đúng định dạng mongo"
