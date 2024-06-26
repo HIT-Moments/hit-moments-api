@@ -23,6 +23,7 @@
     "registerSuccess": "Đăng ký thành công",
     "invalidCredentials": "Email hoặc mật khẩu không đúng",
     "loginSuccess": "Đăng nhập thành công",
+    "getMeSuccess": "Lấy thông tin người dùng thành công",
     "unauthorized": "Vui lòng đăng nhập",
     "updateProfileSuccess": "Cập nhật thông tin thành công",
     "invalidPassword": "Mật khẩu không đúng",
@@ -30,7 +31,9 @@
     "tokenExpired": "Phiên đăng nhập đã hết hạn",
     "tokenInvalid": "Token không hợp lệ",
     "tokenRequired": "Token không được để trống",
-    "invalidSignature": "Chữ ký không hợp lệ"
+    "invalidSignature": "Chữ ký không hợp lệ",
+    "invalidToken": "Token không hợp lệ",
+    "verifyEmailSuccess": "Xác thực email thành công"
   },
   "report": {
     "createSuccess": "Tạo report thành công",
