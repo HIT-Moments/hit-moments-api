@@ -42,19 +42,6 @@
     "getDetail": "Lấy đơn khiếu nại thành công",
     "deleteSuccess": "Xoá đơn khiếu nại thành công"
   },
-  "upload": {
-    "unsupported": "Không hỗ trợ định dạng",
-    "imgRequired": "Không có ảnh tải lên"
-  },
-  "feedback": {
-    "createSuccess": "Tạo nhận xét thành công",
-    "notFound": "Không tìm thấy nhận xét",
-    "getList": "Lấy danh sách nhận xét thành công",
-    "getFeedback": "Lấy nhận xét thành công",
-    "updateFeedback": "Cập nhập nhận xét thành công",
-    "deleteSuccess": "Xóa nhận xét thành công"
-  },
-  "reports": "reports",
   "custom": {
     "regexObjectId": "Id không đúng định dạng mongo"
   }
