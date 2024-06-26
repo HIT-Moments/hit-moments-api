@@ -23,6 +23,7 @@
     "registerSuccess": "Register successfully",
     "invalidCredentials": "Wrong email or password",
     "loginSuccess": "Login successfully",
+    "getMeSuccess": "Get me successfully",
     "unauthorized": "Please login first",
     "updateProfileSuccess": "Update profile successfully",
     "invalidPassword": "Invalid password",
@@ -30,7 +31,8 @@
     "tokenExpired": "Token expired",
     "tokenInvalid": "Token invalid",
     "tokenRequired": "Token required",
-    "invalidSignature": "Invalid signature"
+    "invalidSignature": "Invalid signature",
+    "verifyEmailSuccess": "Verify email successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",

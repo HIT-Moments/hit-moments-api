@@ -1,9 +1,11 @@
+const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
 const { User } = require('../models');
 const { i18n, env } = require('../config');
 const { ApiError, catchAsync } = require('../utils');
+const { sendVerificationEmail } = require('../utils/');
 
 const register = catchAsync(async (req, res) => {
   const existingEmail = await User.findOne({ email: req.body.email });
@@ -12,11 +14,44 @@ const register = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.CONFLICT, i18n.translate('auth.emailExists'));
   }
 
-  await User.create(req.body);
+  const emailToken = crypto.randomBytes(64).toString('hex');
+  const user = await User.create({ ...req.body, emailToken });
+
+  sendVerificationEmail(user);
+
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
     message: i18n.translate('auth.registerSuccess'),
     data: {},
+  });
+});
+
+const verifyEmail = catchAsync(async (req, res) => {
+  const emailToken = req.query.token;
+  if (!emailToken) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('auth.tokenInvalid'));
+  }
+
+  const user = await User.findOne({ emailToken });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.tokenInvalid'));
+  }
+
+  user.emailToken = undefined;
+  user.isVerified = true;
+
+  await user.save();
+
+  const accessToken = generateToken({ id: user._id });
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('auth.verifyEmailSuccess'),
+    data: {
+      user,
+      accessToken,
+    },
   });
 });
 
@@ -98,6 +133,7 @@ const changePassword = catchAsync(async (req, res) => {
 
 module.exports = {
   register,
+  verifyEmail,
   login,
   getMe,
   updateProfile,
