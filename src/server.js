@@ -9,10 +9,11 @@ const { env, i18n } = require('./config');
 const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
+const isDevelopment = env.nodeEnv === 'development';
 
 app.use(express.json());
 
-if (env.nodeEnv === 'development') {
+if (isDevelopment) {
   app.use(morgan('dev'));
   mongoose.set('debug', true);
 }
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
 
-app.use('/api/v1', apiRoute);
+app.use(isDevelopment ? '/api/v1' : '/v1', apiRoute);
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({

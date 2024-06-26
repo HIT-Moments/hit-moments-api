@@ -38,7 +38,7 @@
     "getList": "Lấy danh sách khiếu nại thành công",
     "getDetail": "Lấy đơn khiếu nại thành công",
     "deleteSuccess": "Xoá đơn khiếu nại thành công",
-    "existed" : "Đơn khiếu nại đã tồn tại"
+    "existed": "Đơn khiếu nại đã tồn tại"
   },
   "upload": {
     "unsupported": "Không hỗ trợ định dạng",
