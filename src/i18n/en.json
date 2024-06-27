@@ -32,7 +32,9 @@
     "tokenInvalid": "Token invalid",
     "tokenRequired": "Token required",
     "invalidSignature": "Invalid signature",
-    "verifyEmailSuccess": "Verify email successfully"
+    "verifyEmailSuccess": "Verify email successfully",
+    "userNotFound": "User not found",
+    "emailNotVerified": "Email not verified"
   },
   "report": {
     "createSuccess": "Report created successfully",

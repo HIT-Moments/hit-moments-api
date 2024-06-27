@@ -32,7 +32,9 @@
     "tokenInvalid": "Token không hợp lệ",
     "tokenRequired": "Token không được để trống",
     "invalidSignature": "Chữ ký không hợp lệ",
-    "verifyEmailSuccess": "Xác thực email thành công"
+    "verifyEmailSuccess": "Xác thực email thành công",
+    "userNotFound": "Không tìm thấy người dùng",
+    "emailNotVerified": "Email chưa được xác thực"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

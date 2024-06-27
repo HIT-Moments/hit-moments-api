@@ -45,9 +45,6 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    emailToken: {
-      type: String,
-    },
     role: {
       type: String,
       enum: USER_ROLE,

@@ -13,6 +13,7 @@ const env = {
   jwtSecret: process.env.JWT_SECRET || 'hitmoments.com',
   jwtExpire: process.env.JWT_EXPIRE || '1d',
   apiUrl: process.env.API_URL || `http://localhost:${process.env.PORT || 3000}`,
+  frontendUrl: process.env.FRONTEND_URL,
 };
 
 module.exports = env;

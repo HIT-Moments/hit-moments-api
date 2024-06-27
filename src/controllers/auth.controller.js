@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
@@ -14,10 +13,10 @@ const register = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.CONFLICT, i18n.translate('auth.emailExists'));
   }
 
-  const emailToken = crypto.randomBytes(64).toString('hex');
-  const user = await User.create({ ...req.body, emailToken });
+  const user = await User.create(req.body);
 
-  sendVerificationEmail(user);
+  const token = generateToken({ email: user.email });
+  sendVerificationEmail(user, token);
 
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
@@ -27,32 +26,34 @@ const register = catchAsync(async (req, res) => {
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
-  const emailToken = req.query.token;
-  if (!emailToken) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('auth.tokenInvalid'));
+  const { token } = req.query;
+
+  if (!token) {
+    return res.redirect(`${env.frontendUrl}/404`);
   }
 
-  const user = await User.findOne({ emailToken });
+  try {
+    const { email } = jwt.verify(token, env.jwtSecret);
 
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.tokenInvalid'));
+    const user = await User.findOne({ email });
+
+    if (!user || user.isVerified) {
+      return res.redirect(`${env.frontendUrl}/404`);
+    }
+
+    user.isVerified = true;
+    await user.save();
+
+    res.status(httpStatus.OK).json({
+      statusCode: httpStatus.OK,
+      message: i18n.translate('auth.verifyEmailSuccess'),
+      data: {
+        user,
+      },
+    });
+  } catch (error) {
+    return res.redirect(`${env.frontendUrl}/404`);
   }
-
-  user.emailToken = undefined;
-  user.isVerified = true;
-
-  await user.save();
-
-  const accessToken = generateToken({ id: user._id });
-
-  res.status(httpStatus.OK).json({
-    statusCode: httpStatus.OK,
-    message: i18n.translate('auth.verifyEmailSuccess'),
-    data: {
-      user,
-      accessToken,
-    },
-  });
 });
 
 const login = catchAsync(async (req, res) => {
@@ -62,6 +63,10 @@ const login = catchAsync(async (req, res) => {
 
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidCredentials'));
+  }
+
+  if (!user.isVerified) {
+    throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.emailNotVerified'));
   }
 
   const accessToken = generateToken({ id: user._id });
