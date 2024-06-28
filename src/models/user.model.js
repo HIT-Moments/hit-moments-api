@@ -45,6 +45,9 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    lastVerificationEmailSentAt: {
+      type: Date,
+    },
     role: {
       type: String,
       enum: USER_ROLE,

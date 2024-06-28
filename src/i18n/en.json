@@ -36,7 +36,8 @@
     "userNotFound": "User not found",
     "emailNotVerified": "Email not verified",
     "emailAlreadyVerified": "Email already verified",
-    "verificationEmailResent": "Verification email resent"
+    "verificationEmailResent": "Verification email resent",
+    "emailResendTimeout": "Please wait at least 1 minute before resending the verification email."
   },
   "report": {
     "createSuccess": "Report created successfully",

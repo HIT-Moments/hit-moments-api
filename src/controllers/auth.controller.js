@@ -33,7 +33,7 @@ const verifyEmail = catchAsync(async (req, res) => {
   }
 
   try {
-    const { email } = jwt.verify(token, env.jwtEmailSecret);
+    const { email } = jwt.verify(token, env.jwtVerifyEmailSecret);
 
     const user = await User.findOne({ email });
 
@@ -64,8 +64,20 @@ const resendVerificationEmail = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('auth.emailAlreadyVerified'));
   }
 
+  const now = new Date();
+
+  if (
+    user.lastVerificationEmailSentAt &&
+    user.lastVerificationEmailSentAt > new Date(now.getTime() - env.emailResendTime)
+  ) {
+    throw new ApiError(httpStatus.TOO_MANY_REQUESTS, i18n.translate('auth.emailResendTimeout'));
+  }
+
   const token = generateEmailToken({ email: user.email });
   sendVerificationEmail(user, token);
+
+  user.lastVerificationEmailSentAt = now;
+  await user.save();
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
@@ -133,8 +145,8 @@ const generateToken = (payload) => {
 };
 
 const generateEmailToken = (payload) => {
-  const token = jwt.sign(payload, env.jwtEmailSecret, {
-    expiresIn: env.jwtEmailExpire,
+  const token = jwt.sign(payload, env.jwtVerifyEmailSecret, {
+    expiresIn: env.jwtVerifyEmailExpire,
   });
   return token;
 };

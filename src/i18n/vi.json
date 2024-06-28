@@ -36,7 +36,8 @@
     "userNotFound": "Không tìm thấy người dùng",
     "emailNotVerified": "Email chưa được xác thực",
     "emailAlreadyVerified": "Email đã được xác thực",
-    "verificationEmailResent": "Gửi lại email xác thực thành công"
+    "verificationEmailResent": "Gửi lại email xác thực thành công",
+    "emailResendTimeout": "Vui lòng đợi ít nhất 1 phút trước khi gửi lại email xác thực"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

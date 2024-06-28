@@ -14,8 +14,9 @@ const env = {
   jwtExpire: process.env.JWT_EXPIRE || '1d',
   apiUrl: process.env.API_URL || `http://localhost:${process.env.PORT || 3000}`,
   frontendUrl: process.env.FRONTEND_URL,
-  jwtEmailSecret: process.env.JWT_EMAIL_SECRET,
-  jwtEmailExpire: process.env.JWT_EMAIL_EXPIRE || '1h',
+  jwtVerifyEmailSecret: process.env.JWT_VERIFY_EMAIL_SECRET,
+  jwtVerifyEmailExpire: process.env.JWT_VERIFY_EMAIL_EXPIRE || '1h',
+  emailResendTime: process.env.EMAIL_RESEND_TIME || 60000,
 };
 
 module.exports = env;
