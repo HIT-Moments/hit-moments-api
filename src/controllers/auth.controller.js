@@ -51,6 +51,29 @@ const verifyEmail = catchAsync(async (req, res) => {
   }
 });
 
+const resendVerificationEmail = catchAsync(async (req, res) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.userNotFound'));
+  }
+
+  if (user.isVerified) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('auth.emailAlreadyVerified'));
+  }
+
+  const token = generateEmailToken({ email: user.email });
+  sendVerificationEmail(user, token);
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('auth.verificationEmailResent'),
+    data: {},
+  });
+});
+
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
@@ -141,6 +164,7 @@ const changePassword = catchAsync(async (req, res) => {
 module.exports = {
   register,
   verifyEmail,
+  resendVerificationEmail,
   login,
   getMe,
   updateProfile,

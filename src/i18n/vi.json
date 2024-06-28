@@ -34,7 +34,9 @@
     "invalidSignature": "Chữ ký không hợp lệ",
     "verifyEmailSuccess": "Xác thực email thành công",
     "userNotFound": "Không tìm thấy người dùng",
-    "emailNotVerified": "Email chưa được xác thực"
+    "emailNotVerified": "Email chưa được xác thực",
+    "emailAlreadyVerified": "Email đã được xác thực",
+    "verificationEmailResent": "Gửi lại email xác thực thành công"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

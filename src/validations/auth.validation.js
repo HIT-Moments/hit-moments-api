@@ -11,6 +11,18 @@ const register = {
   }),
 };
 
+const verifyEmail = {
+  query: joi.object({
+    token: joi.string().required(),
+  }),
+};
+
+const resendVerificationEmail = {
+  body: joi.object({
+    email: joi.string().email().required(),
+  }),
+};
+
 const login = {
   body: joi.object({
     email: joi.string().email().required(),
@@ -40,6 +52,8 @@ const changePassword = {
 
 module.exports = {
   register,
+  verifyEmail,
+  resendVerificationEmail,
   login,
   updateProfile,
   changePassword,

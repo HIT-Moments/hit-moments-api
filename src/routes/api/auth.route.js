@@ -16,6 +16,8 @@ authRoute
 
 authRoute.put('/change-password', auth, validate(authValidation.changePassword), authController.changePassword);
 
-authRoute.get('/verify', authController.verifyEmail);
+authRoute.get('/verify', validate(authValidation.verifyEmail), authController.verifyEmail);
+
+authRoute.post('/resend-verification-email', validate(authValidation.resendVerificationEmail), authController.resendVerificationEmail);
 
 module.exports = authRoute;

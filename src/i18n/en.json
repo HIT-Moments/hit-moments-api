@@ -34,7 +34,9 @@
     "invalidSignature": "Invalid signature",
     "verifyEmailSuccess": "Verify email successfully",
     "userNotFound": "User not found",
-    "emailNotVerified": "Email not verified"
+    "emailNotVerified": "Email not verified",
+    "emailAlreadyVerified": "Email already verified",
+    "verificationEmailResent": "Verification email resent"
   },
   "report": {
     "createSuccess": "Report created successfully",
