@@ -37,7 +37,8 @@
     "emailNotVerified": "Email chưa được xác thực",
     "emailAlreadyVerified": "Email đã được xác thực",
     "verificationEmailResent": "Gửi lại email xác thực thành công",
-    "emailResendTimeout": "Vui lòng đợi ít nhất 1 phút trước khi gửi lại email xác thực"
+    "emailResendTimeout": "Vui lòng đợi ít nhất 1 phút trước khi gửi lại email xác thực",
+    "forbidden": "Không có quyền truy cập"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

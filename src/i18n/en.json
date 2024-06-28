@@ -37,7 +37,8 @@
     "emailNotVerified": "Email not verified",
     "emailAlreadyVerified": "Email already verified",
     "verificationEmailResent": "Verification email resent",
-    "emailResendTimeout": "Please wait at least 1 minute before resending the verification email."
+    "emailResendTimeout": "Please wait at least 1 minute before resending the verification email.",
+    "forbidden": "Forbidden"
   },
   "report": {
     "createSuccess": "Report created successfully",
