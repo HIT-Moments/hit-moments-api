@@ -22,6 +22,14 @@ const auth = catchAsync(async (req, res, next) => {
   next();
 });
 
+const author = (allowedRoles) =>
+  catchAsync(async (req, res, next) => {
+    if (!allowedRoles.includes(req.user.role)) {
+      throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('auth.forbidden'));
+    }
+    next();
+  });
+
 const extractToken = (req) => {
   let token;
   if (req.headers.authorization?.startsWith('Bearer')) {
@@ -32,4 +40,5 @@ const extractToken = (req) => {
 
 module.exports = {
   auth,
+  author,
 };
