@@ -15,7 +15,7 @@ const register = catchAsync(async (req, res) => {
 
   const user = await User.create(req.body);
 
-  const token = generateToken({ email: user.email });
+  const token = generateEmailToken({ email: user.email });
   sendVerificationEmail(user, token);
 
   res.status(httpStatus.CREATED).json({
@@ -33,7 +33,7 @@ const verifyEmail = catchAsync(async (req, res) => {
   }
 
   try {
-    const { email } = jwt.verify(token, env.jwtSecret);
+    const { email } = jwt.verify(token, env.jwtEmailSecret);
 
     const user = await User.findOne({ email });
 
@@ -44,13 +44,8 @@ const verifyEmail = catchAsync(async (req, res) => {
     user.isVerified = true;
     await user.save();
 
-    res.status(httpStatus.OK).json({
-      statusCode: httpStatus.OK,
-      message: i18n.translate('auth.verifyEmailSuccess'),
-      data: {
-        user,
-      },
-    });
+    // will change to redirect to verify email success page after frontend is ready
+    return res.redirect(`${env.frontendUrl}`);
   } catch (error) {
     return res.redirect(`${env.frontendUrl}/404`);
   }
@@ -110,6 +105,13 @@ const updateProfile = catchAsync(async (req, res) => {
 const generateToken = (payload) => {
   const token = jwt.sign(payload, env.jwtSecret, {
     expiresIn: env.jwtExpire,
+  });
+  return token;
+};
+
+const generateEmailToken = (payload) => {
+  const token = jwt.sign(payload, env.jwtEmailSecret, {
+    expiresIn: env.jwtEmailExpire,
   });
   return token;
 };

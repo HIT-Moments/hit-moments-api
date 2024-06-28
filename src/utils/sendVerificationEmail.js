@@ -1,6 +1,5 @@
-const { sendEmail } = require('../services');
-
 const { env } = require('../config');
+const { sendEmail } = require('../services');
 
 const sendVerificationEmail = async (user, token) => {
   const subject = 'Email Verification';
