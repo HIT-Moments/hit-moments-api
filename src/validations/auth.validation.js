@@ -50,6 +50,20 @@ const changePassword = {
   }),
 };
 
+const forgotPassword = {
+  body: joi.object({
+    email: joi.string().email().required(),
+  }),
+};
+
+const resetPassword = {
+  body: joi.object({
+    email: joi.string().email().required(),
+    otp: joi.string().required(),
+    password: joi.string().custom(password).required(),
+  }),
+};
+
 module.exports = {
   register,
   verifyEmail,
@@ -57,4 +71,6 @@ module.exports = {
   login,
   updateProfile,
   changePassword,
+  forgotPassword,
+  resetPassword,
 };

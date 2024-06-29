@@ -37,7 +37,10 @@
     "emailNotVerified": "Email not verified",
     "emailAlreadyVerified": "Email already verified",
     "verificationEmailResent": "Verification email resent",
-    "emailResendTimeout": "Please wait at least 1 minute before resending the verification email."
+    "emailResendTimeout": "Please wait at least 1 minute before resending the verification email.",
+    "resetPasswordEmailSent": "Reset password email sent",
+    "invalidOtp": "Invalid OTP",
+    "resetPasswordSuccess": "Reset password successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",

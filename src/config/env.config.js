@@ -16,7 +16,8 @@ const env = {
   frontendUrl: process.env.FRONTEND_URL,
   jwtVerifyEmailSecret: process.env.JWT_VERIFY_EMAIL_SECRET,
   jwtVerifyEmailExpire: process.env.JWT_VERIFY_EMAIL_EXPIRE || '1h',
-  emailResendTime: process.env.EMAIL_RESEND_TIME || 60000,
+  emailResendTime: (+process.env.EMAIL_RESEND_TIME || 1) * 60 * 1000,
+  otpExpireTime: (+process.env.OTP_EXPIRE_TIME || 1) * 60 * 1000,
 };
 
 module.exports = env;
