@@ -24,6 +24,7 @@
     "invalidCredentials": "Wrong email or password",
     "loginSuccess": "Login successfully",
     "unauthorized": "Please login first",
+    "forbidden": "Forbidden",
     "updateProfileSuccess": "Update profile successfully",
     "invalidPassword": "Invalid password",
     "changePasswordSuccess": "Change password successfully",
@@ -44,14 +45,14 @@
     "unsupported": "Unsupported file format",
     "imgRequired": "Img is required"
   },
-  "feedback" :{
+  "feedback": {
     "createSuccess": "Feedback created successfully",
     "notFound": "Feedback not found",
     "getList": "Get all feedback successfully",
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
     "deleteSuccess": "Delete feedback successfully"
-  },  
+  },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"
   }

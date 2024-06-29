@@ -24,6 +24,7 @@
     "invalidCredentials": "Email hoặc mật khẩu không đúng",
     "loginSuccess": "Đăng nhập thành công",
     "unauthorized": "Vui lòng đăng nhập",
+    "forbidden": "Không có quyền truy cập",
     "updateProfileSuccess": "Cập nhật thông tin thành công",
     "invalidPassword": "Mật khẩu không đúng",
     "changePasswordSuccess": "Đổi mật khẩu thành công",
@@ -38,7 +39,7 @@
     "getList": "Lấy danh sách khiếu nại thành công",
     "getDetail": "Lấy đơn khiếu nại thành công",
     "deleteSuccess": "Xoá đơn khiếu nại thành công",
-    "existed" : "Đơn khiếu nại đã tồn tại"
+    "existed": "Đơn khiếu nại đã tồn tại"
   },
   "upload": {
     "unsupported": "Không hỗ trợ định dạng",
