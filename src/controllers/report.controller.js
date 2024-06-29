@@ -1,17 +1,17 @@
 const https = require('http-status');
 
 const { i18n } = require('../config');
-const { Report , User } = require('../models');
+const { Report, User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createReport = catchAsync(async (req, res, next) => {
-  const reportExisting = await Report.findOne({userId : req.params.userId , postId : req.params.postId});
-  if(!reportExisting){
+  const reportExisting = await Report.findOne({ userId: req.params.userId, postId: req.params.postId });
+  if (!reportExisting) {
     throw new ApiError(https.CONFLICT, i18n.translate('report.existed'));
   }
-  req.body.userId = '662cf6c351d7d3424baea277'; 
-  const report = await Report.create(req.body); 
+  req.body.userId = '662cf6c351d7d3424baea277';
+  const report = await Report.create(req.body);
   return res.status(https.CREATED).json({
     statusCode: https.CREATED,
     message: i18n.translate('report.createSuccess'),
