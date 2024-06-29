@@ -45,10 +45,19 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    lastVerificationEmailSentAt: {
+      type: Date,
+    },
     role: {
       type: String,
       enum: USER_ROLE,
       default: USER_ROLE.USER,
+    },
+    otp: {
+      type: String,
+    },
+    otpExpiredAt: {
+      type: Date,
     },
   },
   {

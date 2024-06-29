@@ -23,6 +23,7 @@
     "registerSuccess": "Đăng ký thành công",
     "invalidCredentials": "Email hoặc mật khẩu không đúng",
     "loginSuccess": "Đăng nhập thành công",
+    "getMeSuccess": "Lấy thông tin người dùng thành công",
     "unauthorized": "Vui lòng đăng nhập",
     "forbidden": "Không có quyền truy cập",
     "updateProfileSuccess": "Cập nhật thông tin thành công",
@@ -31,7 +32,17 @@
     "tokenExpired": "Phiên đăng nhập đã hết hạn",
     "tokenInvalid": "Token không hợp lệ",
     "tokenRequired": "Token không được để trống",
-    "invalidSignature": "Chữ ký không hợp lệ"
+    "invalidSignature": "Chữ ký không hợp lệ",
+    "verifyEmailSuccess": "Xác thực email thành công",
+    "userNotFound": "Không tìm thấy người dùng",
+    "emailNotVerified": "Email chưa được xác thực",
+    "emailAlreadyVerified": "Email đã được xác thực",
+    "verificationEmailResent": "Gửi lại email xác thực thành công",
+    "emailResendTimeout": "Vui lòng đợi ít nhất 1 phút trước khi gửi lại email xác thực",
+    "resetPasswordEmailSent": "Email đặt lại mật khẩu đã được gửi",
+    "invalidOtp": "Mã OTP không hợp lệ",
+    "otpVerified": "Mã OTP đã được xác thực",
+    "resetPasswordSuccess": "Đặt lại mật khẩu thành công"
   },
   "report": {
     "createSuccess": "Tạo report thành công",

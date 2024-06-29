@@ -16,4 +16,18 @@ authRoute
 
 authRoute.put('/change-password', auth, validate(authValidation.changePassword), authController.changePassword);
 
+authRoute.get('/verify', validate(authValidation.verifyEmail), authController.verifyEmail);
+
+authRoute.post(
+  '/resend-verification-email',
+  validate(authValidation.resendVerificationEmail),
+  authController.resendVerificationEmail,
+);
+
+authRoute.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
+
+authRoute.post('/verify-otp', validate(authValidation.verifyOtp), authController.verifyOtp);
+
+authRoute.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
+
 module.exports = authRoute;

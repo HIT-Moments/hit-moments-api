@@ -23,6 +23,7 @@
     "registerSuccess": "Register successfully",
     "invalidCredentials": "Wrong email or password",
     "loginSuccess": "Login successfully",
+    "getMeSuccess": "Get me successfully",
     "unauthorized": "Please login first",
     "forbidden": "Forbidden",
     "updateProfileSuccess": "Update profile successfully",
@@ -31,7 +32,17 @@
     "tokenExpired": "Token expired",
     "tokenInvalid": "Token invalid",
     "tokenRequired": "Token required",
-    "invalidSignature": "Invalid signature"
+    "invalidSignature": "Invalid signature",
+    "verifyEmailSuccess": "Verify email successfully",
+    "userNotFound": "User not found",
+    "emailNotVerified": "Email not verified",
+    "emailAlreadyVerified": "Email already verified",
+    "verificationEmailResent": "Verification email resent",
+    "emailResendTimeout": "Please wait at least 1 minute before resending the verification email.",
+    "resetPasswordEmailSent": "Reset password email sent",
+    "invalidOtp": "Invalid OTP",
+    "otpVerified": "OTP verified",
+    "resetPasswordSuccess": "Reset password successfully"
   },
   "report": {
     "createSuccess": "Report created successfully",
