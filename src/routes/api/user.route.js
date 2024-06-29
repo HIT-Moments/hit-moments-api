@@ -1,7 +1,6 @@
 const express = require('express');
 
-const { validate } = require('../../middlewares');
-const { auth, author } = require('../../middlewares/auth.middleware');
+const { auth, author, validate } = require('../../middlewares');
 const { userValidation } = require('../../validations');
 const { userController } = require('../../controllers');
 
