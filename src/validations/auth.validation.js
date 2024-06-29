@@ -11,6 +11,18 @@ const register = {
   }),
 };
 
+const verifyEmail = {
+  query: joi.object({
+    token: joi.string().required(),
+  }),
+};
+
+const resendVerificationEmail = {
+  body: joi.object({
+    email: joi.string().email().required(),
+  }),
+};
+
 const login = {
   body: joi.object({
     email: joi.string().email().required(),
@@ -38,9 +50,34 @@ const changePassword = {
   }),
 };
 
+const forgotPassword = {
+  body: joi.object({
+    email: joi.string().email().required(),
+  }),
+};
+
+const verifyOtp = {
+  body: joi.object({
+    email: joi.string().email().required(),
+    otp: joi.string().required(),
+  }),
+};
+
+const resetPassword = {
+  body: joi.object({
+    otpToken: joi.string().required(),
+    password: joi.string().custom(password).required(),
+  }),
+};
+
 module.exports = {
   register,
+  verifyEmail,
+  resendVerificationEmail,
   login,
   updateProfile,
   changePassword,
+  forgotPassword,
+  verifyOtp,
+  resetPassword,
 };

@@ -1,10 +1,16 @@
 const express = require('express');
 
-const { validate } = require('../../middlewares');
+const { auth, author, validate } = require('../../middlewares');
 const { userValidation } = require('../../validations');
 const { userController } = require('../../controllers');
 
 const userRoute = express.Router();
+
+userRoute.use(auth);
+
+userRoute.route('/').get(validate(userValidation.getUsers), userController.getUsers);
+
+userRoute.use(author(['admin']));
 
 userRoute
   .route('/')

@@ -23,21 +23,34 @@
     "registerSuccess": "Đăng ký thành công",
     "invalidCredentials": "Email hoặc mật khẩu không đúng",
     "loginSuccess": "Đăng nhập thành công",
+    "getMeSuccess": "Lấy thông tin người dùng thành công",
     "unauthorized": "Vui lòng đăng nhập",
+    "forbidden": "Không có quyền truy cập",
     "updateProfileSuccess": "Cập nhật thông tin thành công",
     "invalidPassword": "Mật khẩu không đúng",
     "changePasswordSuccess": "Đổi mật khẩu thành công",
     "tokenExpired": "Phiên đăng nhập đã hết hạn",
     "tokenInvalid": "Token không hợp lệ",
     "tokenRequired": "Token không được để trống",
-    "invalidSignature": "Chữ ký không hợp lệ"
+    "invalidSignature": "Chữ ký không hợp lệ",
+    "verifyEmailSuccess": "Xác thực email thành công",
+    "userNotFound": "Không tìm thấy người dùng",
+    "emailNotVerified": "Email chưa được xác thực",
+    "emailAlreadyVerified": "Email đã được xác thực",
+    "verificationEmailResent": "Gửi lại email xác thực thành công",
+    "emailResendTimeout": "Vui lòng đợi ít nhất 1 phút trước khi gửi lại email xác thực",
+    "resetPasswordEmailSent": "Email đặt lại mật khẩu đã được gửi",
+    "invalidOtp": "Mã OTP không hợp lệ",
+    "otpVerified": "Mã OTP đã được xác thực",
+    "resetPasswordSuccess": "Đặt lại mật khẩu thành công"
   },
   "report": {
     "createSuccess": "Tạo report thành công",
     "notFound": "Không tìm thấy Id khiếu nại",
     "getList": "Lấy danh sách khiếu nại thành công",
     "getDetail": "Lấy đơn khiếu nại thành công",
-    "deleteSuccess": "Xoá đơn khiếu nại thành công"
+    "deleteSuccess": "Xoá đơn khiếu nại thành công",
+    "existed": "Đơn khiếu nại đã tồn tại"
   },
   "upload": {
     "unsupported": "Không hỗ trợ định dạng",
