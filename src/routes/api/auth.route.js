@@ -26,6 +26,8 @@ authRoute.post(
 
 authRoute.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 
+authRoute.post('/verify-otp', validate(authValidation.verifyOtp), authController.verifyOtp);
+
 authRoute.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
 
 module.exports = authRoute;

@@ -40,6 +40,7 @@
     "emailResendTimeout": "Vui lòng đợi ít nhất 1 phút trước khi gửi lại email xác thực",
     "resetPasswordEmailSent": "Email đặt lại mật khẩu đã được gửi",
     "invalidOtp": "Mã OTP không hợp lệ",
+    "otpVerified": "Mã OTP đã được xác thực",
     "resetPasswordSuccess": "Đặt lại mật khẩu thành công"
   },
   "report": {

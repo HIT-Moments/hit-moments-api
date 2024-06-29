@@ -3,7 +3,8 @@ const httpStatus = require('http-status');
 
 const { User } = require('../models');
 const { i18n, env } = require('../config');
-const { ApiError, catchAsync, sendVerificationEmail, sendOtpEmail, generateOtp } = require('../utils');
+const { ApiError, catchAsync } = require('../utils');
+const { generateOtp, sendOtpEmail, sendVerificationEmail } = require('../services/');
 
 const register = catchAsync(async (req, res) => {
   const existingEmail = await User.findOne({ email: req.body.email });
@@ -136,20 +137,6 @@ const updateProfile = catchAsync(async (req, res) => {
   });
 });
 
-const generateToken = (payload) => {
-  const token = jwt.sign(payload, env.jwtSecret, {
-    expiresIn: env.jwtExpire,
-  });
-  return token;
-};
-
-const generateEmailToken = (payload) => {
-  const token = jwt.sign(payload, env.jwtVerifyEmailSecret, {
-    expiresIn: env.jwtVerifyEmailExpire,
-  });
-  return token;
-};
-
 const changePassword = catchAsync(async (req, res) => {
   const user = await User.findById(req.user.id).select('+password');
 
@@ -196,8 +183,8 @@ const forgotPassword = catchAsync(async (req, res) => {
   });
 });
 
-const resetPassword = catchAsync(async (req, res) => {
-  const { email, otp, password } = req.body;
+const verifyOtp = catchAsync(async (req, res) => {
+  const { email, otp } = req.body;
 
   const user = await User.findOne({ email });
 
@@ -205,23 +192,70 @@ const resetPassword = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.userNotFound'));
   }
 
-  console.log(user.otp !== otp);
-
   if (user.otp !== otp || user.otpExpiredAt < new Date()) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('auth.invalidOtp'));
   }
 
+  const otpToken = generateOtpToken({ email: user.email });
+
   user.otp = null;
   user.otpExpiredAt = null;
-  user.password = password;
   await user.save();
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
-    message: i18n.translate('auth.resetPasswordSuccess'),
-    data: {},
+    message: i18n.translate('auth.otpVerified'),
+    data: {
+      otpToken,
+    },
   });
 });
+
+const resetPassword = catchAsync(async (req, res) => {
+  const { otpToken, password } = req.body;
+
+  try {
+    const { email } = jwt.verify(otpToken, env.jwtOtpSecret);
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.userNotFound'));
+    }
+
+    Object.assign(user, { password });
+    await user.save();
+
+    res.status(httpStatus.OK).json({
+      statusCode: httpStatus.OK,
+      message: i18n.translate('auth.resetPasswordSuccess'),
+      data: {},
+    });
+  } catch (error) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('auth.invalidToken'));
+  }
+});
+
+const generateToken = (payload) => {
+  const token = jwt.sign(payload, env.jwtSecret, {
+    expiresIn: env.jwtExpire,
+  });
+  return token;
+};
+
+const generateEmailToken = (payload) => {
+  const token = jwt.sign(payload, env.jwtVerifyEmailSecret, {
+    expiresIn: env.jwtVerifyEmailExpire,
+  });
+  return token;
+};
+
+const generateOtpToken = (payload) => {
+  const token = jwt.sign(payload, env.jwtOtpSecret, {
+    expiresIn: env.jwtOtpExpire,
+  });
+  return token;
+};
 
 module.exports = {
   register,
@@ -232,5 +266,6 @@ module.exports = {
   updateProfile,
   changePassword,
   forgotPassword,
+  verifyOtp,
   resetPassword,
 };

@@ -40,6 +40,7 @@
     "emailResendTimeout": "Please wait at least 1 minute before resending the verification email.",
     "resetPasswordEmailSent": "Reset password email sent",
     "invalidOtp": "Invalid OTP",
+    "otpVerified": "OTP verified",
     "resetPasswordSuccess": "Reset password successfully"
   },
   "report": {

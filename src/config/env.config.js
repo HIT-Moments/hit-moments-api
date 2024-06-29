@@ -18,6 +18,8 @@ const env = {
   jwtVerifyEmailExpire: process.env.JWT_VERIFY_EMAIL_EXPIRE || '1h',
   emailResendTime: (+process.env.EMAIL_RESEND_TIME || 1) * 60 * 1000,
   otpExpireTime: (+process.env.OTP_EXPIRE_TIME || 1) * 60 * 1000,
+  jwtOtpSecret: process.env.JWT_OTP_SECRET || 'otp-hitmoments.com',
+  jwtOtpExpire: process.env.JWT_OTP_EXPIRE || '5m',
 };
 
 module.exports = env;
