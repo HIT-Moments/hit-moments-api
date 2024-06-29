@@ -1,19 +1,20 @@
 const express = require('express');
 
-const { validate } = require('../../middlewares');
+const { validate , auth } = require('../../middlewares');
 const { reportValidation } = require('../../validations');
 const { reportController } = require('../../controllers');
 
-const userRoute = express.Router();
+const reportRoute = express.Router();
 
-userRoute
+reportRoute.use(auth);
+
+reportRoute
   .route('/')
-  .post(validate(reportValidation.createReport), reportController.createReport)
-  .get(reportController.getList);
+  .post(validate(reportValidation.createReport), reportController.createReport);
 
-userRoute
+reportRoute
   .route('/:reportId')
   .get(validate(reportValidation.getDetail), reportController.getDetail)
   .delete(validate(reportValidation.deleteReport), reportController.deleteReport);
 
-module.exports = userRoute;
+module.exports = reportRoute;
