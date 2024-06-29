@@ -1,8 +1,8 @@
 const express = require('express');
 
-const { auth, author, validate } = require('../../middlewares');
 const { userValidation } = require('../../validations');
 const { userController } = require('../../controllers');
+const { auth, author, validate } = require('../../middlewares');
 
 const userRoute = express.Router();
 
@@ -12,10 +12,7 @@ userRoute.route('/').get(validate(userValidation.getUsers), userController.getUs
 
 userRoute.use(author(['admin']));
 
-userRoute
-  .route('/')
-  .post(validate(userValidation.createUser), userController.createUser)
-  .get(validate(userValidation.getUsers), userController.getUsers);
+userRoute.route('/').post(validate(userValidation.createUser), userController.createUser);
 
 userRoute
   .route('/:userId')

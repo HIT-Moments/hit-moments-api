@@ -67,5 +67,13 @@
   "reports": "reports",
   "custom": {
     "regexObjectId": "Id không đúng định dạng mongo"
+  },
+  "moment": {
+    "createSuccess": "Tạo moment thành công",
+    "getMomentsSuccess": "Lấy danh sách moment thành công",
+    "momentNotFound": "Không tìm thấy moment",
+    "getMomentSuccess": "Lấy thông tin moment thành công",
+    "updateMomentSuccess": "Cập nhật moment thành công",
+    "deleteMomentSuccess": "Xoá moment thành công"
   }
 }

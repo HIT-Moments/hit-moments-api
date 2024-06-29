@@ -66,5 +66,13 @@
   },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"
+  },
+  "moment": {
+    "createSuccess": "Moment created successfully",
+    "getMomentsSuccess": "Get moments successfully",
+    "momentNotFound": "Moment not found",
+    "getMomentSuccess": "Get moment successfully",
+    "updateMomentSuccess": "Update moment successfully",
+    "deleteMomentSuccess": "Delete moment successfully"
   }
 }
