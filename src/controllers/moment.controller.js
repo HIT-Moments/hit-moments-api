@@ -104,10 +104,43 @@ const deleteMoment = catchAsync(async (req, res) => {
   });
 });
 
+const getMyMoments = catchAsync(async (req, res) => {
+  const moments = await Moment.find({ userId: req.user.id });
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.getMyMomentsSuccess'),
+    data: {
+      moments,
+    },
+  });
+});
+
+// check if req.user is friend with userId
+const getMomentsByUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.userIdRequired'));
+  }
+
+  const moments = await Moment.find({ userId });
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.getMomentsByUserSuccess'),
+    data: {
+      moments,
+    },
+  });
+});
+
 module.exports = {
   createMoment,
   getMoments,
   getMoment,
   updateMoment,
   deleteMoment,
+  getMyMoments,
+  getMomentsByUser,
 };

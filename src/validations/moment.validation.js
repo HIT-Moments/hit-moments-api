@@ -46,10 +46,17 @@ const deleteMoment = {
   }),
 };
 
+const getMomentsByUser = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createMoment,
   getMoments,
   getMoment,
   updateMoment,
   deleteMoment,
+  getMomentsByUser,
 };
