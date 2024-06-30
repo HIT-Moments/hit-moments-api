@@ -74,6 +74,8 @@
     "momentNotFound": "Không tìm thấy moment",
     "getMomentSuccess": "Lấy thông tin moment thành công",
     "updateMomentSuccess": "Cập nhật moment thành công",
-    "deleteMomentSuccess": "Xoá moment thành công"
+    "deleteMomentSuccess": "Xoá moment thành công",
+    "updateMomentForbidden": "Không có quyền cập nhật moment",
+    "deleteMomentForbidden": "Không có quyền xoá moment"
   }
 }

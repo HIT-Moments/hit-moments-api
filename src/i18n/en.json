@@ -73,6 +73,8 @@
     "momentNotFound": "Moment not found",
     "getMomentSuccess": "Get moment successfully",
     "updateMomentSuccess": "Update moment successfully",
-    "deleteMomentSuccess": "Delete moment successfully"
+    "deleteMomentSuccess": "Delete moment successfully",
+    "updateMomentForbidden": "You are not allowed to update this moment",
+    "deleteMomentForbidden": "You are not allowed to delete this moment"
   }
 }

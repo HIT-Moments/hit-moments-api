@@ -67,6 +67,10 @@ const updateMoment = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
 
+  if (moment.userId.toString() !== req.user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('moment.updateMomentForbidden'));
+  }
+
   Object.assign(moment, req.body);
   await moment.save();
 
@@ -82,11 +86,17 @@ const updateMoment = catchAsync(async (req, res) => {
 const deleteMoment = catchAsync(async (req, res) => {
   const { momentId } = req.params;
 
-  const moment = await Moment.findByIdAndDelete(momentId);
+  const moment = await Moment.findById(momentId);
 
   if (!moment) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
+
+  if (moment.userId.toString() !== req.user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('moment.deleteMomentForbidden'));
+  }
+
+  await moment.deleteOne();
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,

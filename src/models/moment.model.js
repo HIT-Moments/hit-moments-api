@@ -20,8 +20,9 @@ const momentSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
-    music: {
+    musicId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: 'Music',
     },
     location: {
       type: String,
@@ -36,5 +37,18 @@ const momentSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
+
+momentSchema.virtual('momentId').get(function () {
+  return this._id;
+});
+
+momentSchema.set('toJSON', {
+  virtuals: true,
+  versionKey: false,
+  transform: (doc, ret) => {
+    ret.momentId = ret._id;
+    delete ret._id;
+  },
+});
 
 module.exports = mongoose.model('Moment', momentSchema);
