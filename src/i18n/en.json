@@ -75,6 +75,9 @@
     "updateMomentSuccess": "Update moment successfully",
     "deleteMomentSuccess": "Delete moment successfully",
     "updateMomentForbidden": "You are not allowed to update this moment",
-    "deleteMomentForbidden": "You are not allowed to delete this moment"
+    "deleteMomentForbidden": "You are not allowed to delete this moment",
+    "restoreMomentBadRequest": "Moment is not deleted",
+    "restoreMomentForbidden": "You are not allowed to restore this moment",
+    "restoreMomentSuccess": "Restore moment successfully"
   }
 }

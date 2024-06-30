@@ -15,6 +15,7 @@ const getMoments = {
   query: joi.object({
     limit: joi.number().integer(),
     page: joi.number().integer(),
+    isDeleted: joi.boolean(),
   }),
 };
 
@@ -43,6 +44,13 @@ const updateMoment = {
 const deleteMoment = {
   params: joi.object({
     momentId: joi.string().custom(objectId),
+    isDeletePermanently: joi.boolean(),
+  }),
+};
+
+const getMyMoments = {
+  query: joi.object({
+    isDeleted: joi.boolean(),
   }),
 };
 
@@ -52,11 +60,19 @@ const getMomentsByUser = {
   }),
 };
 
+const restoreMoment = {
+  params: joi.object({
+    momentId: joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   createMoment,
   getMoments,
   getMoment,
   updateMoment,
   deleteMoment,
+  getMyMoments,
   getMomentsByUser,
+  restoreMoment,
 };

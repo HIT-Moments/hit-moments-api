@@ -21,10 +21,10 @@ const createMoment = catchAsync(async (req, res) => {
 });
 
 const getMoments = catchAsync(async (req, res) => {
-  const { limit = 10, page = 1 } = req.query;
+  const { limit = 10, page = 1, isDeleted = false } = req.query;
   const skip = (+page - 1) * limit;
-  const query = {};
-  const moments = await Moment.find().limit(limit).skip(skip);
+  const query = { isDeleted };
+  const moments = await Moment.find(query).limit(limit).skip(skip);
   const totalMoments = await Moment.countDocuments(query);
 
   res.status(httpStatus.OK).json({
@@ -40,6 +40,7 @@ const getMoments = catchAsync(async (req, res) => {
   });
 });
 
+// check if req.user is friend with moment.userId
 const getMoment = catchAsync(async (req, res) => {
   const { momentId } = req.params;
 
@@ -84,7 +85,7 @@ const updateMoment = catchAsync(async (req, res) => {
 });
 
 const deleteMoment = catchAsync(async (req, res) => {
-  const { momentId } = req.params;
+  const { momentId, isDeletePermanently = false } = req.params;
 
   const moment = await Moment.findById(momentId);
 
@@ -96,7 +97,13 @@ const deleteMoment = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('moment.deleteMomentForbidden'));
   }
 
-  await moment.deleteOne();
+  if (isDeletePermanently) {
+    await moment.deleteOne();
+  } else {
+    moment.isDeleted = true;
+    moment.deletedAt = new Date();
+    await moment.save();
+  }
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
@@ -105,7 +112,9 @@ const deleteMoment = catchAsync(async (req, res) => {
 });
 
 const getMyMoments = catchAsync(async (req, res) => {
-  const moments = await Moment.find({ userId: req.user.id });
+  const { isDeleted = false } = req.query;
+
+  const moments = await Moment.find({ userId: req.user.id, isDeleted });
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
@@ -117,6 +126,7 @@ const getMyMoments = catchAsync(async (req, res) => {
 });
 
 // check if req.user is friend with userId
+// other users cannot see deleted moments -> isDeleted default is false
 const getMomentsByUser = catchAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -124,13 +134,43 @@ const getMomentsByUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.userIdRequired'));
   }
 
-  const moments = await Moment.find({ userId });
+  const moments = await Moment.find({ userId, isDeleted: false });
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsByUserSuccess'),
     data: {
       moments,
+    },
+  });
+});
+
+const restoreMoment = catchAsync(async (req, res) => {
+  const { momentId } = req.params;
+
+  const moment = await Moment.findById(momentId);
+
+  if (!moment) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
+  if (!moment.isDeleted) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.restoreMomentBadRequest'));
+  }
+
+  if (moment.userId.toString() !== req.user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('moment.restoreMomentForbidden'));
+  }
+
+  moment.isDeleted = false;
+  moment.deletedAt = null;
+  await moment.save();
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.restoreMomentSuccess'),
+    data: {
+      moment,
     },
   });
 });
@@ -143,4 +183,5 @@ module.exports = {
   deleteMoment,
   getMyMoments,
   getMomentsByUser,
+  restoreMoment,
 };

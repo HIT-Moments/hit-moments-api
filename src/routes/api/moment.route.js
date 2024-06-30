@@ -19,7 +19,8 @@ momentRoute
   .route('/:momentId')
   .get(validate(momentValidation.getMoment), momentController.getMoment)
   .delete(validate(momentValidation.deleteMoment), momentController.deleteMoment)
-  .put(validate(momentValidation.updateMoment), momentController.updateMoment);
+  .put(validate(momentValidation.updateMoment), momentController.updateMoment)
+  .patch(validate(momentValidation.restoreMoment), momentController.restoreMoment);
 
 momentRoute.route('/user/:userId').get(validate(momentValidation.getMomentsByUser), momentController.getMomentsByUser);
 

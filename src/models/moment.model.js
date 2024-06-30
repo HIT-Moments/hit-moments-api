@@ -16,6 +16,9 @@ const momentSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    deletedAt: {
+      type: Date,
+    },
     content: {
       type: String,
       trim: true,
