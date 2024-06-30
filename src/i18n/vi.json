@@ -67,5 +67,18 @@
   "reports": "reports",
   "custom": {
     "regexObjectId": "Id không đúng định dạng mongo"
+  },
+  "moment": {
+    "createSuccess": "Tạo moment thành công",
+    "getMomentsSuccess": "Lấy danh sách moment thành công",
+    "momentNotFound": "Không tìm thấy moment",
+    "getMomentSuccess": "Lấy thông tin moment thành công",
+    "updateMomentSuccess": "Cập nhật moment thành công",
+    "deleteMomentSuccess": "Xoá moment thành công",
+    "updateMomentForbidden": "Không có quyền cập nhật moment",
+    "deleteMomentForbidden": "Không có quyền xoá moment",
+    "restoreMomentBadRequest": "Khôi phục moment thất bại",
+    "restoreMomentForbidden": "Không có quyền khôi phục moment",
+    "restoreMomentSuccess": "Khôi phục moment thành công"
   }
 }
