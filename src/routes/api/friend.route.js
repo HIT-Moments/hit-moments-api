@@ -26,5 +26,4 @@ friendRoute
   .route('/:friendId')
   .get(validate(friendValidation.getDetail), friendController.getDetail)
 
-
 module.exports = friendRoute;
