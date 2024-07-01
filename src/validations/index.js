@@ -5,4 +5,5 @@ module.exports = {
   feedbackValidation: require('./feedback.validation'),
   customValidation: require('./custom.validation'),
   momentValidation: require('./moment.validation'),
+  friendValidation: require('./friend.validation'),
 };
