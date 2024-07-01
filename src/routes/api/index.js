@@ -19,6 +19,10 @@ const routesApi = [
     path: '/feedbacks',
     route: require('./feedback.route'),
   },
+  {
+    path : '/friends',
+    route : require('./friend.route')
+  }
 ];
 
 routesApi.forEach((route) => {

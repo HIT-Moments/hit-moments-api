@@ -66,5 +66,12 @@
   },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"
+  },
+  "friend" : {
+    "notFound" : "Friend not found",
+    "createSuccess" : "Friend created successfully",
+    "getDetail" : "Get detail successfully",
+    "getList" : "Get list friends successfully",
+    "deleteSuccess" : "Delete friends successfully"
   }
 }

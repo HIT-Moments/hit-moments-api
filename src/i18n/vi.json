@@ -64,8 +64,14 @@
     "updateFeedback": "Cập nhập nhận xét thành công",
     "deleteSuccess": "Xóa nhận xét thành công"
   },
-  "reports": "reports",
   "custom": {
     "regexObjectId": "Id không đúng định dạng mongo"
+  },
+  "friend" : {
+    "notFound" : "Không tìm thấy Id người dùng",
+    "createSuccess" : "Tạo bạn bè thành công",
+    "getDetail" : "Lấy bạn bè thành công",
+    "getList" : "Lấy danh sách bạn bè thành công",
+    "deleteSuccess" : "Xoá danh sách bạn bè thành công"
   }
 }
