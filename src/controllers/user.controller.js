@@ -6,7 +6,8 @@ const { ApiError, catchAsync, formatEmail } = require('../utils');
 
 const createUser = catchAsync(async (req, res) => {
   const { email } = req.body;
-  const existingEmail = await User.findOne({ $or: [{ email }, { formattedEmail: formatEmail(email) }] });
+
+  const existingEmail = await User.findOne({ formattedEmail: formatEmail(email) });
 
   if (existingEmail) {
     throw new ApiError(httpStatus.CONFLICT, i18n.translate('user.emailExists'));

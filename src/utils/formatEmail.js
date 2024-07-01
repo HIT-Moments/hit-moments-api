@@ -8,8 +8,6 @@ const formatEmail = (email) => {
     domain = 'gmail.com';
   }
 
-  console.log(`${username}@${domain}`);
-
   return `${username}@${domain}`;
 };
 
