@@ -32,5 +32,5 @@ module.exports = {
   createFeedback,
   getFeedback,
   updateFeedbackById,
-  deleteFeedbackById
+  deleteFeedbackById,
 };

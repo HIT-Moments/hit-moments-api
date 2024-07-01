@@ -80,11 +80,11 @@
     "restoreMomentForbidden": "Không có quyền khôi phục moment",
     "restoreMomentSuccess": "Khôi phục moment thành công"
   },
-  "friend" : {
-    "notFound" : "Không tìm thấy Id người dùng",
-    "createSuccess" : "Tạo bạn bè thành công",
-    "getDetail" : "Lấy bạn bè thành công",
-    "getList" : "Lấy danh sách bạn bè thành công",
-    "deleteSuccess" : "Xoá danh sách bạn bè thành công"
+  "friend": {
+    "notFound": "Không tìm thấy Id người dùng",
+    "createSuccess": "Tạo bạn bè thành công",
+    "getDetail": "Lấy bạn bè thành công",
+    "getList": "Lấy danh sách bạn bè thành công",
+    "deleteSuccess": "Xoá danh sách bạn bè thành công"
   }
 }

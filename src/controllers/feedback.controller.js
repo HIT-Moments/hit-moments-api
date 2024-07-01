@@ -4,26 +4,26 @@ const { i18n } = require('../config');
 const { Feedback } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
-const createFeedback = catchAsync(async(req, res, next) => {
+const createFeedback = catchAsync(async (req, res, next) => {
   const userId = '662cf6c351d7d3424baea277';
   const { content } = req.body;
   const image = req.file ? req.file.path : null;
 
-  const feedback = await Feedback.create({userId, content, image});
-  
+  const feedback = await Feedback.create({ userId, content, image });
+
   res.json({
     message: i18n.translate('feedback.createSuccess'),
     statusCode: httpStatus.OK,
     data: {
       feedback,
-    }
+    },
   });
 });
 
-const getFeedback = catchAsync(async(req, res, next) => {
+const getFeedback = catchAsync(async (req, res, next) => {
   const feedback = await Feedback.findById(req.params.feedbackId);
 
-  if(!feedback){
+  if (!feedback) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate(feedback.notFound));
   }
 
@@ -32,11 +32,11 @@ const getFeedback = catchAsync(async(req, res, next) => {
     statusCode: httpStatus.OK,
     data: {
       feedback,
-    }
+    },
   });
 });
 
-const getallFeedback = catchAsync(async(req, res, next) => {
+const getallFeedback = catchAsync(async (req, res, next) => {
   const { limit = 10, page = 1, sortBy = 'createdAt : desc' } = req.query;
 
   const skip = (+page - 1) * +limit;
@@ -63,12 +63,12 @@ const getallFeedback = catchAsync(async(req, res, next) => {
   });
 });
 
-const updateFeedbackById = catchAsync(async(req, res, next) => {
+const updateFeedbackById = catchAsync(async (req, res, next) => {
   const updateBody = req.body;
 
   const feedback = await Feedback.findById(req.params.feedbackId);
 
-  if(!feedback){
+  if (!feedback) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('feedback.notFound'));
   }
 
@@ -89,11 +89,11 @@ const updateFeedbackById = catchAsync(async(req, res, next) => {
   });
 });
 
-const deleteFeedbackById = catchAsync(async(req, res, next) => {
+const deleteFeedbackById = catchAsync(async (req, res, next) => {
   const feedback = await Feedback.findByIdAndDelete(req.params.feedbackId);
 
-  if(!feedback) {
-     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('feedback.notFound'));
+  if (!feedback) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('feedback.notFound'));
   }
 
   res.json({
@@ -101,11 +101,11 @@ const deleteFeedbackById = catchAsync(async(req, res, next) => {
     statusCode: httpStatus.OK,
     data: {
       feedback,
-    }
+    },
   });
 });
 
-module.exports = { 
+module.exports = {
   createFeedback,
   getallFeedback,
   updateFeedbackById,

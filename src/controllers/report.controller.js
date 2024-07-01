@@ -7,7 +7,7 @@ const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createReport = catchAsync(async (req, res, next) => {
   const reportExisting = await Report.findById(req.params.reportId);
-  if(reportExisting){
+  if (reportExisting) {
     throw new ApiError(https.CONFLICT, i18n.translate('report.existed'));
   }
   req.body.userId = '662cf6c351d7d3424baea277';
