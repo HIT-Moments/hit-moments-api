@@ -2,15 +2,18 @@ const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
 const { User } = require('../models');
-const { ApiError, catchAsync } = require('../utils');
+const { ApiError, catchAsync, formatEmail } = require('../utils');
 
 const createUser = catchAsync(async (req, res) => {
-  const existingEmail = await User.findOne({ email: req.body.email });
+  const { email } = req.body;
+
+  const existingEmail = await User.findOne({ formattedEmail: formatEmail(email) });
+
   if (existingEmail) {
     throw new ApiError(httpStatus.CONFLICT, i18n.translate('user.emailExists'));
   }
 
-  const user = await User.create(req.body);
+  const user = await User.create({ ...req.body, formattedEmail: formatEmail(email) });
 
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
