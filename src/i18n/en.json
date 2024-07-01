@@ -79,5 +79,12 @@
     "restoreMomentBadRequest": "Moment is not deleted",
     "restoreMomentForbidden": "You are not allowed to restore this moment",
     "restoreMomentSuccess": "Restore moment successfully"
+  },
+  "friend" : {
+    "notFound" : "Friend not found",
+    "createSuccess" : "Friend created successfully",
+    "getDetail" : "Get detail successfully",
+    "getList" : "Get list friends successfully",
+    "deleteSuccess" : "Delete friends successfully"
   }
 }
