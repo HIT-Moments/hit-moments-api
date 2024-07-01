@@ -1,3 +1,5 @@
+const ejs = require('ejs');
+const path = require('path');
 const nodeMailer = require('nodemailer');
 
 const { env, email } = require('../config');
@@ -24,18 +26,19 @@ const sendEmail = async (to, subject, html) => {
   return transporter.sendMail(options);
 };
 
-const sendVerificationEmail = async (user, token) => {
-  const subject = 'Email Verification';
-  const html = `<p>Hello ${user.fullname}</p><br><p>Click <a href="${env.apiUrl}/auth/verify?token=${token}">here</a> to verify your email.</p>`;
-  const to = user.email;
+const sendVerificationEmail = async (data) => {
+  data.link = `${env.apiUrl}/auth/verify?token=${data.token}`;
+  const to = data?.user.email;
+  const subject = 'Xác minh email';
+  const html = await ejs.renderFile(path.join(__dirname, '../templates/email-verification.ejs'), { data });
 
   return sendEmail(to, subject, html);
 };
 
-const sendOtpEmail = async (user, otp) => {
-  const subject = 'OTP Verification';
-  const html = `<p>Hello ${user.fullname}</p><br><p>Your OTP is ${otp}</p>`;
-  const to = user.email;
+const sendOtpEmail = async (data) => {
+  const to = data?.user.email;
+  const subject = 'Mã xác minh';
+  const html = await ejs.renderFile(path.join(__dirname, '../templates/otp.ejs'), { data });
 
   return sendEmail(to, subject, html);
 };

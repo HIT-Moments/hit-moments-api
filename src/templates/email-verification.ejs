@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body>
+    <table style="font-family: sans-serif; margin: 0 auto; max-width: 600px; padding: 20px">
+      <tr align="center">
+        <td style="color: #ff802b; font-size: 52px; font-weight: bold">HIT MOMENTS</td>
+      </tr>
+      <tr align="center">
+        <td>
+          <img
+            src="https://i.ibb.co/SNy96BV/istockphoto-1357207733-612x612-removebg-preview.png"
+            alt=""
+            style="width: 200px"
+          />
+        </td>
+      </tr>
+      <tr align="center">
+        <td style="font-size: 32px">Xác minh email của bạn</td>
+      </tr>
+      <br />
+      <tr>
+        <td style="font-size: 18px; padding: 8px 0">
+          Xin chào <strong><%= data.user.fullname %></strong> đã đến với HIT MOMENTS.
+        </td>
+      </tr>
+      <tr>
+        <td style="font-size: 18px; padding: 8px 0">
+          Để hoàn tất quá trình đăng ký, vui lòng xác minh email của bạn bằng cách nhấn vào nút bên dưới.
+        </td>
+      </tr>
+      <tr align="center">
+        <td style="padding: 8px 0">
+          <button
+            style="
+              padding: 10px 20px;
+              background-color: #ff802b;
+              color: white;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+            "
+          >
+            <a href="<%= data.link %>" style="text-decoration: none; color: white; font-size: 20px">Xác minh email</a>
+          </button>
+        </td>
+      </tr>
+      <tr>
+        <td style="font-size: 18px; padding: 8px 0">Nếu bạn không thực hiện yêu cầu này, vui lòng bỏ qua email này.</td>
+      </tr>
+      <tr>
+        <td style="font-size: 18px; padding: 8px 0">
+          Nếu bạn có bất kỳ câu hỏi nào, hãy liên hệ với chúng tôi theo địa chỉ email:
+          <a href="mailto:info.hitmoments@gmail.com" style="color: #ff802b">info.hitmoments&#64;gmail.com</a>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
