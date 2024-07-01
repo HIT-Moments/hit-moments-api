@@ -3,19 +3,20 @@ const httpStatus = require('http-status');
 
 const { User } = require('../models');
 const { i18n, env } = require('../config');
-const { ApiError, catchAsync } = require('../utils');
+const { ApiError, catchAsync, formatEmail } = require('../utils');
 const { generateOtp, sendOtpEmail, sendVerificationEmail } = require('../services/');
 
 const register = catchAsync(async (req, res) => {
-  const existingEmail = await User.findOne({ email: req.body.email });
+  const { email } = req.body;
+  const existingEmail = await User.findOne({ $or: [{ email }, { formattedEmail: formatEmail(email) }] });
 
   if (existingEmail) {
     throw new ApiError(httpStatus.CONFLICT, i18n.translate('auth.emailExists'));
   }
 
-  const user = await User.create(req.body);
+  const user = await User.create({ ...req.body, formattedEmail: formatEmail(email) });
 
-  const token = generateEmailToken({ email: user.email });
+  const token = generateEmailToken({ email });
   sendVerificationEmail({ user, token });
 
   res.status(httpStatus.CREATED).json({
@@ -54,7 +55,7 @@ const verifyEmail = catchAsync(async (req, res) => {
 const resendVerificationEmail = catchAsync(async (req, res) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ $or: [{ email }, { formattedEmail: formatEmail(email) }] });
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.userNotFound'));
@@ -89,7 +90,7 @@ const resendVerificationEmail = catchAsync(async (req, res) => {
 const login = catchAsync(async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ $or: [{ email }, { formattedEmail: formatEmail(email) }] }).select('+password');
 
   if (!user || !(await user.isPasswordMatch(password))) {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.invalidCredentials'));
@@ -162,7 +163,7 @@ const changePassword = catchAsync(async (req, res) => {
 const forgotPassword = catchAsync(async (req, res) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ $or: [{ email }, { formattedEmail: formatEmail(email) }] });
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.userNotFound'));
@@ -186,7 +187,7 @@ const forgotPassword = catchAsync(async (req, res) => {
 const verifyOtp = catchAsync(async (req, res) => {
   const { email, otp } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ $or: [{ email }, { formattedEmail: formatEmail(email) }] });
 
   if (!user) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('auth.userNotFound'));
