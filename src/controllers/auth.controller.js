@@ -16,7 +16,7 @@ const register = catchAsync(async (req, res) => {
   const user = await User.create(req.body);
 
   const token = generateEmailToken({ email: user.email });
-  sendVerificationEmail(user, token);
+  sendVerificationEmail({ user, token });
 
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
@@ -74,7 +74,7 @@ const resendVerificationEmail = catchAsync(async (req, res) => {
   }
 
   const token = generateEmailToken({ email: user.email });
-  sendVerificationEmail(user, token);
+  sendVerificationEmail({ user, token });
 
   user.lastVerificationEmailSentAt = now;
   await user.save();
@@ -169,7 +169,7 @@ const forgotPassword = catchAsync(async (req, res) => {
   }
 
   const otp = generateOtp();
-  sendOtpEmail(user, otp);
+  sendOtpEmail({ user, otp });
 
   const now = new Date();
   user.otp = otp;
