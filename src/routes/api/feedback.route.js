@@ -10,7 +10,6 @@ userRoute
   .route('/')
   .post(upload.single('image'), validate(feedbackValidation.createFeedback), feedbackController.createFeedback)
   .get(feedbackController.getallFeedback);
-  
 
 userRoute
   .route('/:feedbackId')
