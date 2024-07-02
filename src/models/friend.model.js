@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const friendSchema = new mongoose.Schema(
   {
-    userId : {
+    userId: {
       type: Schema.Types.ObjectId,
     },
     friendList: [
