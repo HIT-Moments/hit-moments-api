@@ -1,5 +1,6 @@
 const { env } = require('../config/');
 const { User } = require('../models/');
+const formatEmail = require('./formatEmail');
 const { USER_ROLE } = require('../constants');
 
 async function initAdmin() {
@@ -12,6 +13,7 @@ async function initAdmin() {
     if (admin) {
       admin.fullname = fullname;
       admin.password = password;
+      admin.formattedEmail = formatEmail(email);
       admin.role = USER_ROLE.ADMIN;
       admin.isVerified = true;
     } else {
