@@ -3,5 +3,5 @@ module.exports = {
   Report: require('./report.model'),
   Feedback: require('./feedback.model'),
   Moment: require('./moment.model'),
-  Friend : require('./friend.model'),
+  Friend: require('./friend.model'),
 };
