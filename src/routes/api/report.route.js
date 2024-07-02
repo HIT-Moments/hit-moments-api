@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { validate , auth ,author } = require('../../middlewares');
+const { validate, auth, author } = require('../../middlewares');
 const { reportValidation } = require('../../validations');
 const { reportController } = require('../../controllers');
 

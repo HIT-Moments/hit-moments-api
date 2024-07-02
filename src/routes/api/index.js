@@ -23,6 +23,10 @@ const routesApi = [
     path: '/moments',
     route: require('./moment.route'),
   },
+  {
+    path: '/friends',
+    route: require('./friend.route'),
+  },
 ];
 
 routesApi.forEach((route) => {
