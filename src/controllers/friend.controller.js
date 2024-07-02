@@ -1,12 +1,13 @@
 const https = require('http-status');
 
 const { i18n } = require('../config');
-const { Friend } = require('../models');
+const { Friend ,User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createFriend = catchAsync(async (req, res, next) => {
-  req.body.userId = '662cf6c351d7d3424baea277';
+  const userId = User._id;
+  req.body.userId = userId;
   const friend = await Friend.create(req.body);
   return res.status(https.CREATED).json({
     message: i18n.translate('friend.createSuccess'),
