@@ -5,7 +5,7 @@ const httpStatus = require('http-status');
 
 const apiRoute = require('./routes/api');
 const { initAdmin } = require('./utils');
-const { env, i18n } = require('./config');
+const { env, i18n, cronJobs } = require('./config');
 const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
@@ -36,6 +36,8 @@ app.all('*', (req, res) => {
 
 app.use(errorConverter);
 app.use(errorHandler);
+
+cronJobs;
 
 mongoose
   .connect(env.mongoURI)
