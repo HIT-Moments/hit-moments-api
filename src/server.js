@@ -1,3 +1,4 @@
+const cors = require('cors');
 const morgan = require('morgan');
 const express = require('express');
 const mongoose = require('mongoose');
@@ -12,10 +13,18 @@ const app = express();
 
 app.use(express.json());
 
-if (env.nodeEnv === 'development') {
+app.use(cors());
+
+const isProduction = env.nodeEnv === 'production';
+const isDevelopment = env.nodeEnv === 'development';
+
+if (isDevelopment) {
   app.use(morgan('dev'));
   mongoose.set('debug', true);
 }
+
+const apiBasePath = isProduction ? '/v1' : '/api/v1';
+app.use(apiBasePath, apiRoute);
 
 app.use((req, res, next) => {
   next(i18n.setLocale(req));
@@ -24,8 +33,6 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
-
-app.use('/api/v1', apiRoute);
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
