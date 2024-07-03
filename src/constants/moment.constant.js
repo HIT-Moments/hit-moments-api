@@ -1,0 +1,5 @@
+const DELETED_MOMENT_EXPIRE_DATE = 30;
+
+module.exports = {
+  DELETED_MOMENT_EXPIRE_DATE,
+};
