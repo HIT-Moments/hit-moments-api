@@ -21,7 +21,7 @@ const getReaction = catchAsync(async (req, res, next) => {
   const reactions = await React.find({ postId: req.params.postId });
 
   if (!reactions) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound')); //#TODO : add error message key  for not found  post.notFound  or something like that.  for example.  post.notFound = 'Post not found'  in en.json file.   //#TODO : also add error handling for other error cases like database error etc.   //#TODO : consider adding pagination for reactions.  //#TODO : add rate limiting for reactions.  //#TODO : add checks for valid postId.  //#TODO : add checks for valid userId.  //#TODO : add checks for valid reaction type.  //#TODO : add checks for valid reaction value.  //#TODO : add checks for valid reaction timestamp.  //#TODO : add checks for valid reaction comment.  //#TODO : add checks for valid reaction user.  //#TODO :
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound')); 
   }
 
   res.status(httpStatus.OK).json({
