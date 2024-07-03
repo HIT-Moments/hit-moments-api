@@ -5,4 +5,5 @@ module.exports = {
   feedbackController: require('./feedback.controller'),
   momentController: require('./moment.controller'),
   friendController: require('./friend.controller'),
+  reactController: require('./react.controller'),
 };
