@@ -3,17 +3,28 @@ const joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const createFriend = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
+  }),
   body: joi.object({
-    userId: joi.string().required().custom(objectId),
     friendList: joi.array(),
     friendRequest: joi.array(),
     blockList: joi.array(),
   }),
-};
+}
 
-const getDetail = {
+const sendRequest = {
   params: joi.object({
-    friendId: joi.string().required().custom(objectId),
+    userId: joi.string().required().custom(objectId),
+  }),
+  body : joi.object({
+    email : joi.string().required(),
+  }) 
+}
+
+const listReceivedRequests = {
+  params: joi.object({
+    userId: joi.string().required().custom(objectId),
   }),
 };
 
@@ -33,7 +44,8 @@ const deleteFriend = {
 
 module.exports = {
   createFriend,
-  getDetail,
+  sendRequest,
+  listReceivedRequests,
   getList,
   deleteFriend,
 };

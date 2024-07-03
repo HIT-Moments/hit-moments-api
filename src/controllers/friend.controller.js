@@ -2,29 +2,65 @@ const https = require('http-status');
 
 const { i18n } = require('../config');
 const { ApiError, catchAsync } = require('../utils');
-const { Friend, User } = require('../models');
+const { Friend , User} = require('../models');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
-const createFriend = catchAsync(async (req, res, next) => {
-  const userId = User._id;
-  req.body.userId = userId;
-  const friend = await Friend.create(req.body);
+const createFriend = catchAsync(async(req , res , next) => {
+  const userId = req.user._id;
+  const friend = await Friend.create({userId});
+
   return res.status(https.CREATED).json({
     message: i18n.translate('friend.createSuccess'),
     statusCode: https.CREATED,
     data: {
       friend,
     },
-  });
+  })
+})
+
+const sendRequest = catchAsync(async (req ,res) => {
+  const senderId = req.user._id;
+  const {email} = req.body;
+ 
+  const receiver = await User.findOne({email});
+
+  if(!receiver) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  }
+
+  const {friendList , friendRequest , blockList} = await Friend.findOne({userId : senderId})
+
+  if(friendList.includes(receiver._id)){
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
+  }
+
+  if(friendRequest.includes(receiver._id)){
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyRequest'));
+  }
+
+  if(blockList.includes(receiver._id)){
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyBlock'));
+  }
+
+  friendRequest.push(receiver._id);
+  await Friend.findOneAndUpdate({userId : senderId}, { friendRequest });
+
+  res.json({
+    message: i18n.translate('friend.sendRequestSuccess'),
+    statusCode: https.OK,
+    data: {},
+  })
+
 });
 
-const getDetail = catchAsync(async (req, res, next) => {
-  const friend = await Friend.findById(req.params.friendId);
+const listReceivedRequests = catchAsync(async (req, res, next) => {
+  const userId  = req.params.userId;
+  const friend = await Friend.findById(userId).populate('friendRequest', 'username email');
   if (!friend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
   res.json({
-    message: i18n.translate('friend.getDetail'),
+    message: i18n.translate('friend.listReceivedRequests'),
     statusCode: https.OK,
     data: {
       friend,
@@ -64,9 +100,11 @@ const deleteFriend = catchAsync(async (req, res, next) => {
   });
 });
 
+
 module.exports = {
   createFriend,
-  getDetail,
+  sendRequest,
   getList,
   deleteFriend,
+  listReceivedRequests,
 };
