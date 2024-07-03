@@ -12,13 +12,16 @@ const app = express();
 
 app.use(express.json());
 
-if (env.nodeEnv === 'development') {
+const isProduction = env.nodeEnv === 'production';
+const isDevelopment = env.nodeEnv === 'development';
+
+if (isDevelopment) {
   app.use(morgan('dev'));
   mongoose.set('debug', true);
-  app.use('/api/v1', apiRoute);
-} else if (env.nodeEnv === 'production') {
-  app.use('/v1', apiRoute);
 }
+
+const apiBasePath = isProduction ? '/v1' : '/api/v1';
+app.use(apiBasePath, apiRoute);
 
 app.use((req, res, next) => {
   next(i18n.setLocale(req));
