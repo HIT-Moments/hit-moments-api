@@ -15,6 +15,9 @@ app.use(express.json());
 if (env.nodeEnv === 'development') {
   app.use(morgan('dev'));
   mongoose.set('debug', true);
+  app.use('/api/v1', apiRoute);
+} else if (env.nodeEnv === 'production') {
+  app.use('/v1', apiRoute);
 }
 
 app.use((req, res, next) => {
@@ -24,8 +27,6 @@ app.use((req, res, next) => {
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
 });
-
-app.use('/api/v1', apiRoute);
 
 app.all('*', (req, res) => {
   res.status(httpStatus.NOT_FOUND).send({
