@@ -43,6 +43,14 @@ const sendOtpEmail = async (data) => {
   return sendEmail(to, subject, html);
 };
 
+const sendBirthdayEmail = async (data) => {
+  const to = data?.user.email;
+  const subject = 'Chúc mừng sinh nhật! 🎉';
+  const html = await ejs.renderFile(path.join(__dirname, '../templates/birthday-email.ejs'), { data });
+
+  return sendEmail(to, subject, html);
+};
+
 const generateOtp = () => {
   return Math.floor(1000 + Math.random() * 9000).toString();
 };
@@ -52,4 +60,5 @@ module.exports = {
   generateOtp,
   sendOtpEmail,
   sendVerificationEmail,
+  sendBirthdayEmail,
 };

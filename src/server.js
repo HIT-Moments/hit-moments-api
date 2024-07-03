@@ -4,8 +4,8 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 
 const apiRoute = require('./routes/api');
-const { initAdmin } = require('./utils');
 const { env, i18n } = require('./config');
+const { initAdmin, scheduleTasks } = require('./utils');
 const { errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
@@ -46,6 +46,7 @@ mongoose
   })
   .then(() => {
     app.listen(env.port, () => {
+      scheduleTasks();
       console.log(`Server is running on port ${env.port}!`);
     });
   })
