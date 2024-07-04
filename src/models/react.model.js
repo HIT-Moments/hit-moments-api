@@ -15,9 +15,10 @@ const reactSchema = new mongoose.Schema(
         required: true,
       },
     ],
-    postId: {
+    momentId: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: 'Post',
     },
   },
   {

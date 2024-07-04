@@ -1,13 +1,26 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
-const { React } = require('../models');
+const { React, Moment } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
-const createReaction = catchAsync(async (req, res, next) => {
+const sendReaction = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  //#TODO : check post
-  const reaction = await React.create({ userId, ...req.body });
+  const momentId = req.body.momentId;
+  const momentExisting = await Moment.findById(momentId);
+  if (!momentExisting) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
+  const reaction = await React.findOne({ userId, momentId });
+
+  if (reaction) {
+    reaction.react.push(req.body.react);
+    await reaction.save();
+  } else {
+    reaction = await React.create({ userId, ...req.body });
+  }
+
   return res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
     message: i18n.translate('react.createSuccess'),
@@ -18,10 +31,10 @@ const createReaction = catchAsync(async (req, res, next) => {
 });
 
 const getReaction = catchAsync(async (req, res, next) => {
-  const reactions = await React.find({postId : req.params.postId}).populate('userId', 'username email fullname');;
+  const reactions = await React.find({ momentId: req.params.momentId }).populate('userId' , 'fullname avatar').sort({react : -1});
   
   if (!reactions) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound')); 
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound'));
   }
 
   res.status(httpStatus.OK).json({
@@ -34,6 +47,6 @@ const getReaction = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  createReaction,
+  sendReaction,
   getReaction,
 };

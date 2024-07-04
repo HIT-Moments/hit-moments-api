@@ -87,7 +87,7 @@
     "getList": "Get list friends successfully",
     "deleteSuccess": "Delete friends successfully"
   },
-  "react" : {
+  "react": {
     "createSuccess": "React created successfully",
     "notFound": "Post not found",
     "getSuccess": "Get react successfully"

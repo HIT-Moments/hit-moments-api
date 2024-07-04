@@ -8,8 +8,8 @@ const reactRoute = express.Router();
 
 reactRoute.use(auth);
 
-reactRoute.route('/').post(validate(reactValidation.createReaction), reactController.createReaction);
+reactRoute.route('/').post(validate(reactValidation.sendReaction), reactController.sendReaction);
 
-reactRoute.route('/:postId').get(validate(reactValidation.getReaction), reactController.getReaction);
+reactRoute.route('/:momentId').get(validate(reactValidation.getReaction), reactController.getReaction);
 
 module.exports = reactRoute;
