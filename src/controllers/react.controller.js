@@ -6,16 +6,14 @@ const { ApiError, catchAsync } = require('../utils');
 
 const sendReaction = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const { momentId } = req.body;
+  const { momentId, react } = req.body;
   const momentExisting = await Moment.findById(momentId);
   if (!momentExisting) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
-
   const reaction = await React.findOne({ userId, momentId });
-
   if (reaction) {
-    reaction.reacts.push(req.body.react);
+    reaction.reacts.push(react);
     await reaction.save();
   } else {
     reaction = await React.create({ userId, ...req.body });
@@ -32,7 +30,7 @@ const sendReaction = catchAsync(async (req, res, next) => {
 
 const getReaction = catchAsync(async (req, res, next) => {
   const { momentId } = req.params;
-  const reactions = await React.find({ momentId }).populate('userId', 'fullname avatar').sort({ react: -1 });
+  const reactions = await React.find({ momentId }).populate('userId', 'fullname avatar').sort({ reacts: 1 });
 
   if (!reactions) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound'));
