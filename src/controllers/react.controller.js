@@ -15,7 +15,7 @@ const sendReaction = catchAsync(async (req, res, next) => {
   const reaction = await React.findOne({ userId, momentId });
 
   if (reaction) {
-    reaction.react.push(req.body.react);
+    reaction.reacts.push(req.body.react);
     await reaction.save();
   } else {
     reaction = await React.create({ userId, ...req.body });

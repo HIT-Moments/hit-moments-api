@@ -9,7 +9,7 @@ const reactSchema = new mongoose.Schema(
       required: true,
       ref: 'User',
     },
-    react: [
+    reacts: [
       {
         type: String,
         required: true,
