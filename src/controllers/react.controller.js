@@ -18,9 +18,9 @@ const createReaction = catchAsync(async (req, res, next) => {
 });
 
 const getReaction = catchAsync(async (req, res, next) => {
-  const reactions = await React.find({postId : req.params.postId});
-
-  if (!reactions || reactions.length === 0) {
+  const reactions = await React.find({postId : req.params.postId}).populate('userId', 'username email fullname');;
+  
+  if (!reactions) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound')); 
   }
 
