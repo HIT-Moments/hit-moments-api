@@ -4,4 +4,5 @@ module.exports = {
   ...require('./report.constant'),
   ...require('./moment.constant'),
   ...require('./cron-job.constant'),
+  ...require('./rate-limit.constant'),
 };

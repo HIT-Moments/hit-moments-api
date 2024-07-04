@@ -1,19 +1,25 @@
 const cors = require('cors');
 const morgan = require('morgan');
+const helmet = require('helmet');
 const express = require('express');
 const mongoose = require('mongoose');
 const httpStatus = require('http-status');
+const compression = require('compression');
+const mongoSanitize = require('express-mongo-sanitize');
 
 const apiRoute = require('./routes/api');
 const { env, i18n } = require('./config');
 const { initAdmin, scheduleTasks } = require('./utils');
-const { errorConverter, errorHandler } = require('./middlewares');
+const { xss, rateLimit, errorConverter, errorHandler } = require('./middlewares');
 
 const app = express();
-
+app.use(rateLimit());
 app.use(express.json());
-
 app.use(cors());
+app.use(xss);
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(compression());
 
 const isProduction = env.nodeEnv === 'production';
 const isDevelopment = env.nodeEnv === 'development';
