@@ -86,5 +86,10 @@
     "getDetail": "Get detail successfully",
     "getList": "Get list friends successfully",
     "deleteSuccess": "Delete friends successfully"
+  },
+  "react" : {
+    "createSuccess": "React created successfully",
+    "notFound": "Post not found",
+    "getSuccess": "Get react successfully"
   }
 }

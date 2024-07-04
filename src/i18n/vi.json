@@ -86,5 +86,10 @@
     "getDetail": "Lấy bạn bè thành công",
     "getList": "Lấy danh sách bạn bè thành công",
     "deleteSuccess": "Xoá danh sách bạn bè thành công"
+  },
+  "react" : {
+    "createSuccess": "Gửi cảm xúc thành công",
+    "notFound": "Không tìm thấy bài viết",
+    "getSuccess": "Lấy danh sách cảm xúc thành công"
   }
 }

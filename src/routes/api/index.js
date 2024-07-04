@@ -27,6 +27,10 @@ const routesApi = [
     path: '/friends',
     route: require('./friend.route'),
   },
+  {
+    path: '/reacts',
+    route: require('./react.route'),
+  },
 ];
 
 routesApi.forEach((route) => {

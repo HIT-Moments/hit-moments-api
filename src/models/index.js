@@ -4,4 +4,5 @@ module.exports = {
   Feedback: require('./feedback.model'),
   Moment: require('./moment.model'),
   Friend: require('./friend.model'),
+  React: require('./react.model'),
 };

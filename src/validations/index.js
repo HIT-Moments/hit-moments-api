@@ -6,4 +6,5 @@ module.exports = {
   customValidation: require('./custom.validation'),
   momentValidation: require('./moment.validation'),
   friendValidation: require('./friend.validation'),
+  reactValidation: require('./react.validation'),
 };
