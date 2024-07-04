@@ -8,10 +8,13 @@ const sendReaction = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { momentId, react } = req.body;
   const momentExisting = await Moment.findById(momentId);
+
   if (!momentExisting) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
-  const reaction = await React.findOne({ userId, momentId });
+
+  let reaction = await React.findOne({ userId, momentId });
+
   if (reaction) {
     reaction.reacts.push(react);
     await reaction.save();
@@ -30,6 +33,19 @@ const sendReaction = catchAsync(async (req, res, next) => {
 
 const getReaction = catchAsync(async (req, res, next) => {
   const { momentId } = req.params;
+
+  const userId = req.user._id;
+
+  const moment = await Moment.findById(momentId);
+
+  if (!moment) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.notFound'));
+  }
+
+  if (moment.userId.toString() !== userId.toString()) {
+    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('auth.forbidden'));
+  }
+
   const reactions = await React.find({ momentId }).populate('userId', 'fullname avatar').sort({ reacts: 1 });
 
   if (!reactions) {
