@@ -18,7 +18,7 @@ const createReaction = catchAsync(async (req, res, next) => {
 });
 
 const getReaction = catchAsync(async (req, res, next) => {
-  const reactions = await React.find({ postId: req.params.postId });
+  const reactions = await React.findOne({postId : req.params.postId});
 
   if (!reactions) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound')); 
