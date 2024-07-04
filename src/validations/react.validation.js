@@ -1,20 +1,20 @@
 const joi = require('joi');
 const { objectId } = require('./custom.validation');
 
-const createReaction = {
+const sendReaction = {
   body: joi.object({
     react: joi.string().required(),
-    postId: joi.string().required().custom(objectId),
+    momentId: joi.string().required().custom(objectId),
   }),
 };
 
 const getReaction = {
   params: joi.object({
-    postId: joi.string().required().custom(objectId),
+    momentId: joi.string().required().custom(objectId),
   }),
 };
 
 module.exports = {
-  createReaction,
+  sendReaction,
   getReaction,
 };

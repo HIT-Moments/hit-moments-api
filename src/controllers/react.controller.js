@@ -1,13 +1,27 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
-const { React } = require('../models');
+const { React, Moment } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
-const createReaction = catchAsync(async (req, res, next) => {
+const sendReaction = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  //#TODO : check post
-  const reaction = await React.create({ userId, ...req.body });
+  const { momentId, react } = req.body;
+  const momentExisting = await Moment.findById(momentId);
+
+  if (!momentExisting) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
+  let reaction = await React.findOne({ userId, momentId });
+
+  if (reaction) {
+    reaction.reacts.push(react);
+    await reaction.save();
+  } else {
+    reaction = await React.create({ userId, ...req.body });
+  }
+
   return res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
     message: i18n.translate('react.createSuccess'),
@@ -18,10 +32,24 @@ const createReaction = catchAsync(async (req, res, next) => {
 });
 
 const getReaction = catchAsync(async (req, res, next) => {
-  const reactions = await React.find({ postId: req.params.postId });
+  const { momentId } = req.params;
+
+  const userId = req.user._id;
+
+  const moment = await Moment.findById(momentId);
+
+  if (!moment) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.notFound'));
+  }
+
+  if (moment.userId.toString() !== userId.toString()) {
+    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('auth.forbidden'));
+  }
+
+  const reactions = await React.find({ momentId }).populate('userId', 'fullname avatar').sort({ reacts: 1 });
 
   if (!reactions) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound')); 
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('react.notFound'));
   }
 
   res.status(httpStatus.OK).json({
@@ -34,6 +62,6 @@ const getReaction = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  createReaction,
+  sendReaction,
   getReaction,
 };

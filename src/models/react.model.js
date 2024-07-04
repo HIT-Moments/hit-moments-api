@@ -9,15 +9,16 @@ const reactSchema = new mongoose.Schema(
       required: true,
       ref: 'User',
     },
-    react: [
+    reacts: [
       {
         type: String,
         required: true,
       },
     ],
-    postId: {
+    momentId: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: 'Post',
     },
   },
   {
