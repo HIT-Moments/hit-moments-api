@@ -3,7 +3,7 @@ const { objectId } = require('./custom.validation');
 
 const createReaction = {
   body: joi.object({
-    react: joi.string().required(),
+    react: joi.array().required(),
     postId: joi.string().required().custom(objectId),
   }),
 };
