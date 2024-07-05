@@ -12,7 +12,7 @@ const reportSchema = new mongoose.Schema(
     momentId: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref : 'Moment'
+      ref: 'Moment',
     },
     userId: {
       type: Schema.Types.ObjectId,

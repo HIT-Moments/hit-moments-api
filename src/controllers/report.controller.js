@@ -7,11 +7,11 @@ const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createReport = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const {momentId} = req.body;
+  const { momentId } = req.body;
 
-  const reportExisting = await Report.findOne({ userId : userId  , momentId : momentId});
-  const momentExisting = await Report.findOne({momentId : momentId});
-  
+  const momentExisting = await Report.findOne({ momentId: momentId });
+  const reportExisting = await Report.findOne({ userId: userId, momentId: momentId });
+
   if (!momentExisting) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
@@ -19,7 +19,7 @@ const createReport = catchAsync(async (req, res, next) => {
   if (reportExisting) {
     throw new ApiError(https.CONFLICT, i18n.translate('report.existed'));
   }
-  
+
   const report = await Report.create({ ...req.body, userId });
 
   return res.status(https.CREATED).json({
@@ -35,12 +35,12 @@ const getReportOfMoment = catchAsync(async (req, res, next) => {
   const momentId = req.params.momentId;
 
   const momentExisting = await Moment.findById(momentId);
-  const reportOfMoment = await Report.find({momentId: momentId});
-  
-  if(!momentExisting){
+  const reportOfMoment = await Report.find({ momentId: momentId });
+
+  if (!momentExisting) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
-  
+
   res.json({
     statusCode: https.OK,
     message: i18n.translate('report.getDetail'),

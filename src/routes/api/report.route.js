@@ -16,8 +16,6 @@ reportRoute.route('/').get(reportController.getList);
 
 reportRoute.route('/:momentId').get(validate(reportValidation.getReportOfMoment), reportController.getReportOfMoment);
 
-reportRoute
-  .route('/:reportId')
-  .delete(validate(reportValidation.deleteReport), reportController.deleteReport);
+reportRoute.route('/:reportId').delete(validate(reportValidation.deleteReport), reportController.deleteReport);
 
 module.exports = reportRoute;
