@@ -1,17 +1,27 @@
 const https = require('http-status');
 
 const { i18n } = require('../config');
-const { Report, User } = require('../models');
+const { Report, Moment } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createReport = catchAsync(async (req, res, next) => {
-  const reportExisting = await Report.findOne({ postId: req.body.postId, userId: req.user._id });
+  const userId = req.user._id;
+  const {momentId} = req.body;
+
+  const reportExisting = await Report.findOne({ userId : userId  , momentId : momentId});
+  const momentExisting = await Report.findOne({momentId : momentId});
+  
+  if (!momentExisting) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
   if (reportExisting) {
     throw new ApiError(https.CONFLICT, i18n.translate('report.existed'));
   }
-  const userId = req.user._id;
+  
   const report = await Report.create({ ...req.body, userId });
+
   return res.status(https.CREATED).json({
     statusCode: https.CREATED,
     message: i18n.translate('report.createSuccess'),
@@ -21,16 +31,21 @@ const createReport = catchAsync(async (req, res, next) => {
   });
 });
 
-const getDetail = catchAsync(async (req, res, next) => {
-  const report = await Report.findById(req.params.reportId);
-  if (!report) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('report.notFound'));
+const getReportOfMoment = catchAsync(async (req, res, next) => {
+  const momentId = req.params.momentId;
+
+  const momentExisting = await Moment.findById(momentId);
+  const reportOfMoment = await Report.find({momentId: momentId});
+  
+  if(!momentExisting){
+    throw new ApiError(https.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
+  
   res.json({
     statusCode: https.OK,
     message: i18n.translate('report.getDetail'),
     data: {
-      report,
+      reportOfMoment,
     },
   });
 });
@@ -71,7 +86,7 @@ const deleteReport = catchAsync(async (req, res, next) => {
 
 module.exports = {
   createReport,
-  getDetail,
+  getReportOfMoment,
   getList,
   deleteReport,
 };

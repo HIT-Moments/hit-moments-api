@@ -14,9 +14,10 @@ reportRoute.use(author(['admin']));
 
 reportRoute.route('/').get(reportController.getList);
 
+reportRoute.route('/:momentId').get(validate(reportValidation.getReportOfMoment), reportController.getReportOfMoment);
+
 reportRoute
   .route('/:reportId')
-  .get(validate(reportValidation.getDetail), reportController.getDetail)
   .delete(validate(reportValidation.deleteReport), reportController.deleteReport);
 
 module.exports = reportRoute;

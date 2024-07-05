@@ -9,13 +9,15 @@ const reportSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
-    postId: {
+    momentId: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref : 'Moment'
     },
     userId: {
       type: Schema.Types.ObjectId,
       required: true,
+      ref: 'User',
     },
   },
   {
