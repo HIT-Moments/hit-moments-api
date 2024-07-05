@@ -29,12 +29,12 @@ if (isDevelopment) {
   mongoose.set('debug', true);
 }
 
-const apiBasePath = isProduction ? '/v1' : '/api/v1';
-app.use(apiBasePath, apiRoute);
-
 app.use((req, res, next) => {
   next(i18n.setLocale(req));
 });
+
+const apiBasePath = isProduction ? '/v1' : '/api/v1';
+app.use(apiBasePath, apiRoute);
 
 app.get('/', (req, res) => {
   res.send('The server backend API for HIT Moments is running 🌱');
