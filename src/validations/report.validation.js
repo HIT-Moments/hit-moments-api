@@ -5,19 +5,19 @@ const { objectId } = require('./custom.validation');
 const createReport = {
   body: joi.object({
     description: joi.string().required(),
-    postId: joi.string().required().custom(objectId),
+    momentId: joi.string().required().custom(objectId),
   }),
 };
 
-const getDetail = {
+const getReportOfMoment = {
   params: joi.object({
-    reportId: joi.string().required().custom(objectId),
+    momentId: joi.string().required().custom(objectId),
   }),
 };
 
 const getList = {
   query: joi.object({
-    postId: joi.string().required(),
+    momentId: joi.string().required(),
     limit: joi.number().integer(),
     page: joi.number().integer(),
   }),
@@ -31,7 +31,7 @@ const deleteReport = {
 
 module.exports = {
   createReport,
-  getDetail,
+  getReportOfMoment,
   getList,
   deleteReport,
 };
