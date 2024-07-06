@@ -85,7 +85,14 @@
     "createSuccess": "Tạo bạn bè thành công",
     "getDetail": "Lấy bạn bè thành công",
     "getList": "Lấy danh sách bạn bè thành công",
-    "deleteSuccess": "Xoá danh sách bạn bè thành công"
+    "deleteSuccess": "Xoá danh sách bạn bè thành công",
+    "alreadyRequest": "Bạn đã gửi yêu cầu trước đó",
+    "friendRequestNotFound": "Không tìm thấy lời mời kết bạn",
+    "acceptRequestSuccess": "Chấp nhận lời mời kết bạn thành công",
+    "declineRequestSuccess": "Từ chối lời mời kết bạn thành công",
+    "requestNotFound" : "Không tìm thấy lời mời kết bạn",
+    "cannotSendRequestToSelf" : "Không thể gửi lời mời cho chính bản thân",
+    "notInList" : "Không nằm trong danh sách"
   },
   "react": {
     "createSuccess": "Gửi cảm xúc thành công",
