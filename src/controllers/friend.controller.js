@@ -73,7 +73,7 @@ const sendRequest = catchAsync(async (req, res, next) => {
 
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('friendRequest', 'username email fullname avatatr');
+  const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');
 
   if (!friend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
@@ -82,7 +82,7 @@ const listReceivedRequests = catchAsync(async (req, res, next) => {
   const friendRequests = friend.friendRequest;
 
   res.json({
-    message: i18n.translate('rateLimit.listReceivedRequests'),
+    message: i18n.translate('friend.listReceivedRequests'),
     statusCode: https.OK,
     data: { friendRequests },
   });
@@ -163,7 +163,7 @@ const getListFriends = catchAsync(async (req, res, next) => {
   const listFriends = friend.friendList;
   const totaFriends = friend.friendList.length;
   res.json({
-    message: i18n.translate('rateLimit.listReceivedRequests'),
+    message: i18n.translate('friend.getListFriends'),
     statusCode: https.OK,
     data: {
       listFriends,
@@ -266,7 +266,7 @@ const unblockFriend = catchAsync(async (req, res, next) => {
 
 const getListBlock = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('blockList', 'username email fullname avatar');
+  const friend = await Friend.findOne({ userId }).populate('blockList', 'email fullname avatar');
 
   if (!friend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
