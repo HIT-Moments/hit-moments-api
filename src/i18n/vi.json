@@ -96,7 +96,12 @@
     "blockSuccess": "Chặn bạn bè thành công",
     "notBlocked": "Không có trong danh sách chặn",
     "unblockSuccess": "Mở chặn thành công",
-    "getListBlockSuccess": "Lấy danh sách bạn bè đã bị chặn thành công"
+    "getListBlockSuccess": "Lấy danh sách bạn bè đã bị chặn thành công",
+    "alreadyFriend": "Đã là bạn bè",
+    "alreadyBlock": "Đã trong danh sách chặn",
+    "sendRequestSuccess": "Gửi yêu cầu kết bạn thành công ",
+    "listReceivedRequests": "Lấy danh sách lời mời kết bạn thành công",
+    "getListFriends" : "Lấy danh sách bạn bè thành công"
   },
   "react": {
     "createSuccess": "Gửi cảm xúc thành công",
@@ -104,10 +109,6 @@
     "getSuccess": "Lấy danh sách cảm xúc thành công"
   },
   "rateLimit": {
-    "tooManyRequests": "Quá nhiều yêu cầu, vui lòng thử lại sau",
-    "alreadyFriend": "Đã là bạn bè",
-    "alreadyBlock": "Đã trong danh sách chặn",
-    "sendRequestSuccess": "Gửi yêu cầu kết bạn thành công ",
-    "listReceivedRequests": "Lấy danh sách gửi lời mời kết bạn thành công"
+    "tooManyRequests": "Quá nhiều yêu cầu, vui lòng thử lại sau"
   }
 }

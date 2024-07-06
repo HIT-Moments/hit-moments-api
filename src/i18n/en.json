@@ -97,7 +97,11 @@
     "blockSuccess": "Block successfully",
     "notBlocked": "Not blocked",
     "unblockSuccess": "Unblock successfully",
-    "getListBlockSuccess": "Get list block successfully"
+    "getListBlockSuccess": "Get list block successfully",
+    "alreadyBlock": "Already block",
+    "sendRequestSuccess": "Send request successfully",
+    "listReceivedRequests": "Get received requests successfully",
+    "getListFriends" : "Get list friends successfully"
   },
   "react": {
     "createSuccess": "React created successfully",
@@ -105,10 +109,6 @@
     "getSuccess": "Get react successfully"
   },
   "rateLimit": {
-    "tooManyRequests": "Too many requests, please try again later.",
-    "alreadyFriend": "Already friend",
-    "alreadyBlock": "Already block",
-    "sendRequestSuccess": "Send request successfully",
-    "listReceivedRequests": "Get received requests successfully"
+    "tooManyRequests": "Too many requests, please try again later."
   }
 }
