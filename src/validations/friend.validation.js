@@ -3,37 +3,82 @@ const joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const createFriend = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
+  }),
   body: joi.object({
-    userId: joi.string().required().custom(objectId),
     friendList: joi.array(),
     friendRequest: joi.array(),
     blockList: joi.array(),
   }),
 };
 
-const getDetail = {
+const searchUserByEmail = {
+  body: joi.object({
+    email: joi.string().required(),
+  }),
+}
+
+const sendRequest = {
   params: joi.object({
-    friendId: joi.string().required().custom(objectId),
+    userId: joi.string().custom(objectId),
+  }),
+  body: joi.object({
+    receiverId: joi.string().required().custom(objectId),
   }),
 };
 
-const getList = {
-  query: joi.object({
-    friendId: joi.string().required().custom(objectId),
-    limit: joi.number().integer(),
-    page: joi.number().integer(),
+const listReceivedRequests = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
+  }),
+};
+
+const acceptRequest = {
+  body: joi.object({
+    requesterId: joi.string().required().custom(objectId),
+  }),
+};
+
+const delinceRequest = {
+  body: joi.object({
+    requesterId: joi.string().required().custom(objectId),
+  }),
+};
+
+const getListFriends = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
   }),
 };
 
 const deleteFriend = {
-  params: joi.object({
+  body: joi.object({
+    friendId: joi.string().required().custom(objectId),
+  }),
+};
+
+const blockFriend = {
+  body: joi.object({
+    friendId: joi.string().required().custom(objectId),
+  }),
+};
+
+const unblockFriend = {
+  body: joi.object({
     friendId: joi.string().required().custom(objectId),
   }),
 };
 
 module.exports = {
   createFriend,
-  getDetail,
-  getList,
+  sendRequest,
+  listReceivedRequests,
   deleteFriend,
+  acceptRequest,
+  delinceRequest,
+  getListFriends,
+  blockFriend,
+  unblockFriend,
+  searchUserByEmail,
 };
