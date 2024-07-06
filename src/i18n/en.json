@@ -86,14 +86,18 @@
     "getDetail": "Get detail successfully",
     "getList": "Get list friends successfully",
     "deleteSuccess": "Delete friends successfully",
-    "alreadyRequest" : "Already send request before",
-    "alreadyFriend" : "You are already friend",
+    "alreadyRequest": "Already send request before",
+    "alreadyFriend": "You are already friend",
     "friendRequestNotFound": "Friend request not found",
     "acceptRequestSuccess": "Accept request successfully",
     "declineRequestSuccess": "Delince request successfully",
-    "requestNotFound" : "Request not found",
-    "cannotSendRequestToSelf" : "Cannot send request to self",
-    "notInList" : "Not in list"
+    "requestNotFound": "Request not found",
+    "cannotSendRequestToSelf": "Cannot send request to self",
+    "notInList": "Not in list",
+    "blockSuccess": "Block successfully",
+    "notBlocked": "Not blocked",
+    "unblockSuccess": "Unblock successfully",
+    "getListBlockSuccess": "Get list block successfully"
   },
   "react": {
     "createSuccess": "React created successfully",
@@ -102,9 +106,9 @@
   },
   "rateLimit": {
     "tooManyRequests": "Too many requests, please try again later.",
-    "alreadyFriend" : "Already friend",
-    "alreadyBlock" : "Already block",
-    "sendRequestSuccess" : "Send request successfully",
-    "listReceivedRequests" : "Get received requests successfully"
+    "alreadyFriend": "Already friend",
+    "alreadyBlock": "Already block",
+    "sendRequestSuccess": "Send request successfully",
+    "listReceivedRequests": "Get received requests successfully"
   }
 }

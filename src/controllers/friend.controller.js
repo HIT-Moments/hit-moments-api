@@ -2,7 +2,7 @@ const https = require('http-status');
 
 const { i18n } = require('../config');
 const { ApiError, catchAsync } = require('../utils');
-const { Friend , User} = require('../models');
+const { Friend, User } = require('../models');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createFriend = catchAsync(async (req, res, next) => {
@@ -56,8 +56,8 @@ const sendRequest = catchAsync(async (req, res, next) => {
 
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId });
-  
+  const friend = await Friend.findOne({ userId }).populate('friendRequest', 'username email fullname avatatr');
+
   if (!friend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
@@ -82,8 +82,8 @@ const acceptRequest = catchAsync(async (req, res, next) => {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
-  const requestIndex = userFriend.friendRequest.findIndex(request => request._id.toString() === requesterId);
- 
+  const requestIndex = userFriend.friendRequest.findIndex((request) => request._id.toString() === requesterId);
+
   if (requestIndex === -1) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.requestNotFound'));
   }
@@ -134,8 +134,11 @@ const getListFriends = catchAsync(async (req, res, next) => {
   const query = {};
 
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).limit(limit).skip(skip).populate('friendList', 'username email fullname avatar');
-  
+  const friend = await Friend.findOne({ userId })
+    .limit(limit)
+    .skip(skip)
+    .populate('friendList', 'username email fullname avatar');
+
   if (!friend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
@@ -145,12 +148,12 @@ const getListFriends = catchAsync(async (req, res, next) => {
   res.json({
     message: i18n.translate('rateLimit.listReceivedRequests'),
     statusCode: https.OK,
-    data: { 
+    data: {
       listFriends,
       page: +page,
       limit: +limit,
       totalPages: Math.ceil(totaFriends / +limit),
-      totaFriends, 
+      totaFriends,
     },
   });
 });
@@ -160,7 +163,7 @@ const deleteFriend = catchAsync(async (req, res, next) => {
   const { friendId } = req.body;
 
   let userFriend = await Friend.findOne({ userId });
-  let friendFriend = await Friend.findOne({ userId : friendId });
+  let friendFriend = await Friend.findOne({ userId: friendId });
 
   if (!userFriend || !friendFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
@@ -185,7 +188,83 @@ const deleteFriend = catchAsync(async (req, res, next) => {
   });
 });
 
+const blockFriend = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  const { friendId } = req.body;
 
+  const userFriend = await Friend.findOne({ userId });
+  const friendFriend = await Friend.findOne({ userId: friendId });
+
+  if (!userFriend || !friendFriend) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  }
+
+  const userFriendIndex = userFriend.friendList.indexOf(friendId);
+  if (userFriendIndex !== -1) {
+    userFriend.friendList.splice(userFriendIndex, 1);
+  }
+
+  const friendFriendIndex = friendFriend.friendList.indexOf(userId);
+  if (friendFriendIndex !== -1) {
+    friendFriend.friendList.splice(friendFriendIndex, 1);
+  }
+
+  userFriend.blockList.push(friendId);
+
+  await userFriend.save();
+  await friendFriend.save();
+
+  res.json({
+    message: i18n.translate('friend.blockSuccess'),
+    statusCode: https.OK,
+    data: {},
+  });
+});
+
+const unblockFriend = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  const { friendId } = req.body;
+
+  const userFriend = await Friend.findOne({ userId });
+
+  if (!userFriend) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  }
+
+  const blockIndex = userFriend.blockList.indexOf(friendId);
+  if (blockIndex === -1) {
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.notBlocked'));
+  }
+
+  userFriend.blockList.splice(blockIndex, 1);
+
+  await userFriend.save();
+
+  res.json({
+    message: i18n.translate('friend.unblockSuccess'),
+    statusCode: https.OK,
+    data: {},
+  });
+});
+
+const getListBlock = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  const friend = await Friend.findOne({ userId }).populate('blockList', 'username email fullname avatar');
+
+  if (!friend) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  }
+
+  const listBlock = friend.blockList;
+
+  res.json({
+    message: i18n.translate('friend.getListBlockSuccess'),
+    statusCode: https.OK,
+    data: {
+      listBlock,
+    },
+  });
+});
 
 module.exports = {
   createFriend,
@@ -195,4 +274,7 @@ module.exports = {
   acceptRequest,
   delinceRequest,
   getListFriends,
+  blockFriend,
+  unblockFriend,
+  getListBlock,
 };

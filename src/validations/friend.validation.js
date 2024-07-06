@@ -11,16 +11,16 @@ const createFriend = {
     friendRequest: joi.array(),
     blockList: joi.array(),
   }),
-}
+};
 
 const sendRequest = {
   params: joi.object({
     userId: joi.string().custom(objectId),
   }),
-  body : joi.object({
-    email : joi.string().required(),
-  }) 
-}
+  body: joi.object({
+    email: joi.string().required(),
+  }),
+};
 
 const listReceivedRequests = {
   params: joi.object({
@@ -38,15 +38,27 @@ const delinceRequest = {
   body: joi.object({
     requesterId: joi.string().required().custom(objectId),
   }),
-}
+};
 
 const getListFriends = {
   params: joi.object({
     userId: joi.string().custom(objectId),
   }),
-}
+};
 
 const deleteFriend = {
+  body: joi.object({
+    friendId: joi.string().required().custom(objectId),
+  }),
+};
+
+const blockFriend = {
+  body: joi.object({
+    friendId: joi.string().required().custom(objectId),
+  }),
+};
+
+const unblockFriend = {
   body: joi.object({
     friendId: joi.string().required().custom(objectId),
   }),
@@ -60,4 +72,6 @@ module.exports = {
   acceptRequest,
   delinceRequest,
   getListFriends,
+  blockFriend,
+  unblockFriend,
 };

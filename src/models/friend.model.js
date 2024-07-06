@@ -10,19 +10,19 @@ const friendSchema = new mongoose.Schema(
     friendList: [
       {
         type: Schema.Types.ObjectId,
-        ref : 'User',
+        ref: 'User',
       },
     ],
     friendRequest: [
       {
         type: Schema.Types.ObjectId,
-        ref : 'User',
+        ref: 'User',
       },
     ],
     blockList: [
       {
         type: Schema.Types.ObjectId,
-        ref : 'User',
+        ref: 'User',
       },
     ],
   },
