@@ -154,7 +154,7 @@ const getListFriends = catchAsync(async (req, res, next) => {
   const friend = await Friend.findOne({ userId })
     .limit(limit)
     .skip(skip)
-    .populate('friendList', 'username email fullname avatar');
+    .populate('friendList', 'email fullname avatar');
 
   if (!friend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
