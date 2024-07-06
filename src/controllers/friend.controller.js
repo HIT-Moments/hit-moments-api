@@ -16,11 +16,27 @@ const createFriend = catchAsync(async (req, res, next) => {
   });
 });
 
-const sendRequest = catchAsync(async (req, res, next) => {
-  const senderId = req.user._id;
+const searchUserByEmail = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 
-  const receiver = await User.findOne({ email });
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('user.notFound'));
+  }
+
+  res.json({
+    message: i18n.translate('user.getUsersSuccess'),
+    statusCode: https.OK,
+    data: { user },
+  });
+});
+
+const sendRequest = catchAsync(async (req, res, next) => {
+  const senderId = req.user._id;
+  const { receiverId } = req.body;
+
+  const receiver = await User.findById(receiverId);
 
   if (receiver._id.equals(senderId)) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.cannotSendRequestToSelf'));
@@ -33,7 +49,7 @@ const sendRequest = catchAsync(async (req, res, next) => {
   let receiverFriend = await Friend.findOne({ userId: receiver._id });
 
   if (receiverFriend.friendList.includes(senderId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('rateLimit.alreadyFriend'));
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
   }
 
   if (receiverFriend.friendRequest.includes(senderId)) {
@@ -41,18 +57,19 @@ const sendRequest = catchAsync(async (req, res, next) => {
   }
 
   if (receiverFriend.blockList.includes(senderId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('rateLimit.alreadyBlock'));
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyBlocked'));
   }
 
   receiverFriend.friendRequest.push(senderId);
   await receiverFriend.save();
 
   res.json({
-    message: i18n.translate('rateLimit.sendRequestSuccess'),
+    message: i18n.translate('friend.sendRequestSuccess'),
     statusCode: https.OK,
     data: {},
   });
 });
+
 
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
@@ -277,4 +294,5 @@ module.exports = {
   blockFriend,
   unblockFriend,
   getListBlock,
+  searchUserByEmail,
 };

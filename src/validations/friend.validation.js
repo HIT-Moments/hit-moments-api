@@ -13,12 +13,18 @@ const createFriend = {
   }),
 };
 
+const searchUserByEmail = {
+  body: joi.object({
+    email: joi.string().required(),
+  }),
+}
+
 const sendRequest = {
   params: joi.object({
     userId: joi.string().custom(objectId),
   }),
   body: joi.object({
-    email: joi.string().required(),
+    receiverId: joi.string().required().custom(objectId),
   }),
 };
 
@@ -74,4 +80,5 @@ module.exports = {
   getListFriends,
   blockFriend,
   unblockFriend,
+  searchUserByEmail,
 };
