@@ -1,14 +1,14 @@
 const multer = require('multer');
 const httpStatus = require('http-status');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const { i18n } = require('../config');
 const { ApiError } = require('../utils');
+const { i18n, cloudinary } = require('../config');
 const { MAX_FILE_SIZE, TYPES_IMAGE_ALLOWED } = require('../constants');
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads');
-  },
+const storage = new CloudinaryStorage({
+  cloudinary,
+  allowedFormats: TYPES_IMAGE_ALLOWED,
   filename: (req, file, cb) => {
     const ext = file.originalname.split('.').pop();
     cb(null, `${file.fieldname}-${Date.now()}.${ext}`);
