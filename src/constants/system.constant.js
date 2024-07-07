@@ -8,10 +8,13 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 const TYPES_IMAGE_ALLOWED = ['image/png', 'image/jpg', 'image/jpeg'];
 
+const TYPES_AUDIO_ALLOWED = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/midi'];
+
 module.exports = {
   LOCALES,
   HEADER_NAME,
   LANGUAGE_DEFAULT,
   MAX_FILE_SIZE,
   TYPES_IMAGE_ALLOWED,
+  TYPES_AUDIO_ALLOWED,
 };
