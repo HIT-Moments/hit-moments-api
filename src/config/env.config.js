@@ -20,6 +20,11 @@ const env = {
   otpExpireTime: (+process.env.OTP_EXPIRE_TIME || 3) * 60 * 1000,
   jwtOtpSecret: process.env.JWT_OTP_SECRET || 'otp-hitmoments.com',
   jwtOtpExpire: process.env.JWT_OTP_EXPIRE || '5m',
+  tiktok: {
+    url: process.env.TIKTOK_URL,
+    token: process.env.TIKTOK_TOKEN,
+    cookie: process.env.TIKTOK_COOKIE,
+  },
 };
 
 module.exports = env;
