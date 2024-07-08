@@ -3,7 +3,7 @@ const path = require('path');
 const axios = require('axios');
 const FormData = require('form-data');
 
-const { env } = require('../config/');
+const { env, cloudinary } = require('../config/');
 const { downloadImage } = require('../helpers');
 
 const getConfig = (filePath) => {
@@ -39,7 +39,13 @@ const uploadToTiktok = async (url) => {
 
   fs.unlinkSync(filePath);
 
+  await cloudinary.uploader.destroy(getCloudinaryPublicId(url));
+
   return response.data.data.url;
+};
+
+const getCloudinaryPublicId = (url) => {
+  return url.split('/').pop().split('.')[0];
 };
 
 module.exports = { uploadToTiktok };
