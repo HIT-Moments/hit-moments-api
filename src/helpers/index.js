@@ -1,3 +1,3 @@
 module.exports = {
-  downloadImage: require('./download-image.helper'),
+  getImageBuffer: require('./getImageBuffer'),
 };

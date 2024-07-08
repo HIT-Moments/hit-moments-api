@@ -10,6 +10,8 @@ const TYPES_IMAGE_ALLOWED = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const TYPES_AUDIO_ALLOWED = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/midi'];
 
+const SAMPLE_IMAGE = 'https://res.cloudinary.com/dmb2dtl9a/image/upload/v1720458179/sample.png';
+
 module.exports = {
   LOCALES,
   HEADER_NAME,
@@ -17,4 +19,5 @@ module.exports = {
   MAX_FILE_SIZE,
   TYPES_IMAGE_ALLOWED,
   TYPES_AUDIO_ALLOWED,
+  SAMPLE_IMAGE,
 };

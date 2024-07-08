@@ -1,7 +1,7 @@
 const { cronJobs } = require('../config');
 const { User, Moment } = require('../models');
 const { sendBirthdayEmail, uploadToTiktok } = require('../services');
-const { DELETED_MOMENT_EXPIRE_DATE, CRON_JOB_TIME, UPLOAD_LOCATION } = require('../constants');
+const { DELETED_MOMENT_EXPIRE_DATE, CRON_JOB_TIME, UPLOAD_LOCATION, SAMPLE_IMAGE } = require('../constants');
 
 const scheduleTasks = () => {
   const scheduledTasks = [
@@ -52,10 +52,14 @@ const deleteExpiredMoments = async () => {
 };
 
 const changeUploadLocation = async () => {
+  if (!(await uploadToTiktok(SAMPLE_IMAGE))) {
+    return;
+  }
+
   const moments = await Moment.find({ uploadLocation: { $ne: UPLOAD_LOCATION.TIKTOK } });
 
   for (const moment of moments) {
-    moment.image = await uploadToTiktok(moment.image);
+    moment.image = await uploadToTiktok(moment.image, moment.uploadLocation);
     moment.uploadLocation = UPLOAD_LOCATION.TIKTOK;
     await moment.save();
   }
