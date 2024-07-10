@@ -101,7 +101,8 @@
     "alreadyBlock": "Already block",
     "sendRequestSuccess": "Send request successfully",
     "listReceivedRequests": "Get received requests successfully",
-    "getListFriends" : "Get list friends successfully"
+    "getListFriends": "Get list friends successfully",
+    "notAlreadyFriend" : "Not already friend"
   },
   "react": {
     "createSuccess": "React created successfully",
@@ -110,5 +111,15 @@
   },
   "rateLimit": {
     "tooManyRequests": "Too many requests, please try again later."
+  },
+  "conversation": {
+    "maxParticipants": "Max number of participants",
+    "alreadyExist": "Conversation already exists",
+    "createSuccess": "Conversation created successfully",
+    "getConversationsSuccess": "Get conversation of user successfully",
+    "getListConversationsSuccess": "Get list of conversations successfully",
+    "duplicateParticipants": "Duplicate participants",
+    "deleteSuccess": "Delete conversation successfully",
+    "notFound": "Conversation not found"
   }
 }

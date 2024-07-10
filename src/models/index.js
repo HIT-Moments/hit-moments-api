@@ -5,4 +5,5 @@ module.exports = {
   Moment: require('./moment.model'),
   Friend: require('./friend.model'),
   React: require('./react.model'),
+  Conversation: require('./conversation.model'),
 };
