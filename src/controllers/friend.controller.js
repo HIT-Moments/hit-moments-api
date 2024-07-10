@@ -70,7 +70,6 @@ const sendRequest = catchAsync(async (req, res, next) => {
   });
 });
 
-
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');

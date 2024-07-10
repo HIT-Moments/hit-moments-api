@@ -17,7 +17,7 @@ const searchUserByEmail = {
   body: joi.object({
     email: joi.string().required(),
   }),
-}
+};
 
 const sendRequest = {
   params: joi.object({
