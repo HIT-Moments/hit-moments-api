@@ -1,3 +1,5 @@
+const { apiUrl } = require('../config/env.config');
+
 const LOCALES = ['en', 'vi'];
 
 const LANGUAGE_DEFAULT = 'vi';
@@ -10,7 +12,7 @@ const TYPES_IMAGE_ALLOWED = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const TYPES_AUDIO_ALLOWED = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/midi'];
 
-const SAMPLE_IMAGE = 'https://res.cloudinary.com/dmb2dtl9a/image/upload/v1720458179/sample.png';
+const SAMPLE_IMAGE = `${apiUrl}/images/sample.png`;
 
 module.exports = {
   LOCALES,

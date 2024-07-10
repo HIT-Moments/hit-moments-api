@@ -5,20 +5,19 @@ const FormData = require('form-data');
 
 const { getImageBuffer } = require('../helpers');
 const { env, cloudinary } = require('../config/');
-const { UPLOAD_LOCATION } = require('../constants');
+const { UPLOAD_LOCATION, SAMPLE_IMAGE } = require('../constants');
 
-const getConfig = async (url, uploadLocation) => {
+const getConfig = async (imageLocation, uploadLocation) => {
   try {
-    let buffer;
+    let image;
     if (uploadLocation === UPLOAD_LOCATION.LOCAL) {
-      const filePath = path.join(__dirname, '..', '..', url);
-      buffer = fs.readFileSync(filePath);
+      image = fs.readFileSync(imageLocation);
     } else {
-      buffer = await getImageBuffer(url);
+      image = await getImageBuffer(imageLocation);
     }
 
     const data = new FormData();
-    data.append('Filedata', buffer, {
+    data.append('Filedata', image, {
       filename: 'image.png',
       contentType: 'image/png',
     });
@@ -41,14 +40,22 @@ const getConfig = async (url, uploadLocation) => {
 
 const uploadToTiktok = async (url, uploadLocation = 'sample') => {
   try {
-    const config = await getConfig(url, uploadLocation);
-    const response = await axios.request(config);
+    let config;
+
     if (uploadLocation === UPLOAD_LOCATION.LOCAL) {
-      fs.unlinkSync(url);
+      const fileName = getFileName(url);
+      const filePath = path.join(__dirname, '..', '..', 'public', 'images', fileName);
+      config = await getConfig(filePath, uploadLocation);
+      if (url !== SAMPLE_IMAGE) fs.unlinkSync(filePath);
     }
+
     if (uploadLocation === UPLOAD_LOCATION.CLOUDINARY) {
+      config = await getConfig(url, uploadLocation);
       await cloudinary.uploader.destroy(getCloudinaryPublicId(url));
     }
+
+    const response = await axios.request(config);
+
     return response.data.data.url;
   } catch (error) {
     throw new Error(error);
@@ -57,6 +64,10 @@ const uploadToTiktok = async (url, uploadLocation = 'sample') => {
 
 const getCloudinaryPublicId = (url) => {
   return url.split('/').pop().split('.')[0];
+};
+
+const getFileName = (url) => {
+  return url.split('/').pop();
 };
 
 module.exports = { uploadToTiktok };

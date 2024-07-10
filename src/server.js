@@ -33,6 +33,8 @@ app.use((req, res, next) => {
   next(i18n.setLocale(req));
 });
 
+app.use(express.static('public'));
+
 const apiBasePath = isProduction ? '/v1' : '/api/v1';
 app.use(apiBasePath, apiRoute);
 

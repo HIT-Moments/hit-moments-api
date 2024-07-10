@@ -52,7 +52,7 @@ const deleteExpiredMoments = async () => {
 };
 
 const changeUploadLocation = async () => {
-  if (!(await uploadToTiktok(SAMPLE_IMAGE))) {
+  if (!(await uploadToTiktok(SAMPLE_IMAGE, UPLOAD_LOCATION.LOCAL))) {
     return;
   }
 
