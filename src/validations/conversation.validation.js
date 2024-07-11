@@ -4,7 +4,7 @@ const { objectId } = require('./custom.validation');
 
 const createConversation = {
   body: joi.object({
-    participant2: joi.string().custom(objectId).required(),
+    participants: joi.array().items(joi.string().custom(objectId)).required().min(2).max(2),
   }),
 };
 
