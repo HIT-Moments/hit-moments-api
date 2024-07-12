@@ -101,8 +101,7 @@
     "alreadyBlock": "Đã trong danh sách chặn",
     "sendRequestSuccess": "Gửi yêu cầu kết bạn thành công ",
     "listReceivedRequests": "Lấy danh sách lời mời kết bạn thành công",
-    "getListFriends": "Lấy danh sách bạn bè thành công",
-    "notAlreadyFriend" : "Chưa là bạn bè"
+    "getListFriends": "Lấy danh sách bạn bè thành công"
   },
   "react": {
     "createSuccess": "Gửi cảm xúc thành công",

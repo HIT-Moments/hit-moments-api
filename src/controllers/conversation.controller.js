@@ -1,34 +1,26 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
-const { Conversation, User, Friend } = require('../models');
+const { Conversation , User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
 const createConversation = catchAsync(async (req, res, next) => {
-  const participant1 = req.user._id;
-  const { participant2 } = req.body;
+  const {participants} = req.body;
 
-  const user = await User.findById(participant2);
-    
-  if (!user) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('user.userNotFound'));
-  }
+  const conversationExisting = await Conversation.findOne({participants: participants});
 
-  const isFriend = await Friend.findOne({ userId: participant2 });
-
-  if(!isFriend || !isFriend.friendList.includes(participant1)) {
-    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('friend.notAlreadyFriend'));
-  }
-
-  //TODO: check react or commnet
-  const conversationExisting = await Conversation.findOne({ participant1: participant1, participant2: participant2 });
-
-  if (conversationExisting) {
+  if(conversationExisting){
     throw new ApiError(httpStatus.CONFLICT, i18n.translate('conversation.alreadyExist'));
   }
 
-  const conversation = await Conversation.create({ participant1, participant2 });
+  const users = await User.find({ _id: { $in: participants } });
+
+  if (users.length !== participants.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('user.userNotFound'));
+  } 
+
+  const conversation = await Conversation.create({participants: participants})
 
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,
@@ -42,11 +34,7 @@ const createConversation = catchAsync(async (req, res, next) => {
 const getMyConversation = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
 
-  const myConversations = await Conversation.find({
-    $expr: {
-      $or: [{ $eq: ['$participant1', userId] }, { $eq: ['$participant2', userId] }],
-    },
-  });
+  const myConversations = await Conversation.find({participants: userId});
 
   if (!myConversations) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('conversation.notFound'));

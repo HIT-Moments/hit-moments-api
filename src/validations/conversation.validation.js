@@ -3,10 +3,16 @@ const joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const createConversation = {
-  body: joi.object({
-    participant2: joi.string().custom(objectId).required(),
+  body: joi.object().keys({
+    participants: joi.array().items(joi.string().custom(objectId)).required().length(2),
   }),
 };
+
+const getMyConversation = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
+  }),
+}
 
 const deleteConversation = {
   params: joi.object({
@@ -16,5 +22,6 @@ const deleteConversation = {
 
 module.exports = {
   createConversation,
+  getMyConversation,
   deleteConversation,
 };

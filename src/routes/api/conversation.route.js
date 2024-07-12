@@ -8,17 +8,15 @@ const conversationRoute = express.Router();
 
 conversationRoute.use(auth);
 
-conversationRoute
-  .route('/')
-  .post(validate(conversationValidation.createConversation), conversationController.createConversation);
+conversationRoute.route('/').post(validate(conversationValidation.createConversation),conversationController.createConversation);
 
-conversationRoute.route('/myConversation').get(conversationController.getMyConversation);
+conversationRoute.route('/myConversation').get(validate(conversationValidation.getMyConversation),conversationController.getMyConversation);
 
 conversationRoute.use(author(['admin']));
 
 conversationRoute
   .route('/')
-  .get(validate(conversationValidation.getListConversations), conversationController.getListConversations);
+  .get(conversationController.getListConversations);
 
 conversationRoute
   .route('/:conversationId')
