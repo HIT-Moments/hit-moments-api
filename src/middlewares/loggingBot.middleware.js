@@ -1,7 +1,18 @@
+const fs = require('fs');
+const path = require('path');
 const { lookup } = require('geoip-lite');
 
 const { catchAsync } = require('../utils');
-const { client, discordChannelId } = require('../config').discordBot;
+
+const writeToLogFile = (logMessage) => {
+  const logFilePath = path.join(__dirname, '..', 'log', 'requests.log');
+  console.log(logFilePath);
+  fs.appendFile(logFilePath, logMessage + '\n', (err) => {
+    if (err) {
+      console.error('Failed to write log message to file:', err);
+    }
+  });
+};
 
 const loggingBot = catchAsync(async (req, res, next) => {
   const start = Date.now();
@@ -10,14 +21,7 @@ const loggingBot = catchAsync(async (req, res, next) => {
     const geoIP = lookup(req.ip);
     const logMessage = `${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms ${req.ip} ${geoIP?.city} ${geoIP?.country}`;
 
-    try {
-      const channel = await client.channels.fetch(discordChannelId);
-      if (channel) {
-        await channel.send(logMessage);
-      }
-    } catch (error) {
-      console.error('Failed to send message to Discord:', error);
-    }
+    writeToLogFile(logMessage);
   });
 
   next();
