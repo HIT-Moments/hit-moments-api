@@ -13,15 +13,17 @@ const { initAdmin, scheduleTasks } = require('./utils');
 const { xss, rateLimit, errorConverter, errorHandler, loggingBot } = require('./middlewares');
 
 const app = express();
+
 app.set('trust proxy', 1);
-app.use(rateLimit());
 app.use(express.json());
-app.use(loggingBot);
 app.use(cors());
-app.use(xss);
 app.use(helmet());
 app.use(mongoSanitize());
 app.use(compression());
+
+app.use(rateLimit());
+app.use(xss);
+app.use(loggingBot);
 
 const isProduction = env.nodeEnv === 'production';
 const isDevelopment = env.nodeEnv === 'development';

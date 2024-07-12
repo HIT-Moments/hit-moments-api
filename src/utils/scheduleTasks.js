@@ -57,18 +57,18 @@ const deleteExpiredMoments = async () => {
 
 const sendLogMessagesToDiscord = async () => {
   const logFilePath = path.join(__dirname, '..', 'log', 'requests.log');
-  const logMessages = fs.readFileSync(logFilePath, 'utf8').split('\n');
-  logMessages.pop();
+  const logMessages = fs.readFileSync(logFilePath, 'utf8');
+  if (!logMessages) {
+    return;
+  }
 
-  for (const logMessage of logMessages) {
-    try {
-      const channel = await client.channels.fetch(discordChannelId);
-      if (channel) {
-        await channel.send(logMessage);
-      }
-    } catch (error) {
-      console.error('Failed to send message to Discord:', error);
+  try {
+    const channel = await client.channels.fetch(discordChannelId);
+    if (channel) {
+      await channel.send(logMessages);
     }
+  } catch (error) {
+    console.error('Failed to send message to Discord:', error);
   }
 
   fs.truncate(logFilePath, 0, () => {});
