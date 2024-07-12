@@ -5,4 +5,5 @@ module.exports = {
   validate: require('./validate.middleware'),
   upload: require('./multer.middleware'),
   rateLimit: require('./rate-limit.middleware'),
+  loggingBot: require('./discordBot.middleware'),
 };

@@ -20,6 +20,8 @@ const env = {
   otpExpireTime: (+process.env.OTP_EXPIRE_TIME || 3) * 60 * 1000,
   jwtOtpSecret: process.env.JWT_OTP_SECRET || 'otp-hitmoments.com',
   jwtOtpExpire: process.env.JWT_OTP_EXPIRE || '5m',
+  discordToken: process.env.DISCORD_TOKEN,
+  discordChannelId: process.env.DISCORD_CHANNEL_ID,
 };
 
 module.exports = env;

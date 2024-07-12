@@ -10,11 +10,13 @@ const mongoSanitize = require('express-mongo-sanitize');
 const apiRoute = require('./routes/api');
 const { env, i18n } = require('./config');
 const { initAdmin, scheduleTasks } = require('./utils');
-const { xss, rateLimit, errorConverter, errorHandler } = require('./middlewares');
+const { xss, rateLimit, errorConverter, errorHandler, loggingBot } = require('./middlewares');
 
 const app = express();
+app.set('trust proxy', 1);
 app.use(rateLimit());
 app.use(express.json());
+app.use(loggingBot);
 app.use(cors());
 app.use(xss);
 app.use(helmet());
