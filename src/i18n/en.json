@@ -119,6 +119,11 @@
     "getListConversationsSuccess": "Get list of conversations successfully",
     "duplicateParticipants": "Duplicate participants",
     "deleteSuccess": "Delete conversation successfully",
-    "notFound": "Conversation not found"
+    "notFound": "Conversation not found",
+    "getConversationByIdSuccess": "Get conversation by Id successfully"
+  },
+  "message": {
+    "sendSucess": "Send message successfully",
+    "getSucess": "Get message successfully"
   }
 }

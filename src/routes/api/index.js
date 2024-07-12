@@ -35,6 +35,10 @@ const routesApi = [
     path: '/conversations',
     route: require('./conversation.route'),
   },
+  {
+    path: '/messages',
+    route: require('./message.route'),
+  },
 ];
 
 routesApi.forEach((route) => {

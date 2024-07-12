@@ -7,4 +7,5 @@ module.exports = {
   friendController: require('./friend.controller'),
   reactController: require('./react.controller'),
   conversationController: require('./conversation.controller'),
+  messageController: require('./message.controller'),
 };

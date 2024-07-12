@@ -119,6 +119,11 @@
     "getListConversationsSuccess": "Lấy danh sách tất cả cuộc hội thoại thành công",
     "duplicateParticipants": "Người tham gia bị trùng lặp",
     "deleteSuccess": "Xoá cuộc hội thoại thành công",
-    "notFound": "Không tìm thấy cuộc hội thoại"
+    "notFound": "Không tìm thấy cuộc hội thoại",
+    "getConversationByIdSuccess": "Lấy cuộc hội thoại theo Id thành công"
+  },
+  "message": {
+    "sendSucess": "Gửi tin nhắn thành công",
+    "getSuccess": "Lấy tin nhắn thành công"
   }
 }

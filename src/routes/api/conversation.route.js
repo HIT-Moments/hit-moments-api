@@ -8,18 +8,21 @@ const conversationRoute = express.Router();
 
 conversationRoute.use(auth);
 
-conversationRoute.route('/').post(validate(conversationValidation.createConversation),conversationController.createConversation);
+conversationRoute
+  .route('/')
+  .post(validate(conversationValidation.createConversation), conversationController.createConversation);
 
-conversationRoute.route('/myConversation').get(validate(conversationValidation.getMyConversation),conversationController.getMyConversation);
+conversationRoute
+  .route('/my-conversation')
+  .get(validate(conversationValidation.getMyConversation), conversationController.getMyConversation);
 
 conversationRoute.use(author(['admin']));
 
-conversationRoute
-  .route('/')
-  .get(conversationController.getListConversations);
+conversationRoute.route('/').get(conversationController.getListConversations);
 
 conversationRoute
   .route('/:conversationId')
-  .delete(validate(conversationValidation.deleteConversation), conversationController.deleteConversation);
+  .delete(validate(conversationValidation.deleteConversation), conversationController.deleteConversation)
+  .get(validate(conversationValidation.getListConversationById), conversationController.getListConversationById);
 
 module.exports = conversationRoute;
