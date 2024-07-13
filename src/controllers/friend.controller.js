@@ -21,14 +21,14 @@ const searchUserByEmail = catchAsync(async (req, res, next) => {
 
   const user = await User.findOne({ email });
 
-  if (!user) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('user.notFound'));
-  }
+  // if (!user) {
+  //   throw new ApiError(https.NOT_FOUND, i18n.translate('user.notFound'));
+  // }
 
   res.json({
     message: i18n.translate('user.getUsersSuccess'),
     statusCode: https.OK,
-    data: { user },
+    data: { user: user || [] },
   });
 });
 
@@ -70,14 +70,13 @@ const sendRequest = catchAsync(async (req, res, next) => {
   });
 });
 
-
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');
 
-  if (!friend) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  }
+  // if (!friend) {
+  //   throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  // }
 
   const friendRequests = friend.friendRequest;
 
@@ -148,7 +147,6 @@ const getListFriends = catchAsync(async (req, res, next) => {
   const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
 
   const skip = (+page - 1) * limit;
-  const query = {};
 
   const userId = req.user._id;
   const friend = await Friend.findOne({ userId })
@@ -156,12 +154,12 @@ const getListFriends = catchAsync(async (req, res, next) => {
     .skip(skip)
     .populate('friendList', 'email fullname avatar');
 
-  if (!friend) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  }
+  // if (!friend) {
+  //   throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  // }
 
-  const listFriends = friend.friendList;
-  const totaFriends = friend.friendList.length;
+  const listFriends = friend.friendList || [];
+  const totaFriends = friend.friendList.length || 0;
   res.json({
     message: i18n.translate('friend.getListFriends'),
     statusCode: https.OK,
