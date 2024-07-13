@@ -1,6 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
 const { cronJobs } = require('../config');
 const { User, Moment } = require('../models');
 const { sendBirthdayEmail, uploadToTiktok } = require('../services');
+const { client, discordChannelId } = require('../config').discordBot;
 const { DELETED_MOMENT_EXPIRE_DATE, CRON_JOB_TIME, UPLOAD_LOCATION, SAMPLE_IMAGE } = require('../constants');
 
 const scheduleTasks = () => {
@@ -16,6 +20,10 @@ const scheduleTasks = () => {
     {
       time: CRON_JOB_TIME.CHANGE_UPLOAD_LOCATION,
       task: changeUploadLocation,
+    },
+    {
+      time: CRON_JOB_TIME.SEND_LOG_MESSAGES_TO_DISCORD,
+      task: sendLogMessagesToDiscord,
     },
   ];
 
@@ -63,6 +71,25 @@ const changeUploadLocation = async () => {
     moment.uploadLocation = UPLOAD_LOCATION.TIKTOK;
     await moment.save();
   }
+};
+
+const sendLogMessagesToDiscord = async () => {
+  const logFilePath = path.join(__dirname, '..', 'log', 'requests.log');
+  const logMessages = fs.readFileSync(logFilePath, 'utf8');
+  if (!logMessages) {
+    return;
+  }
+
+  try {
+    const channel = await client.channels.fetch(discordChannelId);
+    if (channel) {
+      await channel.send(logMessages);
+    }
+  } catch (error) {
+    console.error('Failed to send message to Discord:', error);
+  }
+
+  fs.truncate(logFilePath, 0, () => {});
 };
 
 module.exports = scheduleTasks;

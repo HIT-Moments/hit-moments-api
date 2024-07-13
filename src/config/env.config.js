@@ -25,6 +25,8 @@ const env = {
     token: process.env.TIKTOK_TOKEN,
     cookie: process.env.TIKTOK_COOKIE,
   },
+  discordToken: process.env.DISCORD_TOKEN,
+  discordChannelId: process.env.DISCORD_CHANNEL_ID,
 };
 
 module.exports = env;
