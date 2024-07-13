@@ -1,32 +1,16 @@
 const https = require('http-status');
 
 const { i18n } = require('../config');
-const { ApiError, catchAsync } = require('../utils');
 const { Friend, User } = require('../models');
-const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
-
-const createFriend = catchAsync(async (req, res, next) => {
-  const userId = req.user._id;
-  const friend = await Friend.create({ userId });
-
-  return res.status(https.CREATED).json({
-    message: i18n.translate('friend.createSuccess'),
-    statusCode: https.CREATED,
-    data: { friend },
-  });
-});
+const { ApiError, catchAsync } = require('../utils');
 
 const searchUserByEmail = catchAsync(async (req, res, next) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
-
-  // if (!user) {
-  //   throw new ApiError(https.NOT_FOUND, i18n.translate('user.notFound'));
-  // }
+  const user = await User.findOne({ email }).select('_id fullname email avatar');
 
   res.json({
-    message: i18n.translate('user.getUsersSuccess'),
+    message: i18n.translate('user.getUserSuccess'),
     statusCode: https.OK,
     data: { user: user || [] },
   });
@@ -74,16 +58,12 @@ const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');
 
-  // if (!friend) {
-  //   throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  // }
-
-  const friendRequests = friend.friendRequest;
+  const { friendRequests = [] } = friend;
 
   res.json({
     message: i18n.translate('friend.listReceivedRequests'),
     statusCode: https.OK,
-    data: { friendRequests },
+    data: { friendRequests, total: friendRequests.length },
   });
 });
 
@@ -144,31 +124,22 @@ const delinceRequest = catchAsync(async (req, res, next) => {
 });
 
 const getListFriends = catchAsync(async (req, res, next) => {
-  const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
-
-  const skip = (+page - 1) * limit;
-
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId })
-    .limit(limit)
-    .skip(skip)
-    .populate('friendList', 'email fullname avatar');
 
-  // if (!friend) {
-  //   throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  // }
+  const friend = await Friend.findOne({ userId }).populate([
+    {
+      path: 'friendList',
+      select: 'id fullname email avatar',
+    },
+  ]);
 
-  const listFriends = friend.friendList || [];
-  const totaFriends = friend.friendList.length || 0;
+  const { friendList = [] } = friend;
   res.json({
     message: i18n.translate('friend.getListFriends'),
     statusCode: https.OK,
     data: {
-      listFriends,
-      page: +page,
-      limit: +limit,
-      totalPages: Math.ceil(totaFriends / +limit),
-      totaFriends,
+      friendList,
+      total: friendList.length,
     },
   });
 });
@@ -224,7 +195,9 @@ const blockFriend = catchAsync(async (req, res, next) => {
     friendFriend.friendList.splice(friendFriendIndex, 1);
   }
 
-  userFriend.blockList.push(friendId);
+  if (!userFriend.blockList.includes(friendId)) {
+    userFriend.blockList.push(friendId);
+  }
 
   await userFriend.save();
   await friendFriend.save();
@@ -264,25 +237,21 @@ const unblockFriend = catchAsync(async (req, res, next) => {
 
 const getListBlock = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('blockList', 'email fullname avatar');
+  const friend = await Friend.findOne({ userId }).populate('blockList', '_id email fullname avatar');
 
-  if (!friend) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  }
-
-  const listBlock = friend.blockList;
+  const { blockList = [] } = friend;
 
   res.json({
     message: i18n.translate('friend.getListBlockSuccess'),
     statusCode: https.OK,
     data: {
-      listBlock,
+      blockList,
+      totaBlocks: blockList.length,
     },
   });
 });
 
 module.exports = {
-  createFriend,
   sendRequest,
   deleteFriend,
   listReceivedRequests,

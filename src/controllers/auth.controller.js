@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 const httpStatus = require('http-status');
 
-const { User } = require('../models');
 const { i18n, env } = require('../config');
+const { User, Friend } = require('../models');
 const { ApiError, catchAsync, formatEmail } = require('../utils');
 const { generateOtp, sendOtpEmail, sendVerificationEmail } = require('../services/');
 
@@ -15,6 +15,8 @@ const register = catchAsync(async (req, res) => {
   }
 
   const user = await User.create({ ...req.body, formattedEmail: formatEmail(email) });
+
+  await Friend.create({ userId: user._id });
 
   const token = generateEmailToken({ email });
   sendVerificationEmail({ user, token });
