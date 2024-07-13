@@ -62,17 +62,27 @@ const cloudUpload = multer({
 const upload = (fieldname) => (req, res, next) => {
   cloudUpload.single(fieldname)(req, res, (cloudErr) => {
     if (cloudErr) {
-      localUpload.single(fieldname)(req, res, (localErr) => {
-        if (localErr) {
-          console.error('Local upload error:', localErr);
-          return next(localErr);
-        }
-        return next();
-      });
-    } else {
-      next();
+      console.error('Cloud upload error:', cloudErr);
+      return next(cloudErr);
     }
+    return next();
   });
 };
+
+// const upload = (fieldname) => (req, res, next) => {
+//   cloudUpload.single(fieldname)(req, res, (cloudErr) => {
+//     if (cloudErr) {
+//       localUpload.single(fieldname)(req, res, (localErr) => {
+//         if (localErr) {
+//           console.error('Local upload error:', localErr);
+//           return next(localErr);
+//         }
+//         return next();
+//       });
+//     } else {
+//       next();
+//     }
+//   });
+// };
 
 module.exports = upload;

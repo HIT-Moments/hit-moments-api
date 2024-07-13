@@ -5,7 +5,7 @@ const FormData = require('form-data');
 
 const { getImageBuffer } = require('../helpers');
 const { env, cloudinary } = require('../config/');
-const { UPLOAD_LOCATION, SAMPLE_IMAGE } = require('../constants');
+const { UPLOAD_LOCATION, SAMPLE_IMAGE, MIME_TYPES } = require('../constants');
 
 const getConfig = async (imageLocation, uploadLocation) => {
   try {
@@ -16,10 +16,14 @@ const getConfig = async (imageLocation, uploadLocation) => {
       image = await getImageBuffer(imageLocation);
     }
 
+    const extension = getFileName(imageLocation).split('.').pop();
+    const filename = `image.${extension}`;
+    let contentType = MIME_TYPES[extension];
+
     const data = new FormData();
     data.append('Filedata', image, {
-      filename: 'image.png',
-      contentType: 'image/png',
+      filename,
+      contentType,
     });
 
     return {
@@ -31,7 +35,7 @@ const getConfig = async (imageLocation, uploadLocation) => {
         'x-csrftoken': env.tiktok.token,
         ...data.getHeaders(),
       },
-      data: data,
+      data,
     };
   } catch (error) {
     throw new Error(error);
