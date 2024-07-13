@@ -1,6 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+
 const { cronJobs } = require('../config');
 const { User, Moment } = require('../models');
 const { sendBirthdayEmail } = require('../services');
+const { client, discordChannelId } = require('../config').discordBot;
 const { DELETED_MOMENT_EXPIRE_DATE, CRON_JOB_TIME } = require('../constants');
 
 const scheduleTasks = () => {
@@ -12,6 +16,10 @@ const scheduleTasks = () => {
     {
       time: CRON_JOB_TIME.DELETE_EXPIRED_MOMENTS,
       task: deleteExpiredMoments,
+    },
+    {
+      time: CRON_JOB_TIME.SEND_LOG_MESSAGES_TO_DISCORD,
+      task: sendLogMessagesToDiscord,
     },
   ];
 
@@ -45,6 +53,25 @@ const deleteExpiredMoments = async () => {
   for (const moment of moments) {
     await moment.deleteOne();
   }
+};
+
+const sendLogMessagesToDiscord = async () => {
+  const logFilePath = path.join(__dirname, '..', 'log', 'requests.log');
+  const logMessages = fs.readFileSync(logFilePath, 'utf8');
+  if (!logMessages) {
+    return;
+  }
+
+  try {
+    const channel = await client.channels.fetch(discordChannelId);
+    if (channel) {
+      await channel.send(logMessages);
+    }
+  } catch (error) {
+    console.error('Failed to send message to Discord:', error);
+  }
+
+  fs.truncate(logFilePath, 0, () => {});
 };
 
 module.exports = scheduleTasks;
