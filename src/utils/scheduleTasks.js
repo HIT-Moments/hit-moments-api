@@ -3,9 +3,9 @@ const path = require('path');
 
 const { cronJobs } = require('../config');
 const { User, Moment } = require('../models');
-const { sendBirthdayEmail } = require('../services');
+const { sendBirthdayEmail, uploadToTiktok } = require('../services');
 const { client, discordChannelId } = require('../config').discordBot;
-const { DELETED_MOMENT_EXPIRE_DATE, CRON_JOB_TIME } = require('../constants');
+const { DELETED_MOMENT_EXPIRE_DATE, CRON_JOB_TIME, UPLOAD_LOCATION, SAMPLE_IMAGE } = require('../constants');
 
 const scheduleTasks = () => {
   const scheduledTasks = [
@@ -16,6 +16,10 @@ const scheduleTasks = () => {
     {
       time: CRON_JOB_TIME.DELETE_EXPIRED_MOMENTS,
       task: deleteExpiredMoments,
+    },
+    {
+      time: CRON_JOB_TIME.CHANGE_UPLOAD_LOCATION,
+      task: changeUploadLocation,
     },
     {
       time: CRON_JOB_TIME.SEND_LOG_MESSAGES_TO_DISCORD,
@@ -52,6 +56,20 @@ const deleteExpiredMoments = async () => {
 
   for (const moment of moments) {
     await moment.deleteOne();
+  }
+};
+
+const changeUploadLocation = async () => {
+  if (!(await uploadToTiktok(SAMPLE_IMAGE, UPLOAD_LOCATION.LOCAL))) {
+    return;
+  }
+
+  const moments = await Moment.find({ uploadLocation: { $ne: UPLOAD_LOCATION.TIKTOK } });
+
+  for (const moment of moments) {
+    moment.image = await uploadToTiktok(moment.image, moment.uploadLocation);
+    moment.uploadLocation = UPLOAD_LOCATION.TIKTOK;
+    await moment.save();
   }
 };
 

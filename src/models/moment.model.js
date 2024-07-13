@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { UPLOAD_LOCATION } = require('../constants');
+
 const momentSchema = new mongoose.Schema(
   {
     userId: {
@@ -11,6 +13,10 @@ const momentSchema = new mongoose.Schema(
       type: String,
       trim: true,
       required: true,
+    },
+    uploadLocation: {
+      type: String,
+      default: UPLOAD_LOCATION.CLOUDINARY,
     },
     isDeleted: {
       type: Boolean,

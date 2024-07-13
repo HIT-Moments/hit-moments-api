@@ -2,7 +2,7 @@ const express = require('express');
 
 const { momentController } = require('../../controllers');
 const { momentValidation } = require('../../validations');
-const { auth, author, validate, upload } = require('../../middlewares');
+const { auth, validate, upload } = require('../../middlewares');
 
 const momentRoute = express.Router();
 
@@ -10,7 +10,7 @@ momentRoute.use(auth);
 
 momentRoute
   .route('/')
-  .post(upload.single('image'), validate(momentValidation.createMoment), momentController.createMoment)
+  .post(upload('image'), validate(momentValidation.createMoment), momentController.createMoment)
   .get(validate(momentValidation.getMoments), momentController.getMoments);
 
 momentRoute.route('/me').get(momentController.getMyMoments);
