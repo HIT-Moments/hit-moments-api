@@ -7,7 +7,7 @@ const { ApiError, catchAsync } = require('../utils');
 const createFeedback = catchAsync(async (req, res, next) => {
   const image = req.file?.path;
 
-  const feedback = await Feedback.create({ ...req.body, image });
+  const feedback = await Feedback.create({ ...req.body, userId: req.user._id, image });
 
   res.status(httpStatus.CREATED).json({
     message: i18n.translate('feedback.createSuccess'),
@@ -61,31 +61,19 @@ const getallFeedback = catchAsync(async (req, res, next) => {
   });
 });
 
-const updateFeedbackById = catchAsync(async (req, res, next) => {
-  const updateBody = req.body;
+  const getMyFeedbacks = catchAsync(async (req, res, next) =>{
+    const userId = req.user.id;
 
-  const feedback = await Feedback.findById(req.params.feedbackId);
+    const myFeedbacks = await Feedback.find({ userId });
 
-  if (!feedback) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('feedback.notFound'));
-  }
-
-  Object.assign(feedback, updateBody);
-
-  if (req.file) {
-    feedback.image = req.file.path;
-  }
-
-  await feedback.save();
-
-  res.status(httpStatus.OK).json({
-    message: i18n.translate('feedback.updateSuccess'),
-    statusCode: httpStatus.OK,
-    data: {
-      feedback,
-    },
+    res.status(httpStatus.OK).json({
+      message: i18n.translate('feedback.getMyFeedbacks'),
+      statusCode: httpStatus.OK,
+      data: {
+        myFeedbacks,
+      }
+    });
   });
-});
 
 const deleteFeedbackById = catchAsync(async (req, res, next) => {
   const feedback = await Feedback.findByIdAndDelete(req.params.feedbackId);
@@ -106,7 +94,7 @@ const deleteFeedbackById = catchAsync(async (req, res, next) => {
 module.exports = {
   createFeedback,
   getallFeedback,
-  updateFeedbackById,
+  getMyFeedbacks,
   getFeedback,
   deleteFeedbackById,
 };

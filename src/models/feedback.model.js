@@ -14,7 +14,8 @@ const feedbackSchema = new mongoose.Schema(
       require: true,
     },
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
+      ref:'User',
       require: true,
     },
   },
