@@ -6,4 +6,5 @@ module.exports = {
   momentController: require('./moment.controller'),
   friendController: require('./friend.controller'),
   reactController: require('./react.controller'),
+  musicController: require('./music.controller'),
 };

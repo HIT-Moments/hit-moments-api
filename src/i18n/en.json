@@ -59,7 +59,7 @@
   "feedback": {
     "createSuccess": "Feedback created successfully",
     "notFound": "Feedback not found",
-    "getList": "Get all feedback successfully",
+    "getDetail": "Get all feedback successfully",
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
     "deleteSuccess": "Delete feedback successfully"
@@ -110,5 +110,13 @@
   },
   "rateLimit": {
     "tooManyRequests": "Too many requests, please try again later."
+  },
+  "music": {
+    "createSuccess": "Music added successfully",
+    "notFound":"Music not found",
+    "musicRequired":"Không có nhạc tải lên",
+    "getSuccess":"Get music successfully",
+    "updateSuccess":"Update music successfully",
+    "deleteSuccess": "Delete music successfully"
   }
 }
