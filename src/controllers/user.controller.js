@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
-const { User } = require('../models');
+const { User, Friend } = require('../models');
 const { ApiError, catchAsync, formatEmail } = require('../utils');
 
 const createUser = catchAsync(async (req, res) => {
@@ -14,6 +14,8 @@ const createUser = catchAsync(async (req, res) => {
   }
 
   const user = await User.create({ ...req.body, formattedEmail: formatEmail(email) });
+
+  await Friend.create({ userId: user._id });
 
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,

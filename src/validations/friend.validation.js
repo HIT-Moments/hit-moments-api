@@ -2,35 +2,15 @@ const joi = require('joi');
 
 const { objectId } = require('./custom.validation');
 
-const createFriend = {
-  params: joi.object({
-    userId: joi.string().custom(objectId),
-  }),
-  body: joi.object({
-    friendList: joi.array(),
-    friendRequest: joi.array(),
-    blockList: joi.array(),
-  }),
-};
-
 const searchUserByEmail = {
   body: joi.object({
     email: joi.string().required(),
   }),
-}
-
-const sendRequest = {
-  params: joi.object({
-    userId: joi.string().custom(objectId),
-  }),
-  body: joi.object({
-    receiverId: joi.string().required().custom(objectId),
-  }),
 };
 
-const listReceivedRequests = {
-  params: joi.object({
-    userId: joi.string().custom(objectId),
+const sendRequest = {
+  body: joi.object({
+    receiverId: joi.string().required().custom(objectId),
   }),
 };
 
@@ -70,10 +50,14 @@ const unblockFriend = {
   }),
 };
 
+const cancelSentRequest = {
+  body: joi.object({
+    receiverId: joi.string().required().custom(objectId),
+  }),
+};
+
 module.exports = {
-  createFriend,
   sendRequest,
-  listReceivedRequests,
   deleteFriend,
   acceptRequest,
   delinceRequest,
@@ -81,4 +65,5 @@ module.exports = {
   blockFriend,
   unblockFriend,
   searchUserByEmail,
+  cancelSentRequest,
 };
