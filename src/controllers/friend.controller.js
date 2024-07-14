@@ -30,7 +30,7 @@ const sendRequest = catchAsync(async (req, res, next) => {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
-  let receiverFriend = await Friend.findOne({ userId: receiver._id });
+  let receiverFriend = await Friend.findOne({ userId: receiverId });
 
   if (receiverFriend.friendList.includes(senderId)) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
@@ -237,7 +237,7 @@ const unblockFriend = catchAsync(async (req, res, next) => {
 
 const getListBlock = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('blockList', '_id email fullname avatar');
+  const friend = await Friend.findOne({ userId }).populate('blockList', 'email fullname avatar');
 
   const { blockList = [] } = friend;
 
@@ -246,8 +246,52 @@ const getListBlock = catchAsync(async (req, res, next) => {
     statusCode: https.OK,
     data: {
       blockList,
-      totaBlocks: blockList.length,
+      total: blockList.length,
     },
+  });
+});
+
+const listSentRequests = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  const friends = await Friend.find({ friendRequest: userId });
+
+  const friendIds = friends.map((friend) => friend.userId);
+
+  const users = await User.find({ _id: { $in: friendIds } }).select('fullname email avatar');
+
+  res.json({
+    message: i18n.translate('friend.listSentRequestsSuccess'),
+    statusCode: https.OK,
+    data: { sentRequests: users, total: users.length },
+  });
+});
+
+const cancelSentRequest = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  const { receiverId } = req.body;
+
+  let userFriend = await Friend.findOne({ userId });
+  let receiverFriend = await Friend.findOne({ userId: receiverId });
+
+  if (!userFriend || !receiverFriend) {
+    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
+  }
+
+  const receivedRequestIndex = receiverFriend.friendRequest.indexOf(userId);
+
+  if (receivedRequestIndex === -1) {
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.requestNotFound'));
+  }
+
+  receiverFriend.friendRequest.splice(receivedRequestIndex, 1);
+
+  await userFriend.save();
+  await receiverFriend.save();
+
+  res.json({
+    message: i18n.translate('friend.cancelSentRequestSuccess'),
+    statusCode: https.OK,
+    data: {},
   });
 });
 
@@ -262,4 +306,6 @@ module.exports = {
   unblockFriend,
   getListBlock,
   searchUserByEmail,
+  listSentRequests,
+  cancelSentRequest,
 };

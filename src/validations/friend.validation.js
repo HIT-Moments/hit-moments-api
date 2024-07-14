@@ -50,6 +50,12 @@ const unblockFriend = {
   }),
 };
 
+const cancelSentRequest = {
+  body: joi.object({
+    receiverId: joi.string().required().custom(objectId),
+  }),
+};
+
 module.exports = {
   sendRequest,
   deleteFriend,
@@ -59,4 +65,5 @@ module.exports = {
   blockFriend,
   unblockFriend,
   searchUserByEmail,
+  cancelSentRequest,
 };
