@@ -5,13 +5,13 @@ const { Feedback } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
 const createFeedback = catchAsync(async (req, res, next) => {
-  const userId = '662cf6c351d7d3424baea277';
   const { content } = req.body;
-  const image = req.file ? req.file.path : null;
+  const userId = '662cf6c351d7d3424baea277';
+  const image = req.file?.path;
 
   const feedback = await Feedback.create({ userId, content, image });
 
-  res.json({
+  res.status(httpStatus.CREATED).json({
     message: i18n.translate('feedback.createSuccess'),
     statusCode: httpStatus.OK,
     data: {
@@ -24,10 +24,10 @@ const getFeedback = catchAsync(async (req, res, next) => {
   const feedback = await Feedback.findById(req.params.feedbackId);
 
   if (!feedback) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate(feedback.notFound));
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('feedback.notFound'));
   }
 
-  res.json({
+  res.status(httpStatus.OK).json({
     message: i18n.translate('feedback.getFeedback'),
     statusCode: httpStatus.OK,
     data: {
@@ -50,8 +50,8 @@ const getallFeedback = catchAsync(async (req, res, next) => {
 
   const totalResults = await Feedback.countDocuments(query);
 
-  res.json({
-    message: i18n.translate('feedback.getList'),
+  res.status(httpStatus.OK).json({
+    message: i18n.translate('feedback.getDetail'),
     statusCode: httpStatus.OK,
     data: {
       feedbacks,
@@ -80,7 +80,7 @@ const updateFeedbackById = catchAsync(async (req, res, next) => {
 
   await feedback.save();
 
-  res.json({
+  res.status(httpStatus.OK).json({
     message: i18n.translate('feedback.updateSuccess'),
     statusCode: httpStatus.OK,
     data: {
@@ -96,7 +96,7 @@ const deleteFeedbackById = catchAsync(async (req, res, next) => {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('feedback.notFound'));
   }
 
-  res.json({
+  res.status(httpStatus.OK).json({
     message: i18n.translate('feedback.deleteSuccess'),
     statusCode: httpStatus.OK,
     data: {
