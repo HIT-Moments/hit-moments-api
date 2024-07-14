@@ -74,7 +74,7 @@ const changeUploadLocation = async () => {
 };
 
 const sendLogMessagesToDiscord = async () => {
-  const logFilePath = path.join(__dirname, '..', 'log', 'requests.log');
+  const logFilePath = path.join(__dirname, '..', '..', 'log', 'requests.log');
   const logMessages = fs.readFileSync(logFilePath, 'utf8');
   if (!logMessages) {
     return;

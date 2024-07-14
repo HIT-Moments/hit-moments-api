@@ -4,7 +4,7 @@ const path = require('path');
 const { catchAsync } = require('../utils');
 
 const writeToLogFile = (logMessage) => {
-  const logFilePath = path.join(__dirname, '..', 'log', 'requests.log');
+  const logFilePath = path.join(__dirname, '..', '..', 'log', 'requests.log');
   fs.appendFile(logFilePath, logMessage + '\n', (err) => {
     if (err) {
       console.error('Failed to write log message to file:', err);
