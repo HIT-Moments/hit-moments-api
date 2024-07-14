@@ -62,7 +62,8 @@
     "getDetail": "Get all feedback successfully",
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
-    "deleteSuccess": "Delete feedback successfully"
+    "deleteSuccess": "Delete feedback successfully",
+    "getMyFeedbacks": "Get my feedbacks successfully"
   },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"

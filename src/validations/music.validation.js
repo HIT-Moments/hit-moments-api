@@ -15,7 +15,7 @@ const getMusicById = {
   }),
 }
 
-const getMusic = {
+const searchMusic = {
   body: joi.object({
     name: joi.string().max(50),
     author: joi.string().max(50),
@@ -33,9 +33,16 @@ const updateMusic = {
   }),
 };
 
+const deleteMusic = {
+  params: joi.object({
+    musicId: joi.string().required(),
+  }),
+}
+
 module.exports = {
   createMusic,
-  getMusic,
+  searchMusic,
   updateMusic,
   getMusicById,
+  deleteMusic,
 }

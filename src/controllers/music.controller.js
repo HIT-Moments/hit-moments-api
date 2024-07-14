@@ -34,7 +34,7 @@ const getMusicById = catchAsync(async (req, res, next) => {
   });
 });
 
-const getMusic = catchAsync(async (req, res, next) => {
+const searchMusic = catchAsync(async (req, res, next) => {
   const { limit = 10, page = 1, sortBy = 'createdAt : desc' } = req.query;
 
   const skip = (+page - 1) * +limit;
@@ -42,7 +42,7 @@ const getMusic = catchAsync(async (req, res, next) => {
   const [field, value] = sortBy.split(':');
   const sort = { [field]: value === 'asc' ? 1 : -1 };
 
-  const query = {};
+  const query = { isDelete: false };
 
   const music = await Music.find({ ...req.body, isDelete: false }).limit(limit).skip(skip).sort(sort);
 
@@ -119,7 +119,7 @@ const deleteMusicById = catchAsync(async (req, res, next) =>{
 
 module.exports = {
   createMusic,
-  getMusic,
+  searchMusic,
   updateMusicById,
   getMusicById,
   deleteMusicById,
