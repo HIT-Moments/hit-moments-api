@@ -5,11 +5,9 @@ const { Feedback } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
 const createFeedback = catchAsync(async (req, res, next) => {
-  const { content } = req.body;
-  const userId = '662cf6c351d7d3424baea277';
   const image = req.file?.path;
 
-  const feedback = await Feedback.create({ userId, content, image });
+  const feedback = await Feedback.create({ ...req.body, image });
 
   res.status(httpStatus.CREATED).json({
     message: i18n.translate('feedback.createSuccess'),
