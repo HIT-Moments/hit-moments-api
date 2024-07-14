@@ -101,7 +101,9 @@
     "alreadyBlock": "Already block",
     "sendRequestSuccess": "Send request successfully",
     "listReceivedRequests": "Get received requests successfully",
-    "getListFriends": "Get list friends successfully"
+    "getListFriends": "Get list friends successfully",
+    "listSentRequestsSuccess": "Get list sent requests successfully",
+    "cancelSentRequestSuccess": "Cancel sent request successfully"
   },
   "react": {
     "createSuccess": "React created successfully",

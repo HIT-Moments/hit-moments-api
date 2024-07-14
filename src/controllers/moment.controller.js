@@ -2,7 +2,9 @@ const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
 const { Moment } = require('../models');
+const { UPLOAD_LOCATION } = require('../constants');
 const { ApiError, catchAsync } = require('../utils');
+const { frontendUrl } = require('../config/env.config');
 
 const createMoment = catchAsync(async (req, res) => {
   const moment = await Moment.create({
@@ -10,6 +12,13 @@ const createMoment = catchAsync(async (req, res) => {
     userId: req.user.id,
     image: req.file?.path,
   });
+
+  if (!moment.image.startsWith('http')) {
+    moment.image = `${frontendUrl}/${req.file?.path.replaceAll('\\', '/').replace('public/', '')}`;
+    moment.uploadLocation = UPLOAD_LOCATION.LOCAL;
+  }
+
+  await moment.save();
 
   res.status(httpStatus.CREATED).json({
     statusCode: httpStatus.CREATED,

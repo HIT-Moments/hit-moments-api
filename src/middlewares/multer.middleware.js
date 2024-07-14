@@ -8,7 +8,7 @@ const { MAX_FILE_SIZE, TYPES_IMAGE_ALLOWED, TYPES_AUDIO_ALLOWED } = require('../
 
 const ALLOWED_TYPES = [...TYPES_IMAGE_ALLOWED, ...TYPES_AUDIO_ALLOWED];
 
-const storage = new CloudinaryStorage({
+const cloudinaryStorage = new CloudinaryStorage({
   cloudinary,
   params: {
     resource_type: async (req, file) => {
@@ -20,6 +20,13 @@ const storage = new CloudinaryStorage({
       }
       return 'raw';
     },
+  },
+  allowedFormats: ALLOWED_TYPES,
+});
+
+const localStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images');
   },
   allowedFormats: ALLOWED_TYPES,
   filename: (req, file, cb) => {
@@ -36,12 +43,46 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({
-  storage,
+const localUpload = multer({
+  storage: localStorage,
   fileFilter,
   limits: {
     fileSize: MAX_FILE_SIZE,
   },
 });
+
+const cloudUpload = multer({
+  storage: cloudinaryStorage,
+  fileFilter,
+  limits: {
+    fileSize: MAX_FILE_SIZE,
+  },
+});
+
+const upload = (fieldname) => (req, res, next) => {
+  cloudUpload.single(fieldname)(req, res, (cloudErr) => {
+    if (cloudErr) {
+      console.error('Cloud upload error:', cloudErr);
+      return next(cloudErr);
+    }
+    return next();
+  });
+};
+
+// const upload = (fieldname) => (req, res, next) => {
+//   cloudUpload.single(fieldname)(req, res, (cloudErr) => {
+//     if (cloudErr) {
+//       localUpload.single(fieldname)(req, res, (localErr) => {
+//         if (localErr) {
+//           console.error('Local upload error:', localErr);
+//           return next(localErr);
+//         }
+//         return next();
+//       });
+//     } else {
+//       next();
+//     }
+//   });
+// };
 
 module.exports = upload;
