@@ -9,7 +9,7 @@ const createMusic = {
   }),
 };
 
-const getMusicByID = {
+const getMusicById = {
   params: joi.object({
     musicId: joi.string().required(),
   }),
@@ -17,11 +17,8 @@ const getMusicByID = {
 
 const getMusic = {
   body: joi.object({
-    id: joi.string().custom(objectId),
-    link: joi.string(),
     name: joi.string().max(50),
     author: joi.string().max(50),
-    file: joi.string().optional(),
   }),
 };
 
@@ -40,5 +37,5 @@ module.exports = {
   createMusic,
   getMusic,
   updateMusic,
-  getMusicByID,
+  getMusicById,
 }

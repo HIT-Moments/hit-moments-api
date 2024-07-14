@@ -17,6 +17,10 @@ const musicSchema = new mongoose.Schema(
       trim: true,
       required: true,
     },
+    isDelete: {
+      type: Boolean,
+      default: false,
+    },
   }
 );
 

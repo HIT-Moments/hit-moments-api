@@ -3,7 +3,6 @@ const httpStatus = require('http-status');
 const { i18n } = require('../config');
 const { Music } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
-const musicModel = require('../models/music.model');
 
 const createMusic = catchAsync(async (req, res, next) => {
   const link = req.file?.path;
@@ -19,8 +18,8 @@ const createMusic = catchAsync(async (req, res, next) => {
   });
 });
 
-const getMusicByID = catchAsync(async (req, res, next) => {
-  const music = await Music.findById(req.params.musicId);
+const getMusicById = catchAsync(async (req, res, next) => {
+  const music = await Music.findOne({_id: req.params.musicId, isDelete: false});
 
   if(!music) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
@@ -45,7 +44,7 @@ const getMusic = catchAsync(async (req, res, next) => {
 
   const query = {};
 
-  const music = await Music.find({ ...req.body }).limit(limit).skip(skip).sort(sort);
+  const music = await Music.find({ ...req.body, isDelete: false }).limit(limit).skip(skip).sort(sort);
 
   const totalResults = await Music.countDocuments(query);
 
@@ -68,13 +67,12 @@ const getMusic = catchAsync(async (req, res, next) => {
 
 const updateMusicById = catchAsync(async (req, res, next) => {
   const updateBody  = req.body;
-  const { musicId } = req.params;
 
   if (!updateBody) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('music.updateBodyRequired'));
   }
 
-  const music = await Music.findById(musicId);
+  const music = await Music.findOne({_id: req.params.musicId, isDelete: false});
 
   if (!music) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
@@ -98,14 +96,18 @@ const updateMusicById = catchAsync(async (req, res, next) => {
 });
 
 const deleteMusicById = catchAsync(async (req, res, next) =>{
-  const music = await Music.findByIdAndDelete(req.params.musicId);
+  const music = await Music.findOne({ _id: req.params.musicId, isDelete: false});
 
   if(!music) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
   }
 
+  music.isDelete = true;
+
+  await music.save();
+
   res.status(httpStatus.OK).json({
-    message: i18n.translate('music.delete.deleteSuccess'),
+    message: i18n.translate('music.deleteSuccess'),
     statusCode: httpStatus.OK,
     data: {
       music,
@@ -119,6 +121,6 @@ module.exports = {
   createMusic,
   getMusic,
   updateMusicById,
-  getMusicByID,
+  getMusicById,
   deleteMusicById,
 };

@@ -15,8 +15,8 @@ musicRoute
 
 musicRoute
   .route('/:musicId')
-  .get(validate(musicValidation.getMusicByID), musicController.getMusicByID)
-  .delete(validate(musicValidation.deleteMusic), musicController.deleteMusicById)
-  .put(upload.single('file'), validate(musicValidation.updateMusic), musicController.updateMusicById);
+  .get(validate(musicValidation.getMusicById), musicController.getMusicById)
+  .delete(author(['admin']), validate(musicValidation.deleteMusic), musicController.deleteMusicById)
+  .put(author(['admin']), upload.single('file'), validate(musicValidation.updateMusic), musicController.updateMusicById);
 
 module.exports = musicRoute;
