@@ -50,12 +50,6 @@ const unblockFriend = {
   }),
 };
 
-const listSentRequests = {
-  params: joi.object({
-    userId: joi.string().custom(objectId),
-  }),
-};
-
 const cancelSentRequest = {
   body: joi.object({
     receiverId: joi.string().required().custom(objectId),
@@ -71,6 +65,5 @@ module.exports = {
   blockFriend,
   unblockFriend,
   searchUserByEmail,
-  listSentRequests,
   cancelSentRequest,
 };

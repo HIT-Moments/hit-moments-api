@@ -18,7 +18,7 @@ friendRoute.route('/list-received-request').get(friendController.listReceivedReq
 friendRoute.route('/list-friends').get(validate(friendValidation.getListFriends), friendController.getListFriends);
 friendRoute
   .route('/list-send-request')
-  .get(validate(friendValidation.listSentRequests), friendController.listSentRequests);
+  .get(friendController.listSentRequests);
 
 friendRoute.route('/delete-friend').delete(validate(friendValidation.deleteFriend), friendController.deleteFriend);
 

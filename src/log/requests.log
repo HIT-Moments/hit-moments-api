@@ -1,0 +1,15 @@
+12:45:27 14/7/2024 	 GET /api/v1/friends/list-send-request 200 27ms 	 cally233@belgianairways.com 	 ::1
+12:45:46 14/7/2024 	 POST /api/v1/friends/cancel-request 400 24ms 	 cally233@belgianairways.com 	 ::1
+12:46:02 14/7/2024 	 GET /api/v1/friends/list-send-request 200 12ms 	 cally233@belgianairways.com 	 ::1
+12:46:48 14/7/2024 	 POST /api/v1/friends/cancel-request 400 14ms 	 cally233@belgianairways.com 	 ::1
+12:46:53 14/7/2024 	 GET /api/v1/friends/list-send-request 200 14ms 	 cally233@belgianairways.com 	 ::1
+12:47:33 14/7/2024 	 POST /api/v1/friends/cancel-request 404 28ms 	 cally233@belgianairways.com 	 ::1
+12:47:54 14/7/2024 	 POST /api/v1/friends/cancel-request 400 26ms 	 cally233@belgianairways.com 	 ::1
+12:48:37 14/7/2024 	 POST /api/v1/friends/cancel-request 500 22ms 	 cally233@belgianairways.com 	 ::1
+12:48:57 14/7/2024 	 POST /api/v1/friends/cancel-request 200 36ms 	 cally233@belgianairways.com 	 ::1
+12:49:00 14/7/2024 	 GET /api/v1/friends/list-send-request 200 18ms 	 cally233@belgianairways.com 	 ::1
+12:49:19 14/7/2024 	 POST /api/v1/friends/invite 200 21ms 	 cally233@belgianairways.com 	 ::1
+12:49:22 14/7/2024 	 GET /api/v1/friends/list-send-request 200 27ms 	 cally233@belgianairways.com 	 ::1
+12:49:26 14/7/2024 	 POST /api/v1/friends/cancel-request 200 17ms 	 cally233@belgianairways.com 	 ::1
+12:49:29 14/7/2024 	 POST /api/v1/friends/cancel-request 400 19ms 	 cally233@belgianairways.com 	 ::1
+12:49:31 14/7/2024 	 GET /api/v1/friends/list-send-request 200 10ms 	 cally233@belgianairways.com 	 ::1

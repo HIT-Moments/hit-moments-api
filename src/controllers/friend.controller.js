@@ -63,7 +63,7 @@ const listReceivedRequests = catchAsync(async (req, res, next) => {
   res.json({
     message: i18n.translate('friend.listReceivedRequests'),
     statusCode: https.OK,
-    data: { friendRequests: friendRequests, total: friend.length },
+    data: { friendRequests: friendRequests, total: friendRequests.length },
   });
 });
 
