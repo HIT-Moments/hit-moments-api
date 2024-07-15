@@ -4,4 +4,5 @@ module.exports = {
   catchAsync: require('./catchAsync'),
   formatEmail: require('./formatEmail'),
   scheduleTasks: require('./scheduleTasks'),
+  getClientIP: require('./getClientIP'),
 };

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const { catchAsync } = require('../utils');
+const { catchAsync, getClientIP } = require('../utils');
 
 const writeToLogFile = (logMessage) => {
   const logFilePath = path.join(__dirname, '..', '..', 'log', 'requests.log');
@@ -17,8 +17,9 @@ const loggingBot = catchAsync(async (req, res, next) => {
   res.on('finish', async () => {
     const duration = Date.now() - start;
     const date = new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh' });
+    const clientIp = getClientIP(req);
 
-    const logMessage = `${date} \t ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms \t ${req?.user?.email || 'Anonymous'} \t ${req.ip}`;
+    const logMessage = `${date} \t ${req.method} ${req.originalUrl} ${res.statusCode} ${duration}ms \t ${req?.user?.email || 'Anonymous'} \t ${clientIp}`;
 
     writeToLogFile(logMessage);
   });
