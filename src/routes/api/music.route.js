@@ -11,12 +11,12 @@ musicRoute.use(auth);
 musicRoute
   .route('/')
   .get(validate(musicValidation.searchMusic), musicController.searchMusic)
-  .post(author(['admin']), upload.single('file'), validate(musicValidation.createMusic), musicController.createMusic);
+  .post(author(['admin']), upload('file'), validate(musicValidation.createMusic), musicController.createMusic);
 
 musicRoute
   .route('/:musicId')
   .get(author(['admin']), validate(musicValidation.getMusicById), musicController.getMusicById)
   .delete(author(['admin']), validate(musicValidation.deleteMusic), musicController.deleteMusicById)
-  .put(author(['admin']), upload.single('file'), validate(musicValidation.updateMusic), musicController.updateMusicById);
+  .put(author(['admin']), upload('file'), validate(musicValidation.updateMusic), musicController.updateMusicById);
 
 module.exports = musicRoute;

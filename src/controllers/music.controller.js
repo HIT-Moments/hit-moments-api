@@ -35,30 +35,32 @@ const getMusicById = catchAsync(async (req, res, next) => {
 });
 
 const searchMusic = catchAsync(async (req, res, next) => {
-  const { limit = 10, page = 1, sortBy = 'createdAt : desc' } = req.query;
+  const { limit = 10, page = 1, sortBy = 'createdAt:desc', search = '' } = req.query;
 
   const skip = (+page - 1) * +limit;
 
   const [field, value] = sortBy.split(':');
-  const sort = { [field]: value === 'asc' ? 1 : -1 };
+  const sort = { [field.trim()]: value.trim() === 'asc' ? 1 : -1 };
 
   const query = { isDelete: false };
 
-  const music = await Music.find({ ...req.body, isDelete: false }).limit(limit).skip(skip).sort(sort);
+  const regex = new RegExp(req.headers['search'] || '', 'i'); // 'i' for case-insensitive
+  query.$or = [
+    { name: regex },
+    { author: regex },
+  ];
 
+
+  const music = await Music.find(query).limit(+limit).skip(skip).sort(sort);
   const totalResults = await Music.countDocuments(query);
 
-  if (music.length === 0) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
-  }
-
   res.status(httpStatus.OK).json({
-    message: i18n.translate('music.getSuccess'),
+    message: music.length > 0 ? i18n.translate('music.getSuccess') : i18n.translate('music.notFound'),
     statusCode: httpStatus.OK,
     data: {
       music,
       limit: +limit,
-      currarentPage: +page,
+      currentPage: +page,
       totalPage: Math.ceil(totalResults / +limit),
       totalResults,
     },
