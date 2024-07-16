@@ -50,10 +50,11 @@ const searchMusic = catchAsync(async (req, res, next) => {
     { author: regex },
   ];
 
-
-  const music = await Music.find(query).limit(+limit).skip(skip).sort(sort);
-  const totalResults = await Music.countDocuments(query);
-
+  const [music, totalResults] = await Promise.all([
+    Music.find(query).limit(+limit).skip(skip).sort(sort),
+    Music.countDocuments(query)
+  ]);
+  
   res.status(httpStatus.OK).json({
     message: music.length > 0 ? i18n.translate('music.getSuccess') : i18n.translate('music.notFound'),
     statusCode: httpStatus.OK,

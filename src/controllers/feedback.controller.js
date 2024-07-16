@@ -44,9 +44,11 @@ const getallFeedback = catchAsync(async (req, res, next) => {
 
   const query = {};
 
-  const feedbacks = await Feedback.find().limit(limit).skip(skip).sort(sort);
+  const [feedbacks, totalResults] = await Promise.all([
+    Feedback.find().limit(limit).skip(skip).sort(sort),
+    Feedback.countDocuments(query)
+  ]);
 
-  const totalResults = await Feedback.countDocuments(query);
 
   res.status(httpStatus.OK).json({
     message: i18n.translate('feedback.getDetail'),
