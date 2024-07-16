@@ -102,6 +102,8 @@ const login = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.emailNotVerified'));
   }
 
+  user.password = undefined;
+
   const accessToken = generateToken({ id: user._id });
 
   res.status(httpStatus.OK).json({
