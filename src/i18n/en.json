@@ -112,5 +112,20 @@
   },
   "rateLimit": {
     "tooManyRequests": "Too many requests, please try again later."
+  },
+  "conversation": {
+    "maxParticipants": "Max number of participants",
+    "alreadyExist": "Conversation already exists",
+    "createSuccess": "Conversation created successfully",
+    "getConversationsSuccess": "Get conversation of user successfully",
+    "getListConversationsSuccess": "Get list of conversations successfully",
+    "duplicateParticipants": "Duplicate participants",
+    "deleteSuccess": "Delete conversation successfully",
+    "notFound": "Conversation not found",
+    "getConversationByIdSuccess": "Get conversation by Id successfully"
+  },
+  "message": {
+    "sendSucess": "Send message successfully",
+    "getSucess": "Get message successfully"
   }
 }

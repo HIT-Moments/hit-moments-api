@@ -112,5 +112,20 @@
   },
   "rateLimit": {
     "tooManyRequests": "Quá nhiều yêu cầu, vui lòng thử lại sau"
+  },
+  "conversation": {
+    "maxParticipants": "Cuộc hội thoại đã tối đa người",
+    "alreadyExist": "Cuộc hội thoại đã tồn tại",
+    "createSuccess": "Đăng ký cuộc hội thoại thành công",
+    "getConversationsSuccess": "Lấy danh sách cuộc hội thoại của người dùng thành công",
+    "getListConversationsSuccess": "Lấy danh sách tất cả cuộc hội thoại thành công",
+    "duplicateParticipants": "Người tham gia bị trùng lặp",
+    "deleteSuccess": "Xoá cuộc hội thoại thành công",
+    "notFound": "Không tìm thấy cuộc hội thoại",
+    "getConversationByIdSuccess": "Lấy cuộc hội thoại theo Id thành công"
+  },
+  "message": {
+    "sendSucess": "Gửi tin nhắn thành công",
+    "getSuccess": "Lấy tin nhắn thành công"
   }
 }

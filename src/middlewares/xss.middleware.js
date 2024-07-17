@@ -1,21 +1,22 @@
 const xss = require('xss');
 
+const sanitizeValue = (value) => {
+  if (typeof value === 'string') {
+    return xss(value);
+  } else if (typeof value === 'object' && value !== null) {
+    return value;
+  }
+  return value;
+};
+
 const xssMiddleware = (req, res, next) => {
-  if (req.body) {
-    for (let key in req.body) {
-      req.body[key] = xss(req.body[key]);
+  ['body', 'query', 'params'].forEach((prop) => {
+    if (req[prop]) {
+      for (let key in req[prop]) {
+        req[prop][key] = sanitizeValue(req[prop][key]);
+      }
     }
-  }
-  if (req.query) {
-    for (let key in req.query) {
-      req.query[key] = xss(req.query[key]);
-    }
-  }
-  if (req.params) {
-    for (let key in req.params) {
-      req.params[key] = xss(req.params[key]);
-    }
-  }
+  });
   next();
 };
 
