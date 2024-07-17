@@ -24,6 +24,7 @@ const env = {
     url: process.env.TIKTOK_URL,
     token: process.env.TIKTOK_TOKEN,
     cookie: process.env.TIKTOK_COOKIE,
+    imageUrl: process.env.TIKTOK_IMAGE_URL,
   },
   discordToken: process.env.DISCORD_TOKEN,
   discordChannelId: process.env.DISCORD_CHANNEL_ID,
