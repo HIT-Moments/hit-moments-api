@@ -33,9 +33,12 @@ const getMoments = catchAsync(async (req, res) => {
   const { limit = 10, page = 1, isDeleted = false } = req.query;
   const skip = (+page - 1) * limit;
   const query = { isDeleted };
-  const moments = await Moment.find(query).limit(limit).skip(skip);
-  const totalMoments = await Moment.countDocuments(query);
 
+  const [moments, totalMoments] = await Promise.all([
+    Moment.find(query).limit(limit).skip(skip),
+    Moment.countDocuments(query)
+    
+  ])
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsSuccess'),

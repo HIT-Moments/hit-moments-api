@@ -30,8 +30,11 @@ const getUsers = catchAsync(async (req, res) => {
   const { limit = 10, page = 1 } = req.query;
   const skip = (+page - 1) * limit;
   const query = {};
-  const users = await User.find().limit(limit).skip(skip);
-  const totalUsers = await User.countDocuments(query);
+
+  const [users, totalUsers] = await Promise.all([
+    User.find().limit(limit).skip(skip),
+    User.countDocuments(query)
+  ]);
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
