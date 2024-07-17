@@ -102,6 +102,8 @@ const login = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.UNAUTHORIZED, i18n.translate('auth.emailNotVerified'));
   }
 
+  user.password = undefined;
+
   const accessToken = generateToken({ id: user._id });
 
   res.status(httpStatus.OK).json({
@@ -126,6 +128,12 @@ const getMe = async (req, res) => {
 
 const updateProfile = catchAsync(async (req, res) => {
   const { user } = req;
+
+  if (req.file) {
+    user.avatar = req.file.path;
+  }
+
+  req.body.formattedEmail = req.body.email ? formatEmail(req.body.email) : undefined;
 
   Object.assign(user, req.body);
 
