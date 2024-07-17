@@ -129,6 +129,12 @@ const getMe = async (req, res) => {
 const updateProfile = catchAsync(async (req, res) => {
   const { user } = req;
 
+  if (req.file) {
+    user.avatar = req.file.path;
+  }
+
+  req.body.formattedEmail = req.body.email ? formatEmail(req.body.email) : undefined;
+
   Object.assign(user, req.body);
 
   await user.save();
