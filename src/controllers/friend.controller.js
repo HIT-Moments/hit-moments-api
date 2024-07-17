@@ -31,17 +31,18 @@ const sendRequest = catchAsync(async (req, res, next) => {
   }
 
   let receiverFriend = await Friend.findOne({ userId: receiverId });
+  let senderFriend = await Friend.findOne({ userId: senderId });
 
   if (receiverFriend.friendList.includes(senderId)) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
   }
 
-  if (receiverFriend.friendRequest.includes(senderId)) {
+  if (receiverFriend.friendRequest.includes(receiverId)) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyRequest'));
   }
 
-  if (receiverFriend.blockList.includes(senderId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyBlocked'));
+  if (senderFriend.blockList.includes(receiverId)) {
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyBlock'));
   }
 
   receiverFriend.friendRequest.push(senderId);
@@ -58,7 +59,7 @@ const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');
 
-  const { friendRequests = [] } = friend;
+  const friendRequests = friend.friendRequest;
 
   res.json({
     message: i18n.translate('friend.listReceivedRequests'),
