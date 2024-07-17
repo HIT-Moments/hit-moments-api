@@ -17,7 +17,7 @@ const getMusicById = {
 
 const searchMusic = {
   params: joi.object({
-    search: joi.string(),
+    query: joi.string(),
   }),
 };
 

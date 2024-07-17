@@ -44,7 +44,7 @@ const searchMusic = catchAsync(async (req, res, next) => {
 
   const query = { isDelete: false };
 
-  const regex = new RegExp(req.headers['search'] || '', 'i'); // 'i' for case-insensitive
+  const regex = new RegExp(search, 'i');
   query.$or = [
     { name: regex },
     { author: regex },
