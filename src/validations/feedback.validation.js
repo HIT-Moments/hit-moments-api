@@ -17,8 +17,8 @@ const updateFeedbackById = {
     feedbackId: joi.string().required(),
   }),
   body: joi.object({
-    content: joi.string().min(10).max(500).required(),
-    image: joi.string().required(),
+    content: joi.string().min(10).max(500),
+    image: joi.string(),
   }),
 };
 

@@ -59,10 +59,11 @@
   "feedback": {
     "createSuccess": "Feedback created successfully",
     "notFound": "Feedback not found",
-    "getList": "Get all feedback successfully",
+    "getDetail": "Get all feedback successfully",
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
-    "deleteSuccess": "Delete feedback successfully"
+    "deleteSuccess": "Delete feedback successfully",
+    "getMyFeedbacks": "Get my feedbacks successfully"
   },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"
@@ -127,5 +128,13 @@
   "message": {
     "sendSucess": "Send message successfully",
     "getSucess": "Get message successfully"
+  },
+  "music": {
+    "createSuccess": "Music added successfully",
+    "notFound":"Music not found",
+    "musicRequired":"No music uploaded",
+    "getSuccess":"Get music successfully",
+    "updateSuccess":"Update music successfully",
+    "deleteSuccess": "Delete music successfully"
   }
 }

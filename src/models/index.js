@@ -7,4 +7,5 @@ module.exports = {
   React: require('./react.model'),
   Conversation: require('./conversation.model'),
   Message: require('./message.model'),
+  Music: require('./music.model'),
 };

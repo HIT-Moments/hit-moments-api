@@ -9,4 +9,5 @@ module.exports = {
   reactValidation: require('./react.validation'),
   conversationValidation: require('./conversation.validation'),
   messageValidation: require('./message.validation'),
+  musicValidation: require('./music.validation'),
 };

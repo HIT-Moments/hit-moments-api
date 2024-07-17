@@ -8,4 +8,5 @@ module.exports = {
   reactController: require('./react.controller'),
   conversationController: require('./conversation.controller'),
   messageController: require('./message.controller'),
+  musicController: require('./music.controller'),
 };
