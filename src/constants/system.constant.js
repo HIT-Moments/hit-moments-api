@@ -1,4 +1,4 @@
-const { apiUrl } = require('../config/env.config');
+const { env } = require('../config');
 
 const LOCALES = ['en', 'vi'];
 
@@ -12,12 +12,12 @@ const TYPES_IMAGE_ALLOWED = ['image/png', 'image/jpg', 'image/jpeg'];
 
 const TYPES_AUDIO_ALLOWED = ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/midi'];
 
-const SAMPLE_IMAGE = `${apiUrl}/images/sample.png`;
+const SAMPLE_IMAGE = `${env.frontendUrl}/images/sample.png`;
 
 const MIME_TYPES = {
-  'png': 'image/png',
-  'jpg': 'image/jpg',
-  'jpeg': 'image/jpeg',
+  png: 'image/png',
+  jpg: 'image/jpg',
+  jpeg: 'image/jpeg',
 };
 
 module.exports = {
@@ -28,5 +28,5 @@ module.exports = {
   TYPES_IMAGE_ALLOWED,
   TYPES_AUDIO_ALLOWED,
   SAMPLE_IMAGE,
-  MIME_TYPES
+  MIME_TYPES,
 };
