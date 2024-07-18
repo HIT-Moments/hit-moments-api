@@ -37,7 +37,7 @@ const sendRequest = catchAsync(async (req, res, next) => {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
   }
 
-  if (receiverFriend.friendRequest.includes(receiverId)) {
+  if (receiverFriend.friendRequest.includes(senderId)) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyRequest'));
   }
 
@@ -192,8 +192,11 @@ const blockFriend = catchAsync(async (req, res, next) => {
   }
 
   const friendFriendIndex = friendFriend.friendList.indexOf(userId);
+
   if (friendFriendIndex !== -1) {
     friendFriend.friendList.splice(friendFriendIndex, 1);
+  }else{
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.notInList'));
   }
 
   if (!userFriend.blockList.includes(friendId)) {
@@ -221,6 +224,7 @@ const unblockFriend = catchAsync(async (req, res, next) => {
   }
 
   const blockIndex = userFriend.blockList.indexOf(friendId);
+
   if (blockIndex === -1) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.notBlocked'));
   }
