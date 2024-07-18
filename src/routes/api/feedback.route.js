@@ -1,20 +1,23 @@
 const express = require('express');
 
-const { upload, validate } = require('../../middlewares');
 const { feedbackController } = require('../../controllers');
 const { feedbackValidation } = require('../../validations');
+const { auth, author, upload, validate } = require('../../middlewares');
 
-const userRoute = express.Router();
+const feedbackRoute = express.Router();
 
-userRoute
+feedbackRoute.use(auth);
+
+feedbackRoute
   .route('/')
-  .post(upload('image'), validate(feedbackValidation.createFeedback), feedbackController.createFeedback)
-  .get(feedbackController.getallFeedback);
+  .get(author(['admin']), feedbackController.getallFeedback)
+  .post(upload('image'), validate(feedbackValidation.createFeedback), feedbackController.createFeedback);
 
-userRoute
+feedbackRoute.route('/me').get(feedbackController.getMyFeedbacks);
+
+feedbackRoute
   .route('/:feedbackId')
-  .get(validate(feedbackValidation.getFeedback), feedbackController.getFeedback)
-  .put(upload('image'), validate(feedbackValidation.updateFeedbackById), feedbackController.updateFeedbackById)
-  .delete(validate(feedbackValidation.deleteFeedbackById), feedbackController.deleteFeedbackById);
+  .get(author(['admin']), validate(feedbackValidation.getFeedback), feedbackController.getFeedback)
+  .delete(author(['admin']), validate(feedbackValidation.deleteFeedbackById), feedbackController.deleteFeedbackById);
 
-module.exports = userRoute;
+module.exports = feedbackRoute;

@@ -1,6 +1,6 @@
 const express = require('express');
 
-const { auth, validate } = require('../../middlewares');
+const { auth, validate, upload } = require('../../middlewares');
 const { authValidation } = require('../../validations');
 const { authController } = require('../../controllers');
 
@@ -12,7 +12,7 @@ authRoute.post('/login', validate(authValidation.login), authController.login);
 
 authRoute
   .get('/me', auth, authController.getMe)
-  .put('/me', auth, validate(authValidation.updateProfile), authController.updateProfile);
+  .put('/me', auth, upload('avatar'), validate(authValidation.updateProfile), authController.updateProfile);
 
 authRoute.put('/change-password', auth, validate(authValidation.changePassword), authController.changePassword);
 

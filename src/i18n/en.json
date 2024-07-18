@@ -59,10 +59,11 @@
   "feedback": {
     "createSuccess": "Feedback created successfully",
     "notFound": "Feedback not found",
-    "getList": "Get all feedback successfully",
+    "getDetail": "Get all feedback successfully",
     "getFeedback": "Get feedback successfully",
     "updateSuccess": "Update feedback successfully",
-    "deleteSuccess": "Delete feedback successfully"
+    "deleteSuccess": "Delete feedback successfully",
+    "getMyFeedbacks": "Get my feedbacks successfully"
   },
   "custom": {
     "regexObjectId": "Mongo format id is incorrect"
@@ -112,5 +113,28 @@
   },
   "rateLimit": {
     "tooManyRequests": "Too many requests, please try again later."
+  },
+  "conversation": {
+    "maxParticipants": "Max number of participants",
+    "alreadyExist": "Conversation already exists",
+    "createSuccess": "Conversation created successfully",
+    "getConversationsSuccess": "Get conversation of user successfully",
+    "getListConversationsSuccess": "Get list of conversations successfully",
+    "duplicateParticipants": "Duplicate participants",
+    "deleteSuccess": "Delete conversation successfully",
+    "notFound": "Conversation not found",
+    "getConversationByIdSuccess": "Get conversation by Id successfully"
+  },
+  "message": {
+    "sendSucess": "Send message successfully",
+    "getSucess": "Get message successfully"
+  },
+  "music": {
+    "createSuccess": "Music added successfully",
+    "notFound":"Music not found",
+    "musicRequired":"No music uploaded",
+    "getSuccess":"Get music successfully",
+    "updateSuccess":"Update music successfully",
+    "deleteSuccess": "Delete music successfully"
   }
 }

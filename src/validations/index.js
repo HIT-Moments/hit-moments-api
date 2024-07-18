@@ -7,4 +7,7 @@ module.exports = {
   momentValidation: require('./moment.validation'),
   friendValidation: require('./friend.validation'),
   reactValidation: require('./react.validation'),
+  conversationValidation: require('./conversation.validation'),
+  messageValidation: require('./message.validation'),
+  musicValidation: require('./music.validation'),
 };
