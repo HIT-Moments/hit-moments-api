@@ -88,11 +88,19 @@ const deleteConversation = catchAsync(async (req, res, next) => {
 const getListConversationById = catchAsync(async (req, res, next) => {
   const { conversationId } = req.params;
 
-  const conversation = await Conversation.findById(conversationId).populate('messages', 'senderId text');
+  let conversation = await Conversation.findById(conversationId).populate({
+    path: 'messages',
+    select: 'senderId text',
+    populate: {
+      path: 'senderId',
+      select: 'fullname avatar'
+    }
+  });
+
   if (!conversation) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('conversation.notFound'));
   }
-
+  
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('conversation.getConversationByIdSuccess'),
