@@ -7,7 +7,7 @@ const { getReceiverSocketId, io } = require('../sockets/socket');
 
 const sendMessage = catchAsync(async (req, res, next) => {
   const senderId = req.user._id;
-  const { conversationId,text } = req.body;
+  const { conversationId, text } = req.body;
 
   let conversation = await Conversation.findById(conversationId);
 
@@ -15,7 +15,7 @@ const sendMessage = catchAsync(async (req, res, next) => {
     throw new ApiError(https.NOT_FOUND, i18n.translate('conversation.notFound'));
   }
 
-  const message = await Message.create({senderId , ...req.body});
+  const message = await Message.create({ senderId, ...req.body });
 
   if (message) {
     conversation.messages.push(message);
@@ -45,8 +45,8 @@ const getMessages = catchAsync(async (req, res, next) => {
     select: 'senderId text',
     populate: {
       path: 'senderId',
-      select: 'fullname avatar'
-    }
+      select: 'fullname avatar',
+    },
   });
 
   if (!conversation) {

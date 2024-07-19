@@ -93,14 +93,14 @@ const getListConversationById = catchAsync(async (req, res, next) => {
     select: 'senderId text',
     populate: {
       path: 'senderId',
-      select: 'fullname avatar'
-    }
+      select: 'fullname avatar',
+    },
   });
 
   if (!conversation) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('conversation.notFound'));
   }
-  
+
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('conversation.getConversationByIdSuccess'),

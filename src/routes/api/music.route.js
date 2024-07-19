@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { musicController } = require('../../controllers');
-const { musicValidation } =  require('../../validations');
+const { musicValidation } = require('../../validations');
 const { auth, author, upload, validate } = require('../../middlewares');
 
 const musicRoute = express.Router();
