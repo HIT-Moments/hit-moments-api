@@ -130,7 +130,7 @@ const getListFriends = catchAsync(async (req, res, next) => {
   const friend = await Friend.findOne({ userId }).populate([
     {
       path: 'friendList',
-      select: 'id fullname email avatar',
+      select: 'id fullname avatar phoneNumber dob email',
     },
   ]);
 
