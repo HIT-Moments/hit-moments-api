@@ -195,7 +195,7 @@ const blockFriend = catchAsync(async (req, res, next) => {
 
   if (friendFriendIndex !== -1) {
     friendFriend.friendList.splice(friendFriendIndex, 1);
-  }else{
+  } else {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.notInList'));
   }
 

@@ -131,10 +131,10 @@
   },
   "music": {
     "createSuccess": "Music added successfully",
-    "notFound":"Music not found",
-    "musicRequired":"No music uploaded",
-    "getSuccess":"Get music successfully",
-    "updateSuccess":"Update music successfully",
+    "notFound": "Music not found",
+    "musicRequired": "No music uploaded",
+    "getSuccess": "Get music successfully",
+    "updateSuccess": "Update music successfully",
     "deleteSuccess": "Delete music successfully"
   }
 }

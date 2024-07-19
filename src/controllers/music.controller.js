@@ -19,9 +19,9 @@ const createMusic = catchAsync(async (req, res, next) => {
 });
 
 const getMusicById = catchAsync(async (req, res, next) => {
-  const music = await Music.findOne({_id: req.params.musicId, isDelete: false});
+  const music = await Music.findOne({ _id: req.params.musicId, isDelete: false });
 
-  if(!music) {
+  if (!music) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
   }
 
@@ -30,7 +30,7 @@ const getMusicById = catchAsync(async (req, res, next) => {
     statusCode: httpStatus.OK,
     data: {
       music,
-    }
+    },
   });
 });
 
@@ -45,16 +45,13 @@ const searchMusic = catchAsync(async (req, res, next) => {
   const query = { isDelete: false };
 
   const regex = new RegExp(search, 'i');
-  query.$or = [
-    { name: regex },
-    { author: regex },
-  ];
+  query.$or = [{ name: regex }, { author: regex }];
 
   const [music, totalResults] = await Promise.all([
     Music.find(query).limit(+limit).skip(skip).sort(sort),
-    Music.countDocuments(query)
+    Music.countDocuments(query),
   ]);
-  
+
   res.status(httpStatus.OK).json({
     message: music.length > 0 ? i18n.translate('music.getSuccess') : i18n.translate('music.notFound'),
     statusCode: httpStatus.OK,
@@ -69,13 +66,13 @@ const searchMusic = catchAsync(async (req, res, next) => {
 });
 
 const updateMusicById = catchAsync(async (req, res, next) => {
-  const updateBody  = req.body;
+  const updateBody = req.body;
 
   if (!updateBody) {
     throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('music.updateBodyRequired'));
   }
 
-  const music = await Music.findOne({_id: req.params.musicId, isDelete: false});
+  const music = await Music.findOne({ _id: req.params.musicId, isDelete: false });
 
   if (!music) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
@@ -98,10 +95,10 @@ const updateMusicById = catchAsync(async (req, res, next) => {
   });
 });
 
-const deleteMusicById = catchAsync(async (req, res, next) =>{
-  const music = await Music.findOne({ _id: req.params.musicId, isDelete: false});
+const deleteMusicById = catchAsync(async (req, res, next) => {
+  const music = await Music.findOne({ _id: req.params.musicId, isDelete: false });
 
-  if(!music) {
+  if (!music) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('music.notFound'));
   }
 
@@ -117,8 +114,6 @@ const deleteMusicById = catchAsync(async (req, res, next) =>{
     },
   });
 });
-
-
 
 module.exports = {
   createMusic,

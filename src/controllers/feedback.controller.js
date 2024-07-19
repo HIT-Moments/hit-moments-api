@@ -46,9 +46,8 @@ const getallFeedback = catchAsync(async (req, res, next) => {
 
   const [feedbacks, totalResults] = await Promise.all([
     Feedback.find().limit(limit).skip(skip).sort(sort),
-    Feedback.countDocuments(query)
+    Feedback.countDocuments(query),
   ]);
-
 
   res.status(httpStatus.OK).json({
     message: i18n.translate('feedback.getDetail'),
@@ -63,19 +62,19 @@ const getallFeedback = catchAsync(async (req, res, next) => {
   });
 });
 
-  const getMyFeedbacks = catchAsync(async (req, res, next) =>{
-    const userId = req.user.id;
+const getMyFeedbacks = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
 
-    const myFeedbacks = await Feedback.find({ userId });
+  const myFeedbacks = await Feedback.find({ userId });
 
-    res.status(httpStatus.OK).json({
-      message: i18n.translate('feedback.getMyFeedbacks'),
-      statusCode: httpStatus.OK,
-      data: {
-        myFeedbacks,
-      }
-    });
+  res.status(httpStatus.OK).json({
+    message: i18n.translate('feedback.getMyFeedbacks'),
+    statusCode: httpStatus.OK,
+    data: {
+      myFeedbacks,
+    },
   });
+});
 
 const deleteFeedbackById = catchAsync(async (req, res, next) => {
   const feedback = await Feedback.findByIdAndDelete(req.params.feedbackId);
