@@ -52,15 +52,14 @@ const getReportOfMoment = catchAsync(async (req, res, next) => {
 
 const getList = catchAsync(async (req, res, next) => {
   const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
-  
+
   const skip = (+page - 1) * limit;
   const query = {};
 
   const [reports, totalResults] = await Promise.all([
     Report.find().limit(limit).skip(skip),
-    Report.countDocuments(query)
-  ])
- 
+    Report.countDocuments(query),
+  ]);
 
   res.json({
     message: i18n.translate('report.getList'),

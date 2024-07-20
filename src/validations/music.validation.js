@@ -13,7 +13,7 @@ const getMusicById = {
   params: joi.object({
     musicId: joi.string().required(),
   }),
-}
+};
 
 const searchMusic = {
   query: joi.object({
@@ -36,7 +36,7 @@ const deleteMusic = {
   params: joi.object({
     musicId: joi.string().required(),
   }),
-}
+};
 
 module.exports = {
   createMusic,
@@ -44,4 +44,4 @@ module.exports = {
   updateMusic,
   getMusicById,
   deleteMusic,
-}
+};

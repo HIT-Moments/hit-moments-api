@@ -131,10 +131,10 @@
   },
   "music": {
     "createSuccess": "Thêm nhạc thành công",
-    "notFound":"Không tìm thấy bài nhạc",
-    "musicRequired":"Không có nhạc tải lên",
-    "getSuccess":"Lấy danh sách nhạc thành công",
-    "updateSuccess":"Cập nhật thông tin nhạc thành công",
+    "notFound": "Không tìm thấy bài nhạc",
+    "musicRequired": "Không có nhạc tải lên",
+    "getSuccess": "Lấy danh sách nhạc thành công",
+    "updateSuccess": "Cập nhật thông tin nhạc thành công",
     "deleteSuccess": "Xoá nhạc thành công"
   }
 }

@@ -36,9 +36,8 @@ const getMoments = catchAsync(async (req, res) => {
 
   const [moments, totalMoments] = await Promise.all([
     Moment.find(query).limit(limit).skip(skip),
-    Moment.countDocuments(query)
-    
-  ])
+    Moment.countDocuments(query),
+  ]);
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsSuccess'),
