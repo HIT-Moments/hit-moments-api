@@ -196,18 +196,11 @@ const importMoments = catchAsync(async (req, res) => {
     });
   }
 
-  res.status(httpStatus.OK).json({
-    statusCode: httpStatus.OK,
-    message: i18n.translate('moment.importMomentsSuccess'),
-  });
-});
-
-const getMyTemporaryMoments = catchAsync(async (req, res) => {
   const temporaryMoments = await TemporaryMoment.find({ userId: req.user.id });
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
-    message: i18n.translate('moment.getMyTemporaryMomentsSuccess'),
+    message: i18n.translate('moment.importMomentsSuccess'),
     data: {
       moments: temporaryMoments,
     },
@@ -217,20 +210,14 @@ const getMyTemporaryMoments = catchAsync(async (req, res) => {
 const moveMomentToPermanent = catchAsync(async (req, res) => {
   const { momentIds } = req.body;
 
-  const temporaryMoments = [];
-
-  for (const momentId of momentIds) {
-    const temporaryMoment = await TemporaryMoment.findOne({ $and: [{ _id: momentId }, { userId: req.user.id }] });
-
-    if (!temporaryMoment) {
-      throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
-    }
-
-    temporaryMoments.push(temporaryMoment);
-  }
+  const temporaryMoments = await TemporaryMoment.find({ _id: { $in: momentIds }, userId: req.user.id });
 
   if (temporaryMoments.length === 0) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
+  if (temporaryMoments.length !== momentIds.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.invalidImportRecordsCount'));
   }
 
   for (const temporaryMoment of temporaryMoments) {
@@ -257,6 +244,5 @@ module.exports = {
   getMomentsByUser,
   restoreMoment,
   importMoments,
-  getMyTemporaryMoments,
   moveMomentToPermanent,
 };

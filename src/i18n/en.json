@@ -82,7 +82,8 @@
     "restoreMomentSuccess": "Restore moment successfully",
     "importMomentsSuccess": "Import moments successfully",
     "moveMomentToPermanentSuccess": "Moment added successfully",
-    "getMyTemporaryMomentsSuccess": "Get my moments import from facebook successfully"
+    "getMyTemporaryMomentsSuccess": "Get my moments import from Facebook successfully",
+    "invalidImportRecordsCount": "Invalid import records count"
   },
   "friend": {
     "notFound": "Friend not found",

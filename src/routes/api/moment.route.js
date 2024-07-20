@@ -21,7 +21,6 @@ momentRoute
 
 momentRoute
   .route('/temporary')
-  .get(momentController.getMyTemporaryMoments)
   .post(validate(momentValidation.moveMomentToPermanent), momentController.moveMomentToPermanent);
 
 momentRoute
