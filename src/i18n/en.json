@@ -104,7 +104,8 @@
     "listReceivedRequests": "Get received requests successfully",
     "getListFriends": "Get list friends successfully",
     "listSentRequestsSuccess": "Get list sent requests successfully",
-    "cancelSentRequestSuccess": "Cancel sent request successfully"
+    "cancelSentRequestSuccess": "Cancel sent request successfully",
+    "notFriend": "Not friend"
   },
   "react": {
     "createSuccess": "React created successfully",
