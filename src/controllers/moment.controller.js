@@ -1,10 +1,10 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
-const { Moment } = require('../models');
 const { UPLOAD_LOCATION } = require('../constants');
-const { ApiError, catchAsync } = require('../utils');
 const { frontendUrl } = require('../config/env.config');
+const { Moment, TemporaryMoment } = require('../models');
+const { ApiError, catchAsync, convertFacebookPosts } = require('../utils');
 
 const createMoment = catchAsync(async (req, res) => {
   const moment = await Moment.create({
@@ -36,9 +36,8 @@ const getMoments = catchAsync(async (req, res) => {
 
   const [moments, totalMoments] = await Promise.all([
     Moment.find(query).limit(limit).skip(skip),
-    Moment.countDocuments(query)
-    
-  ])
+    Moment.countDocuments(query),
+  ]);
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsSuccess'),
@@ -187,6 +186,67 @@ const restoreMoment = catchAsync(async (req, res) => {
   });
 });
 
+const importMoments = catchAsync(async (req, res) => {
+  const facebookPosts = await convertFacebookPosts(req.file?.path);
+
+  for (const post of facebookPosts) {
+    await TemporaryMoment.create({
+      ...post,
+      userId: req.user.id,
+    });
+  }
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.importMomentsSuccess'),
+  });
+});
+
+const getMyTemporaryMoments = catchAsync(async (req, res) => {
+  const temporaryMoments = await TemporaryMoment.find({ userId: req.user.id });
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.getMyTemporaryMomentsSuccess'),
+    data: {
+      moments: temporaryMoments,
+    },
+  });
+});
+
+const moveMomentToPermanent = catchAsync(async (req, res) => {
+  const { momentIds } = req.body;
+
+  const temporaryMoments = [];
+
+  for (const momentId of momentIds) {
+    const temporaryMoment = await TemporaryMoment.findOne({ $and: [{ _id: momentId }, { userId: req.user.id }] });
+
+    if (!temporaryMoment) {
+      throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+    }
+
+    temporaryMoments.push(temporaryMoment);
+  }
+
+  if (temporaryMoments.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
+  for (const temporaryMoment of temporaryMoments) {
+    await Moment.create({
+      ...temporaryMoment.toObject(),
+    });
+
+    await temporaryMoment.deleteOne();
+  }
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.moveMomentToPermanentSuccess'),
+  });
+});
+
 module.exports = {
   createMoment,
   getMoments,
@@ -196,4 +256,7 @@ module.exports = {
   getMyMoments,
   getMomentsByUser,
   restoreMoment,
+  importMoments,
+  getMyTemporaryMoments,
+  moveMomentToPermanent,
 };

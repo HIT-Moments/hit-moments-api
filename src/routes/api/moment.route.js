@@ -16,6 +16,15 @@ momentRoute
 momentRoute.route('/me').get(momentController.getMyMoments);
 
 momentRoute
+  .route('/import')
+  .post(upload('file'), validate(momentController.importMoments), momentController.importMoments);
+
+momentRoute
+  .route('/temporary')
+  .get(momentController.getMyTemporaryMoments)
+  .post(validate(momentValidation.moveMomentToPermanent), momentController.moveMomentToPermanent);
+
+momentRoute
   .route('/:momentId')
   .get(validate(momentValidation.getMoment), momentController.getMoment)
   .delete(validate(momentValidation.deleteMoment), momentController.deleteMoment)

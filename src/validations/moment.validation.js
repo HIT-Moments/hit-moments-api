@@ -66,6 +66,18 @@ const restoreMoment = {
   }),
 };
 
+const importMoments = {
+  body: joi.object({
+    file: joi.string().required(),
+  }),
+};
+
+const moveMomentToPermanent = {
+  body: joi.object({
+    momentIds: joi.array().items(joi.string().custom(objectId)).required(),
+  }),
+};
+
 module.exports = {
   createMoment,
   getMoments,
@@ -75,4 +87,6 @@ module.exports = {
   getMyMoments,
   getMomentsByUser,
   restoreMoment,
+  importMoments,
+  moveMomentToPermanent,
 };

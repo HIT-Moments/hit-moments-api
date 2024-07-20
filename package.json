@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "locket hithaui moment",
   "main": "./src/server.js",
+  "nodemonConfig": {
+    "ignore": [
+      "uploads/*"
+    ]
+  },
   "scripts": {
     "pro": "node ./src/server.js",
     "start": "nodemon ./src/server.js",
@@ -45,6 +50,7 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.14",
     "socket.io": "^4.7.5",
+    "unzipper": "^0.12.2",
     "xss": "^1.0.15"
   },
   "devDependencies": {

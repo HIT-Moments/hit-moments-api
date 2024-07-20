@@ -5,4 +5,5 @@ module.exports = {
   formatEmail: require('./formatEmail'),
   scheduleTasks: require('./scheduleTasks'),
   getClientIP: require('./getClientIP'),
+  convertFacebookPosts: require('./convertFacebookPosts'),
 };
