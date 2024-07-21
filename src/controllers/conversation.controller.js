@@ -34,7 +34,10 @@ const createConversation = catchAsync(async (req, res, next) => {
 const getMyConversation = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
 
-  const myConversations = await Conversation.find({ participants: userId });
+  const myConversations = await Conversation.find({ participants: userId }).populate({
+    path: 'messages',
+    options: { sort: { createdAt: -1 }, limit: 1 },
+  });
 
   if (!myConversations) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('conversation.notFound'));
