@@ -3,7 +3,7 @@ const joi = require('joi');
 const { objectId } = require('./custom.validation');
 
 const searchUserByEmail = {
-  body: joi.object({
+  query: joi.object({
     email: joi.string().required(),
   }),
 };

@@ -105,7 +105,8 @@
     "getListFriends": "Get list friends successfully",
     "listSentRequestsSuccess": "Get list sent requests successfully",
     "cancelSentRequestSuccess": "Cancel sent request successfully",
-    "suggestFriendsSuccess": "Get suggestions for friends successfully"
+    "suggestFriendsSuccess": "Get suggestions for friends successfully",
+    "notFriend": "Not friend"
   },
   "react": {
     "createSuccess": "React created successfully",

@@ -5,9 +5,9 @@ const { Friend, User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
 const searchUserByEmail = catchAsync(async (req, res, next) => {
-  const { email } = req.body;
+  const { email } = req.query;
 
-  const user = await User.findOne({ email }).select('_id fullname email avatar');
+  const user = await User.findOne({ email }).select('id fullname avatar phoneNumber dob email');
 
   res.json({
     message: i18n.translate('user.getUserSuccess'),
@@ -130,7 +130,7 @@ const getListFriends = catchAsync(async (req, res, next) => {
   const friend = await Friend.findOne({ userId }).populate([
     {
       path: 'friendList',
-      select: 'id fullname email avatar',
+      select: 'id fullname avatar phoneNumber dob email',
     },
   ]);
 
@@ -262,7 +262,7 @@ const listSentRequests = catchAsync(async (req, res, next) => {
 
   const friendIds = friends.map((friend) => friend.userId);
 
-  const users = await User.find({ _id: { $in: friendIds } }).select('fullname email avatar');
+  const users = await User.find({ _id: { $in: friendIds } }).select('id fullname avatar phoneNumber dob email');
 
   res.json({
     message: i18n.translate('friend.listSentRequestsSuccess'),
