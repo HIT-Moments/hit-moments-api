@@ -300,6 +300,68 @@ const cancelSentRequest = catchAsync(async (req, res, next) => {
   });
 });
 
+const suggestionFriends = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+
+  const userFriend = await Friend.findOne({ userId }).populate('friendList');
+
+  if (!userFriend) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('friend.notFound'));
+  }
+
+  const userFriendsIds = userFriend.friendList.map((friend) => friend._id.toString());
+
+  const mutualFriendsCount = {};
+
+  for (const friendId of userFriendsIds) {
+    const friend = await Friend.findOne({ userId: friendId }).populate('friendList');
+
+    if (friend) {
+      const friendFriendsIds = friend.friendList.map((f) => f._id.toString());
+
+      for (const mutualFriendId of friendFriendsIds) {
+        if (mutualFriendId !== userId.toString() && !userFriendsIds.includes(mutualFriendId)) {
+          if (!mutualFriendsCount[mutualFriendId]) {
+            mutualFriendsCount[mutualFriendId] = 0;
+          }
+          mutualFriendsCount[mutualFriendId] += 1;
+        }
+      }
+    }
+  }
+
+  const suggestions = Object.keys(mutualFriendsCount).map((key) => ({
+    userId: key,
+    mutualFriends: mutualFriendsCount[key],
+  }));
+
+  suggestions.sort((a, b) => b.mutualFriends - a.mutualFriends);
+
+  const suggestedUserIds = suggestions.map((s) => s.userId);
+  const suggestedUsersByMutualFriends = await User.find({ _id: { $in: suggestedUserIds } }).select(
+    'fullname email avatar',
+  );
+
+  const excludedIds = [userId, ...userFriendsIds, ...suggestedUserIds];
+
+  const randomUsers = await User.aggregate([
+    { $match: { _id: { $nin: excludedIds } } },
+    { $sample: { size: 10 } },
+    { $project: { fullname: 1, email: 1, avatar: 1 } },
+  ]);
+
+  const suggestedUsers = [...suggestedUsersByMutualFriends, ...randomUsers];
+
+  res.status(https.OK).json({
+    statusCode: https.OK,
+    message: i18n.translate('friend.suggestFriendsSuccess'),
+    data: {
+      suggestedUsers,
+      total: suggestedUsers.length,
+    },
+  });
+});
+
 module.exports = {
   sendRequest,
   deleteFriend,
@@ -313,4 +375,5 @@ module.exports = {
   searchUserByEmail,
   listSentRequests,
   cancelSentRequest,
+  suggestionFriends,
 };

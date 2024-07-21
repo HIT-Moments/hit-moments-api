@@ -56,6 +56,12 @@ const cancelSentRequest = {
   }),
 };
 
+const suggestionFriends = {
+  params: joi.object({
+    userId: joi.string().custom(objectId),
+  }),
+};
+
 module.exports = {
   sendRequest,
   deleteFriend,
@@ -66,4 +72,5 @@ module.exports = {
   unblockFriend,
   searchUserByEmail,
   cancelSentRequest,
+  suggestionFriends,
 };
