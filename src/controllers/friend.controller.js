@@ -1,14 +1,54 @@
 const https = require('http-status');
-
 const { i18n } = require('../config');
 const { Friend, User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 
+const getPopulatedFriend = async (userId) => {
+  return await Friend.findOne({ userId }).populate('friendList friendRequest blockList');
+};
+
+const getExcludedIds = (userId, userFriendsIds, userSentRequestsIds, userReceivedRequestsIds) => {
+  return [userId, ...userFriendsIds, ...userSentRequestsIds, ...userReceivedRequestsIds];
+};
+
+const fetchMutualFriends = async (userFriendsIds, userId, userSentRequestsIds, userReceivedRequestsIds) => {
+  const mutualFriendsCount = {};
+
+  for (const friendId of userFriendsIds) {
+    const friend = await Friend.findOne({ userId: friendId }).populate('friendList');
+    if (friend) {
+      const friendFriendsIds = friend.friendList.map((f) => f._id.toString());
+      for (const mutualFriendId of friendFriendsIds) {
+        if (
+          mutualFriendId !== userId.toString() &&
+          !userFriendsIds.includes(mutualFriendId) &&
+          !userSentRequestsIds.includes(mutualFriendId) &&
+          !userReceivedRequestsIds.includes(mutualFriendId)
+        ) {
+          mutualFriendsCount[mutualFriendId] = (mutualFriendsCount[mutualFriendId] || 0) + 1;
+        }
+      }
+    }
+  }
+  return mutualFriendsCount;
+};
+
+const fetchSuggestedUsersByMutualFriends = async (suggestions) => {
+  const suggestedUserIds = suggestions.map((s) => s.userId);
+  return await User.find({ _id: { $in: suggestedUserIds } }).select('fullname email avatar');
+};
+
+const fetchRandomUsers = async (excludedIds, size = 20) => {
+  return await User.aggregate([
+    { $match: { _id: { $nin: excludedIds } } },
+    { $sample: { size } },
+    { $project: { fullname: 1, email: 1, avatar: 1 } },
+  ]);
+};
+
 const searchUserByEmail = catchAsync(async (req, res, next) => {
   const { email } = req.query;
-
   const user = await User.findOne({ email }).select('id fullname avatar phoneNumber dob email');
-
   res.json({
     message: i18n.translate('user.getUserSuccess'),
     statusCode: https.OK,
@@ -19,68 +59,52 @@ const searchUserByEmail = catchAsync(async (req, res, next) => {
 const sendRequest = catchAsync(async (req, res, next) => {
   const senderId = req.user._id;
   const { receiverId } = req.body;
-
   const receiver = await User.findById(receiverId);
 
-  if (receiver._id.equals(senderId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.cannotSendRequestToSelf'));
+  if (!receiver || receiver._id.equals(senderId)) {
+    throw new ApiError(
+      receiver ? https.BAD_REQUEST : https.NOT_FOUND,
+      i18n.translate(receiver ? 'friend.cannotSendRequestToSelf' : 'friend.notFound'),
+    );
   }
 
-  if (!receiver) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  }
+  let receiverFriend = await getPopulatedFriend(receiverId);
+  let senderFriend = await getPopulatedFriend(senderId);
 
-  let receiverFriend = await Friend.findOne({ userId: receiverId });
-  let senderFriend = await Friend.findOne({ userId: senderId });
-
-  if (receiverFriend.friendList.includes(senderId)) {
+  if (
+    receiverFriend.friendList.includes(senderId) ||
+    receiverFriend.friendRequest.includes(senderId) ||
+    senderFriend.blockList.includes(receiverId)
+  ) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
-  }
-
-  if (receiverFriend.friendRequest.includes(senderId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyRequest'));
-  }
-
-  if (senderFriend.blockList.includes(receiverId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyBlock'));
   }
 
   receiverFriend.friendRequest.push(senderId);
   await receiverFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.sendRequestSuccess'),
-    statusCode: https.OK,
-    data: {},
-  });
+  res.json({ message: i18n.translate('friend.sendRequestSuccess'), statusCode: https.OK, data: {} });
 });
 
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');
-
-  const friendRequests = friend.friendRequest;
-
+  const friend = await getPopulatedFriend(userId);
   res.json({
     message: i18n.translate('friend.listReceivedRequests'),
     statusCode: https.OK,
-    data: { friendRequests, total: friendRequests.length },
+    data: { friendRequests: friend.friendRequest, total: friend.friendRequest.length },
   });
 });
 
 const acceptRequest = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { requesterId } = req.body;
-
-  let userFriend = await Friend.findOne({ userId });
-  let requesterFriend = await Friend.findOne({ userId: requesterId });
+  let userFriend = await getPopulatedFriend(userId);
+  let requesterFriend = await getPopulatedFriend(requesterId);
 
   if (!userFriend || !requesterFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
   const requestIndex = userFriend.friendRequest.findIndex((request) => request._id.toString() === requesterId);
-
   if (requestIndex === -1) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.requestNotFound'));
   }
@@ -91,19 +115,13 @@ const acceptRequest = catchAsync(async (req, res, next) => {
 
   await userFriend.save();
   await requesterFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.acceptRequestSuccess'),
-    statusCode: https.OK,
-    data: {},
-  });
+  res.json({ message: i18n.translate('friend.acceptRequestSuccess'), statusCode: https.OK, data: {} });
 });
 
 const delinceRequest = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { requesterId } = req.body;
-
-  let userFriend = await Friend.findOne({ userId });
+  let userFriend = await getPopulatedFriend(userId);
 
   if (!userFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
@@ -116,41 +134,24 @@ const delinceRequest = catchAsync(async (req, res, next) => {
 
   userFriend.friendRequest.splice(requestIndex, 1);
   await userFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.declineRequestSuccess'),
-    statusCode: https.OK,
-    data: {},
-  });
+  res.json({ message: i18n.translate('friend.declineRequestSuccess'), statusCode: https.OK, data: {} });
 });
 
 const getListFriends = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-
-  const friend = await Friend.findOne({ userId }).populate([
-    {
-      path: 'friendList',
-      select: 'id fullname avatar phoneNumber dob email',
-    },
-  ]);
-
-  const { friendList = [] } = friend;
+  const friend = await Friend.findOne({ userId }).populate('friendList', 'id fullname avatar phoneNumber dob email');
   res.json({
     message: i18n.translate('friend.getListFriends'),
     statusCode: https.OK,
-    data: {
-      friendList,
-      total: friendList.length,
-    },
+    data: { friendList: friend.friendList, total: friend.friendList.length },
   });
 });
 
 const deleteFriend = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { friendId } = req.body;
-
-  let userFriend = await Friend.findOne({ userId });
-  let friendFriend = await Friend.findOne({ userId: friendId });
+  let userFriend = await getPopulatedFriend(userId);
+  let friendFriend = await getPopulatedFriend(friendId);
 
   if (!userFriend || !friendFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
@@ -168,19 +169,14 @@ const deleteFriend = catchAsync(async (req, res, next) => {
 
   await userFriend.save();
   await friendFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.deleteSuccess'),
-    statusCode: https.OK,
-  });
+  res.json({ message: i18n.translate('friend.deleteSuccess'), statusCode: https.OK });
 });
 
 const blockFriend = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { friendId } = req.body;
-
-  const userFriend = await Friend.findOne({ userId });
-  const friendFriend = await Friend.findOne({ userId: friendId });
+  let userFriend = await getPopulatedFriend(userId);
+  let friendFriend = await getPopulatedFriend(friendId);
 
   if (!userFriend || !friendFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
@@ -192,7 +188,6 @@ const blockFriend = catchAsync(async (req, res, next) => {
   }
 
   const friendFriendIndex = friendFriend.friendList.indexOf(userId);
-
   if (friendFriendIndex !== -1) {
     friendFriend.friendList.splice(friendFriendIndex, 1);
   } else {
@@ -205,65 +200,43 @@ const blockFriend = catchAsync(async (req, res, next) => {
 
   await userFriend.save();
   await friendFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.blockSuccess'),
-    statusCode: https.OK,
-    data: {},
-  });
+  res.json({ message: i18n.translate('friend.blockSuccess'), statusCode: https.OK, data: {} });
 });
 
 const unblockFriend = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { friendId } = req.body;
-
-  const userFriend = await Friend.findOne({ userId });
+  let userFriend = await getPopulatedFriend(userId);
 
   if (!userFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
   const blockIndex = userFriend.blockList.indexOf(friendId);
-
   if (blockIndex === -1) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.notBlocked'));
   }
 
   userFriend.blockList.splice(blockIndex, 1);
-
   await userFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.unblockSuccess'),
-    statusCode: https.OK,
-    data: {},
-  });
+  res.json({ message: i18n.translate('friend.unblockSuccess'), statusCode: https.OK, data: {} });
 });
 
 const getListBlock = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('blockList', 'email fullname avatar');
-
-  const { blockList = [] } = friend;
-
+  const friend = await getPopulatedFriend(userId);
   res.json({
     message: i18n.translate('friend.getListBlockSuccess'),
     statusCode: https.OK,
-    data: {
-      blockList,
-      total: blockList.length,
-    },
+    data: { blockList: friend.blockList, total: friend.blockList.length },
   });
 });
 
 const listSentRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const friends = await Friend.find({ friendRequest: userId });
-
   const friendIds = friends.map((friend) => friend.userId);
-
   const users = await User.find({ _id: { $in: friendIds } }).select('id fullname avatar phoneNumber dob email');
-
   res.json({
     message: i18n.translate('friend.listSentRequestsSuccess'),
     statusCode: https.OK,
@@ -274,61 +247,42 @@ const listSentRequests = catchAsync(async (req, res, next) => {
 const cancelSentRequest = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { receiverId } = req.body;
-
-  let userFriend = await Friend.findOne({ userId });
-  let receiverFriend = await Friend.findOne({ userId: receiverId });
+  let userFriend = await getPopulatedFriend(userId);
+  let receiverFriend = await getPopulatedFriend(receiverId);
 
   if (!userFriend || !receiverFriend) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
   const receivedRequestIndex = receiverFriend.friendRequest.indexOf(userId);
-
   if (receivedRequestIndex === -1) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.requestNotFound'));
   }
 
   receiverFriend.friendRequest.splice(receivedRequestIndex, 1);
-
   await userFriend.save();
   await receiverFriend.save();
-
-  res.json({
-    message: i18n.translate('friend.cancelSentRequestSuccess'),
-    statusCode: https.OK,
-    data: {},
-  });
+  res.json({ message: i18n.translate('friend.cancelSentRequestSuccess'), statusCode: https.OK, data: {} });
 });
 
 const suggestionFriends = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-
-  const userFriend = await Friend.findOne({ userId }).populate('friendList');
+  const userFriend = await getPopulatedFriend(userId);
 
   if (!userFriend) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('friend.notFound'));
+    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
   const userFriendsIds = userFriend.friendList.map((friend) => friend._id.toString());
+  const userSentRequestsIds = await Friend.find({ friendRequest: userId }).distinct('userId');
+  const userReceivedRequestsIds = userFriend.friendRequest.map((request) => request._id.toString());
 
-  const mutualFriendsCount = {};
-
-  for (const friendId of userFriendsIds) {
-    const friend = await Friend.findOne({ userId: friendId }).populate('friendList');
-
-    if (friend) {
-      const friendFriendsIds = friend.friendList.map((f) => f._id.toString());
-
-      for (const mutualFriendId of friendFriendsIds) {
-        if (mutualFriendId !== userId.toString() && !userFriendsIds.includes(mutualFriendId)) {
-          if (!mutualFriendsCount[mutualFriendId]) {
-            mutualFriendsCount[mutualFriendId] = 0;
-          }
-          mutualFriendsCount[mutualFriendId] += 1;
-        }
-      }
-    }
-  }
+  const mutualFriendsCount = await fetchMutualFriends(
+    userFriendsIds,
+    userId,
+    userSentRequestsIds,
+    userReceivedRequestsIds,
+  );
 
   const suggestions = Object.keys(mutualFriendsCount).map((key) => ({
     userId: key,
@@ -337,42 +291,34 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
 
   suggestions.sort((a, b) => b.mutualFriends - a.mutualFriends);
 
-  const suggestedUserIds = suggestions.map((s) => s.userId);
-  const suggestedUsersByMutualFriends = await User.find({ _id: { $in: suggestedUserIds } }).select(
-    'fullname email avatar',
-  );
+  const suggestedUsersByMutualFriends = await fetchSuggestedUsersByMutualFriends(suggestions);
 
-  const excludedIds = [userId, ...userFriendsIds, ...suggestedUserIds];
+  const excludedIds = getExcludedIds(userId, userFriendsIds, userSentRequestsIds, userReceivedRequestsIds);
+  const randomUsers = await fetchRandomUsers(excludedIds);
 
-  const randomUsers = await User.aggregate([
-    { $match: { _id: { $nin: excludedIds } } },
-    { $sample: { size: 10 } },
-    { $project: { fullname: 1, email: 1, avatar: 1 } },
-  ]);
+  const suggestedUsers =
+    suggestedUsersByMutualFriends.length >= 15
+      ? suggestedUsersByMutualFriends.slice(0, 20)
+      : [...suggestedUsersByMutualFriends, ...randomUsers.slice(0, 20 - suggestedUsersByMutualFriends.length)];
 
-  const suggestedUsers = [...suggestedUsersByMutualFriends, ...randomUsers];
-
-  res.status(https.OK).json({
+  res.json({
     statusCode: https.OK,
     message: i18n.translate('friend.suggestFriendsSuccess'),
-    data: {
-      suggestedUsers,
-      total: suggestedUsers.length,
-    },
+    data: { suggestedUsers, total: suggestedUsers.length },
   });
 });
 
 module.exports = {
+  searchUserByEmail,
   sendRequest,
-  deleteFriend,
   listReceivedRequests,
   acceptRequest,
   delinceRequest,
   getListFriends,
+  deleteFriend,
   blockFriend,
   unblockFriend,
   getListBlock,
-  searchUserByEmail,
   listSentRequests,
   cancelSentRequest,
   suggestionFriends,
