@@ -1,11 +1,10 @@
 const https = require('http-status');
 
-const NodeCache = require('node-cache');
 const { i18n } = require('../config');
 const { Friend, User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
-
-const cache = new NodeCache({ stdTTL: 10800 });
+const { cache } = require('../services');
+const { PAGE_DEFAULT, LIMIT_DEFAULT } = require('../constants');
 
 const searchUserByEmail = catchAsync(async (req, res, next) => {
   const { email } = req.query;
@@ -60,14 +59,29 @@ const sendRequest = catchAsync(async (req, res, next) => {
 
 const listReceivedRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('friendRequest', 'email fullname avatar');
+
+  const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
+
+  const skip = (+page - 1) * limit;
+  const query = {};
+
+  const friend = await Friend.findOne({ userId })
+    .populate('friendRequest', 'email fullname avatar')
+    .limit(limit)
+    .skip(skip);
 
   const friendRequests = friend.friendRequest;
 
   res.json({
     message: i18n.translate('friend.listReceivedRequests'),
     statusCode: https.OK,
-    data: { friendRequests, total: friendRequests.length },
+    data: {
+      friendRequests,
+      total: friendRequests.length,
+      page: +page,
+      limit: +limit,
+      totalPages: Math.ceil(friendRequests.length / +limit),
+    },
   });
 });
 
@@ -130,10 +144,19 @@ const delinceRequest = catchAsync(async (req, res, next) => {
 const getListFriends = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
 
+  const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
+
+  const skip = (+page - 1) * limit;
+  const query = {};
+
   const friend = await Friend.findOne({ userId }).populate([
     {
       path: 'friendList',
       select: 'id fullname avatar phoneNumber dob email',
+      options: {
+        limit: limit,
+        skip: skip,
+      },
     },
   ]);
 
@@ -144,6 +167,9 @@ const getListFriends = catchAsync(async (req, res, next) => {
     data: {
       friendList,
       total: friendList.length,
+      page: +page,
+      limit: +limit,
+      totalPages: Math.ceil(friendList.length / +limit),
     },
   });
 });
@@ -245,7 +271,16 @@ const unblockFriend = catchAsync(async (req, res, next) => {
 
 const getListBlock = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  const friend = await Friend.findOne({ userId }).populate('blockList', 'email fullname avatar');
+
+  const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
+
+  const skip = (+page - 1) * limit;
+  const query = {};
+
+  const friend = await Friend.findOne({ userId })
+    .populate('blockList', 'email fullname avatar')
+    .limit(limit)
+    .skip(skip);
 
   const { blockList = [] } = friend;
 
@@ -255,22 +290,40 @@ const getListBlock = catchAsync(async (req, res, next) => {
     data: {
       blockList,
       total: blockList.length,
+      page: +page,
+      limit: +limit,
+      totalPages: Math.ceil(blockList.length / +limit),
     },
   });
 });
 
 const listSentRequests = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
+
+  const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
+
+  const skip = (+page - 1) * limit;
+  const query = {};
+
   const friends = await Friend.find({ friendRequest: userId });
 
   const friendIds = friends.map((friend) => friend.userId);
 
-  const users = await User.find({ _id: { $in: friendIds } }).select('id fullname avatar phoneNumber dob email');
+  const users = await User.find({ _id: { $in: friendIds } })
+    .select('id fullname avatar phoneNumber dob email')
+    .skip(skip)
+    .limit(limit);
 
   res.json({
     message: i18n.translate('friend.listSentRequestsSuccess'),
     statusCode: https.OK,
-    data: { sentRequests: users, total: users.length },
+    data: {
+      sentRequests: users,
+      total: users.length,
+      page: +page,
+      limit: +limit,
+      totalPages: Math.ceil(users.length / +limit),
+    },
   });
 });
 
@@ -308,7 +361,7 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
 
   const cacheKey = `suggestionFriends:${userId}`;
   const cachedSuggestions = await cache.get(cacheKey);
-  
+
   if (cachedSuggestions) {
     return res.json({
       statusCode: https.OK,
@@ -319,54 +372,50 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
 
   const userFriend = await Friend.findOne({ userId }).populate('friendList friendRequest blockList');
 
-  if (!userFriend) {
-    throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
-  }
-
-  const userFriendsIds = userFriend.friendList.map(friend => friend._id.toString());
+  const userFriendsIds = userFriend.friendList.map((friend) => friend._id.toString());
   const userSentRequestsIds = await Friend.find({ friendRequest: userId }).distinct('userId');
-  const userReceivedRequestsIds = userFriend.friendRequest.map(request => request._id.toString());
+  const userReceivedRequestsIds = userFriend.friendRequest.map((request) => request._id.toString());
+
+  const friendsPromises = userFriendsIds.map((friendId) => Friend.findOne({ userId: friendId }).populate('friendList'));
+
+  const friends = await Promise.all(friendsPromises);
 
   const mutualFriendsCount = {};
 
-  for (const friendId of userFriendsIds) {
-    const friend = await Friend.findOne({ userId: friendId }).populate('friendList');
-
+  friends.forEach((friend) => {
     if (friend) {
-      const friendFriendsIds = friend.friendList.map(f => f._id.toString());
-
-      for (const mutualFriendId of friendFriendsIds) {
+      const friendFriendsIds = friend.friendList.map((f) => f._id.toString());
+      friendFriendsIds.forEach((mutualFriendId) => {
         if (
           mutualFriendId !== userId.toString() &&
           !userFriendsIds.includes(mutualFriendId) &&
           !userSentRequestsIds.includes(mutualFriendId) &&
           !userReceivedRequestsIds.includes(mutualFriendId)
         ) {
-          if (!mutualFriendsCount[mutualFriendId]) {
-            mutualFriendsCount[mutualFriendId] = 0;
-          }
-          mutualFriendsCount[mutualFriendId] += 1;
+          mutualFriendsCount[mutualFriendId] = (mutualFriendsCount[mutualFriendId] || 0) + 1;
         }
-      }
+      });
     }
-  }
+  });
 
-  const suggestions = Object.keys(mutualFriendsCount).map(key => ({
+  const suggestions = Object.keys(mutualFriendsCount).map((key) => ({
     userId: key,
     mutualFriends: mutualFriendsCount[key],
   }));
 
   suggestions.sort((a, b) => b.mutualFriends - a.mutualFriends);
 
-  const suggestedUserIds = suggestions.map(s => s.userId);
-  const suggestedUsersByMutualFriends = await User.find({ _id: { $in: suggestedUserIds } }).select('fullname email avatar');
+  const suggestedUserIds = suggestions.map((s) => s.userId);
+  const suggestedUsersByMutualFriends = await User.find({ _id: { $in: suggestedUserIds } }).select(
+    'fullname email avatar',
+  );
 
   const excludedIds = [userId, ...userFriendsIds, ...userSentRequestsIds, ...userReceivedRequestsIds];
 
   const randomUsers = await User.aggregate([
     { $match: { _id: { $nin: excludedIds } } },
     { $sample: { size: 20 } },
-    { $project: { fullname: 1, email: 1, avatar: 1 } }
+    { $project: { fullname: 1, email: 1, avatar: 1 } },
   ]);
 
   let suggestedUsers;
@@ -375,10 +424,7 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
     suggestedUsers = suggestedUsersByMutualFriends.slice(0, 20);
   } else {
     const neededRandomUsers = 20 - suggestedUsersByMutualFriends.length;
-    suggestedUsers = [
-      ...suggestedUsersByMutualFriends,
-      ...randomUsers.slice(0, neededRandomUsers)
-    ];
+    suggestedUsers = [...suggestedUsersByMutualFriends, ...randomUsers.slice(0, neededRandomUsers)];
   }
 
   const result = {
