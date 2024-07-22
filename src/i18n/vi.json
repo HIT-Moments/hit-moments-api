@@ -105,6 +105,7 @@
     "getListFriends": "Lấy danh sách bạn bè thành công",
     "listSentRequestsSuccess": "Lấy danh sách đã gửi lời mời kết bạn thành công",
     "cancelSentRequestSuccess": "Huỷ gửi lời mời kết bạn thành công",
+    "suggestFriendsSuccess": "Lấy danh sách gợi ý bạn bè thành công",
     "notFriend": "Không phải là bạn bè"
   },
   "react": {
