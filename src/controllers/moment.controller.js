@@ -1,10 +1,8 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
-const { Moment, Friend } = require('../models');
-const { UPLOAD_LOCATION } = require('../constants');
-const { ApiError, catchAsync } = require('../utils');
-const { frontendUrl } = require('../config/env.config');
+const { Moment, Friend, TemporaryMoment } = require('../models');
+const { ApiError, catchAsync, convertFacebookPosts } = require('../utils');
 
 const createMoment = catchAsync(async (req, res) => {
   const moment = await Moment.create({
@@ -12,11 +10,6 @@ const createMoment = catchAsync(async (req, res) => {
     userId: req.user.id,
     image: req.file?.path,
   });
-
-  if (!moment.image.startsWith('http')) {
-    moment.image = `${frontendUrl}/${req.file?.path.replaceAll('\\', '/').replace('public/', '')}`;
-    moment.uploadLocation = UPLOAD_LOCATION.LOCAL;
-  }
 
   await moment.save();
 
@@ -215,6 +208,48 @@ const restoreMoment = catchAsync(async (req, res) => {
   });
 });
 
+const importMoments = catchAsync(async (req, res) => {
+  const facebookPosts = await convertFacebookPosts(req.file?.path);
+
+  const moments = facebookPosts.map((post) => ({
+    ...post,
+    userId: req.user.id,
+  }));
+
+  const insertedMoment = await TemporaryMoment.insertMany(moments);
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.importMomentsSuccess'),
+    data: {
+      moments: insertedMoment,
+    },
+  });
+});
+
+const moveMomentToPermanent = catchAsync(async (req, res) => {
+  const { momentIds } = req.body;
+
+  const temporaryMoments = await TemporaryMoment.find({ _id: { $in: momentIds }, userId: req.user.id });
+
+  if (temporaryMoments.length !== momentIds.length) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.invalidImportRecordsCount'));
+  }
+
+  for (const temporaryMoment of temporaryMoments) {
+    await Moment.create({
+      ...temporaryMoment.toObject(),
+    });
+
+    await temporaryMoment.deleteOne();
+  }
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.moveMomentToPermanentSuccess'),
+  });
+});
+
 const transformPopulatedMoments = (moments) => {
   return moments.map((moment) => {
     const { userId, ...rest } = moment;
@@ -238,4 +273,6 @@ module.exports = {
   getMyMoments,
   getMomentsByUser,
   restoreMoment,
+  importMoments,
+  moveMomentToPermanent,
 };

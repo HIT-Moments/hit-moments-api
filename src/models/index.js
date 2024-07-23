@@ -8,4 +8,5 @@ module.exports = {
   Conversation: require('./conversation.model'),
   Message: require('./message.model'),
   Music: require('./music.model'),
+  TemporaryMoment: require('./temporaryMoment.model'),
 };

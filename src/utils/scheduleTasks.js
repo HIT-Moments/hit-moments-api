@@ -2,11 +2,12 @@ const fs = require('fs');
 const path = require('path');
 
 const { cronJobs, env } = require('../config');
-const { User, Moment } = require('../models');
+const { User, Moment, TemporaryMoment } = require('../models');
 const { sendBirthdayEmail, uploadToTiktok } = require('../services');
 const { client, discordChannelId } = require('../config').discordBot;
 const {
   DELETED_MOMENT_EXPIRE_DATE,
+  TEMPORARY_MOMENT_EXPRIRE_DATE,
   CRON_JOB_TIME,
   UPLOAD_LOCATION,
   SAMPLE_IMAGE,
@@ -24,8 +25,12 @@ const scheduleTasks = () => {
       task: deleteExpiredMoments,
     },
     {
-      time: CRON_JOB_TIME.CHANGE_UPLOAD_LOCATION,
-      task: changeUploadLocation,
+      time: CRON_JOB_TIME.DELETE_TEMPORARY_MOMENTS,
+      task: deleteTemporaryMoments,
+    },
+    {
+      time: CRON_JOB_TIME.CHANGE_MOMENT_UPLOAD_LOCATION,
+      task: changeMomentsUploadLocation,
     },
     {
       time: CRON_JOB_TIME.CHANGE_AVATAR_UPLOAD_LOCATION,
@@ -69,14 +74,29 @@ const deleteExpiredMoments = async () => {
   }
 };
 
-const changeUploadLocation = async () => {
+const deleteTemporaryMoments = async () => {
+  const today = new Date();
+  const deleteDate = today.setDate(today.getDate() - TEMPORARY_MOMENT_EXPRIRE_DATE);
+
+  const temporaryMoments = await TemporaryMoment.find({ updatedAt: { $lt: deleteDate } });
+
+  for (const moment of temporaryMoments) {
+    await moment.deleteOne();
+  }
+};
+
+const changeMomentsUploadLocation = async () => {
   if (!(await uploadToTiktok(SAMPLE_IMAGE, UPLOAD_LOCATION.LOCAL))) {
     return;
   }
 
   const moments = await Moment.find({ uploadLocation: { $ne: UPLOAD_LOCATION.TIKTOK } });
 
-  for (const moment of moments) {
+  const temporaryMoments = await TemporaryMoment.find({ uploadLocation: { $ne: UPLOAD_LOCATION.TIKTOK } });
+
+  const allMoments = [...moments, ...temporaryMoments];
+
+  for (const moment of allMoments) {
     moment.image = await uploadToTiktok(moment.image, moment.uploadLocation);
     moment.uploadLocation = UPLOAD_LOCATION.TIKTOK;
     await moment.save();

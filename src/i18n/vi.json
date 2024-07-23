@@ -79,7 +79,11 @@
     "deleteMomentForbidden": "Không có quyền xoá moment",
     "restoreMomentBadRequest": "Khôi phục moment thất bại",
     "restoreMomentForbidden": "Không có quyền khôi phục moment",
-    "restoreMomentSuccess": "Khôi phục moment thành công"
+    "restoreMomentSuccess": "Khôi phục moment thành công",
+    "importMomentsSuccess": "Nhập moment thành công",
+    "moveMomentToPermanentSuccess": "Thêm moment thành công",
+    "getMyTemporaryMomentsSuccess": "Lấy danh sách moment nhập từ Facebook thành công",
+    "invalidImportRecordsCount": "Số lượng bản ghi nhập không hợp lệ"
   },
   "friend": {
     "notFound": "Không tìm thấy Id người dùng",
