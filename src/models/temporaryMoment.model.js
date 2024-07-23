@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { UPLOAD_LOCATION } = require('../constants');
+
 const temporaryMoments = new mongoose.Schema(
   {
     userId: {
@@ -15,6 +17,10 @@ const temporaryMoments = new mongoose.Schema(
     content: {
       type: String,
       trim: true,
+    },
+    uploadLocation: {
+      type: String,
+      default: UPLOAD_LOCATION.CLOUDINARY,
     },
   },
   {
