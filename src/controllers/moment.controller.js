@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
+const { Moment, Friend } = require('../models');
 const { UPLOAD_LOCATION } = require('../constants');
 const { frontendUrl } = require('../config/env.config');
 const { Moment, TemporaryMoment } = require('../models');
@@ -32,17 +33,29 @@ const createMoment = catchAsync(async (req, res) => {
 const getMoments = catchAsync(async (req, res) => {
   const { limit = 10, page = 1, isDeleted = false } = req.query;
   const skip = (+page - 1) * limit;
-  const query = { isDeleted };
+
+  const { friendList } = await Friend.findOne({ userId: req.user.id });
+
+  const query = {
+    isDeleted,
+    userId: { $in: [req.user.id, ...friendList] },
+  };
 
   const [moments, totalMoments] = await Promise.all([
-    Moment.find(query).limit(limit).skip(skip),
+    Moment.find(query)
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: -1 })
+      .populate({ path: 'userId', select: 'fullname avatar' })
+      .lean(),
     Moment.countDocuments(query),
   ]);
+
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsSuccess'),
     data: {
-      moments,
+      moments: transformPopulatedMoments(moments),
       limit: +limit,
       currentPage: +page,
       totalPage: Math.ceil(totalMoments / +limit),
@@ -51,13 +64,20 @@ const getMoments = catchAsync(async (req, res) => {
   });
 });
 
-// check if req.user is friend with moment.userId
 const getMoment = catchAsync(async (req, res) => {
   const { momentId } = req.params;
 
-  const moment = await Moment.findById(momentId);
+  const moment = await Moment.findById(momentId).lean().populate({ path: 'userId', select: 'fullname avatar' });
 
   if (!moment) {
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
+  }
+
+  const { friendList } = await Friend.findOne({ userId: req.user.id });
+
+  const validUserIds = [req.user.id, ...friendList].map((id) => id.toString());
+
+  if (!validUserIds.includes(moment.userId._id.toString())) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
 
@@ -65,7 +85,7 @@ const getMoment = catchAsync(async (req, res) => {
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentSuccess'),
     data: {
-      moment,
+      moment: transformPopulatedMoments([moment])[0],
     },
   });
 });
@@ -125,19 +145,20 @@ const deleteMoment = catchAsync(async (req, res) => {
 const getMyMoments = catchAsync(async (req, res) => {
   const { isDeleted = false } = req.query;
 
-  const moments = await Moment.find({ userId: req.user.id, isDeleted });
+  const moments = await Moment.find({ userId: req.user.id, isDeleted })
+    .sort({ createdAt: -1 })
+    .populate({ path: 'userId', select: 'fullname avatar' })
+    .lean();
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMyMomentsSuccess'),
     data: {
-      moments,
+      moments: transformPopulatedMoments(moments),
     },
   });
 });
 
-// check if req.user is friend with userId
-// other users cannot see deleted moments -> isDeleted default is false
 const getMomentsByUser = catchAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -145,13 +166,22 @@ const getMomentsByUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.userIdRequired'));
   }
 
-  const moments = await Moment.find({ userId, isDeleted: false });
+  const { friendList } = await Friend.findOne({ userId: req.user.id });
+
+  if (!friendList.includes(userId) && userId !== req.user.id) {
+    throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('friend.notFriend'));
+  }
+
+  const moments = await Moment.find({ userId, isDeleted: false })
+    .sort({ createdAt: -1 })
+    .populate({ path: 'userId', select: 'fullname avatar' })
+    .lean();
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsByUserSuccess'),
     data: {
-      moments,
+      moments: transformPopulatedMoments(moments),
     },
   });
 });
@@ -233,6 +263,20 @@ const moveMomentToPermanent = catchAsync(async (req, res) => {
     message: i18n.translate('moment.moveMomentToPermanentSuccess'),
   });
 });
+
+const transformPopulatedMoments = (moments) => {
+  return moments.map((moment) => {
+    const { userId, ...rest } = moment;
+    return {
+      ...rest,
+      user: {
+        id: userId._id,
+        fullname: userId.fullname,
+        avatar: userId.avatar,
+      },
+    };
+  });
+};
 
 module.exports = {
   createMoment,
