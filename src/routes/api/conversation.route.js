@@ -9,10 +9,6 @@ const conversationRoute = express.Router();
 conversationRoute.use(auth);
 
 conversationRoute
-  .route('/')
-  .post(validate(conversationValidation.createConversation), conversationController.createConversation);
-
-conversationRoute
   .route('/my-conversation')
   .get(validate(conversationValidation.getMyConversation), conversationController.getMyConversation);
 

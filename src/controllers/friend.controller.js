@@ -1,7 +1,7 @@
 const https = require('http-status');
 
 const { i18n } = require('../config');
-const { Friend, User } = require('../models');
+const { Friend, User, Conversation, Message } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 const { cache } = require('../services');
 const { PAGE_DEFAULT, LIMIT_DEFAULT } = require('../constants');
@@ -109,10 +109,28 @@ const acceptRequest = catchAsync(async (req, res, next) => {
   await userFriend.save();
   await requesterFriend.save();
 
+  const conversationExisting = await Conversation.findOne({
+    participants: { $all: [userId, requesterId], $size: 2 },
+  });
+
+  let conversationId;
+
+  if (!conversationExisting) {
+    const newConversation = new Conversation({
+      participants: [userId, requesterId],
+    });
+    await newConversation.save();
+    conversationId = newConversation._id;
+  } else {
+    conversationId = conversationExisting._id;
+  }
+
   res.json({
     message: i18n.translate('friend.acceptRequestSuccess'),
     statusCode: https.OK,
-    data: {},
+    data: {
+      conversationId,
+    },
   });
 });
 
@@ -197,6 +215,14 @@ const deleteFriend = catchAsync(async (req, res, next) => {
 
   await userFriend.save();
   await friendFriend.save();
+
+  const conversation = await Conversation.findOne({
+    participants: { $all: [userId, friendId] },
+  });
+
+  if (conversation) {
+    await Message.deleteMany({ conversationId: conversation._id });
+  }
 
   res.json({
     message: i18n.translate('friend.deleteSuccess'),
