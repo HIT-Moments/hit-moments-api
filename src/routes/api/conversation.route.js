@@ -15,10 +15,9 @@ conversationRoute
 conversationRoute.use(author(['admin']));
 
 conversationRoute.route('/').get(conversationController.getListConversations);
-
 conversationRoute
   .route('/:conversationId')
   .delete(validate(conversationValidation.deleteConversation), conversationController.deleteConversation)
-  .get(validate(conversationValidation.getListConversationById), conversationController.getListConversationById);
+  .get(validate(conversationValidation.getConversationById), conversationController.getConversationById);
 
 module.exports = conversationRoute;
