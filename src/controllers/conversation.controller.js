@@ -5,49 +5,35 @@ const { Conversation, User } = require('../models');
 const { ApiError, catchAsync } = require('../utils');
 const { LIMIT_DEFAULT, PAGE_DEFAULT } = require('../constants');
 
-const createConversation = catchAsync(async (req, res, next) => {
-  const { participants } = req.body;
-
-  const conversationExisting = await Conversation.findOne({ participants: participants });
-
-  if (conversationExisting) {
-    throw new ApiError(httpStatus.CONFLICT, i18n.translate('conversation.alreadyExist'));
-  }
-
-  const users = await User.find({ _id: { $in: participants } });
-
-  if (users.length !== participants.length) {
-    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('user.userNotFound'));
-  }
-
-  const conversation = await Conversation.create({ participants: participants });
-
-  res.status(httpStatus.CREATED).json({
-    statusCode: httpStatus.CREATED,
-    message: i18n.translate('conversation.createSuccess'),
-    data: {
-      conversation,
-    },
-  });
-});
-
 const getMyConversation = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
 
-  const myConversations = await Conversation.find({ participants: userId }).populate({
-    path: 'messages',
-    options: { sort: { createdAt: -1 }, limit: 1 },
-  });
+  const myConversations = await Conversation.find({ participants: userId })
+    .populate('participants', 'fullname avatar')
+    .populate({
+      path: 'messages',
+      select: 'text createdAt',
+      options: { sort: { createdAt: -1 }, limit: 1 },
+    });
 
   if (!myConversations) {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('conversation.notFound'));
   }
 
+  const result = myConversations.map((conversation) => {
+    const user = conversation.participants.find((participant) => !participant._id.equals(userId));
+    return {
+      _id: conversation._id,
+      user,
+      lastMessage: conversation.messages[0] || [],
+    };
+  });
+
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('conversation.getConversationsSuccess'),
     data: {
-      myConversations,
+      myConversations: result,
     },
   });
 });
@@ -58,7 +44,12 @@ const getListConversations = catchAsync(async (req, res, next) => {
   const skip = (+page - 1) * limit;
   const query = {};
 
-  const conversations = await Conversation.find(query).limit(limit).skip(skip);
+  const conversations = await Conversation.find(query)
+    .limit(limit)
+    .skip(skip)
+    .populate('participants', 'fullname avatar')
+    .select('participants');
+
   const totalConversations = await Conversation.countDocuments(query);
 
   res.status(httpStatus.OK).json({
@@ -114,7 +105,6 @@ const getListConversationById = catchAsync(async (req, res, next) => {
 });
 
 module.exports = {
-  createConversation,
   getMyConversation,
   getListConversations,
   deleteConversation,
