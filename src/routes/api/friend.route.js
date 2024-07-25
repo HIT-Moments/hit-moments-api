@@ -8,7 +8,7 @@ const friendRoute = express.Router();
 
 friendRoute.use(auth);
 
-friendRoute.route('/search-user').get(validate(friendValidation.searchUserByEmail), friendController.searchUserByEmail);
+friendRoute.route('/search-user').get(validate(friendValidation.searchUser), friendController.searchUser);
 friendRoute.route('/invite').post(validate(friendValidation.sendRequest), friendController.sendRequest);
 friendRoute.route('/confirm-request').post(validate(friendValidation.acceptRequest), friendController.acceptRequest);
 friendRoute.route('/delince-request').post(validate(friendValidation.delinceRequest), friendController.delinceRequest);
