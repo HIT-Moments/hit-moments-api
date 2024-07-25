@@ -79,7 +79,11 @@
     "deleteMomentForbidden": "You are not allowed to delete this moment",
     "restoreMomentBadRequest": "Moment is not deleted",
     "restoreMomentForbidden": "You are not allowed to restore this moment",
-    "restoreMomentSuccess": "Restore moment successfully"
+    "restoreMomentSuccess": "Restore moment successfully",
+    "importMomentsSuccess": "Import moments successfully",
+    "moveMomentToPermanentSuccess": "Moment added successfully",
+    "getMyTemporaryMomentsSuccess": "Get my moments import from Facebook successfully",
+    "invalidImportRecordsCount": "Invalid import records count"
   },
   "friend": {
     "notFound": "Friend not found",
