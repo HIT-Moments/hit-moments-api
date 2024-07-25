@@ -10,7 +10,7 @@ feedbackRoute.use(auth);
 
 feedbackRoute
   .route('/')
-  .get(author(['admin']), feedbackController.getallFeedback)
+  .get(author(['admin']), validate(feedbackValidation.getAllFeedback), feedbackController.getAllFeedback)
   .post(upload('image'), validate(feedbackValidation.createFeedback), feedbackController.createFeedback);
 
 feedbackRoute.route('/me').get(feedbackController.getMyFeedbacks);
