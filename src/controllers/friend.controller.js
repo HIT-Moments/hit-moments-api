@@ -261,6 +261,14 @@ const blockFriend = catchAsync(async (req, res, next) => {
   await userFriend.save();
   await friendFriend.save();
 
+  const conversation = await Conversation.findOne({
+    participants: { $all: [userId, friendId] },
+  });
+
+  if (conversation) {
+    await Message.deleteMany({ conversationId: conversation._id });
+  }
+
   res.json({
     message: i18n.translate('friend.blockSuccess'),
     statusCode: https.OK,

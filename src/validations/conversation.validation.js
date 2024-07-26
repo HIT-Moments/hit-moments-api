@@ -14,7 +14,7 @@ const deleteConversation = {
   }),
 };
 
-const getListConversationById = {
+const getConversationById = {
   params: joi.object({
     conversationId: joi.string().custom(objectId).required(),
   }),
@@ -23,5 +23,5 @@ const getListConversationById = {
 module.exports = {
   getMyConversation,
   deleteConversation,
-  getListConversationById,
+  getConversationById,
 };

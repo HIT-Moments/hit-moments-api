@@ -79,7 +79,7 @@ const deleteConversation = catchAsync(async (req, res, next) => {
   });
 });
 
-const getListConversationById = catchAsync(async (req, res, next) => {
+const getConversationById = catchAsync(async (req, res, next) => {
   const { conversationId } = req.params;
 
   let conversation = await Conversation.findById(conversationId).populate({
@@ -108,5 +108,5 @@ module.exports = {
   getMyConversation,
   getListConversations,
   deleteConversation,
-  getListConversationById,
+  getConversationById,
 };
