@@ -6,15 +6,42 @@ const { ApiError, catchAsync } = require('../utils');
 const { cache } = require('../services');
 const { PAGE_DEFAULT, LIMIT_DEFAULT } = require('../constants');
 
-const searchUserByEmail = catchAsync(async (req, res, next) => {
-  const { email } = req.query;
+const searchUser = catchAsync(async (req, res, next) => {
+  const { limit = 10, page = 1 , sortBy = 'createdAt:desc', search = ''} = req.query;
 
-  const user = await User.findOne({ email }).select('id fullname avatar phoneNumber dob email');
+  const skip = (+page - 1) * limit;
 
-  res.json({
-    message: i18n.translate('user.getUserSuccess'),
+  const [field, value] = sortBy.split(':');
+  const sort = { [field.trim()]: value.trim() === 'asc' ? 1 : -1 };
+  
+  const query = { isLocked : false };
+
+  const regex = new RegExp(search.trim(), 'i');
+  query.$or = [
+    { fullname: regex },
+    { email: regex },
+  ];
+
+  const [users, totalResults] = await Promise.all([
+    User.find(query)
+        .select('_id fullname email avatar')
+        .limit(+limit)
+        .skip(skip)
+        .sort(sort),
+
+    User.countDocuments(query),
+  ]);
+
+  res.status(https.OK).json({
     statusCode: https.OK,
-    data: { user: user || [] },
+    message: i18n.translate('user.getUsersSuccess'),
+    data: {
+      users,
+      limit: +limit,
+      currentPage: +page,
+      totalPage: Math.ceil(totalResults / +limit),
+      totalResults,
+    },
   });
 });
 
@@ -485,7 +512,7 @@ module.exports = {
   blockFriend,
   unblockFriend,
   getListBlock,
-  searchUserByEmail,
+  searchUser,
   listSentRequests,
   cancelSentRequest,
   suggestionFriends,

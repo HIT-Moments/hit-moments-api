@@ -2,9 +2,11 @@ const joi = require('joi');
 
 const { objectId } = require('./custom.validation');
 
-const searchUserByEmail = {
+const searchUser = {
   query: joi.object({
-    email: joi.string().required(),
+    search: joi.string(),
+    limit: joi.number().integer(),
+    page: joi.number().integer(),
   }),
 };
 
@@ -64,6 +66,6 @@ module.exports = {
   getListFriends,
   blockFriend,
   unblockFriend,
-  searchUserByEmail,
+  searchUser,
   cancelSentRequest,
 };

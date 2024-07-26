@@ -34,7 +34,7 @@ const getFeedback = catchAsync(async (req, res, next) => {
   });
 });
 
-const getallFeedback = catchAsync(async (req, res, next) => {
+const getAllFeedback = catchAsync(async (req, res, next) => {
   const { limit = 10, page = 1, sortBy = 'createdAt : desc' } = req.query;
 
   const skip = (+page - 1) * +limit;
@@ -94,7 +94,7 @@ const deleteFeedbackById = catchAsync(async (req, res, next) => {
 
 module.exports = {
   createFeedback,
-  getallFeedback,
+  getAllFeedback,
   getMyFeedbacks,
   getFeedback,
   deleteFeedbackById,

@@ -18,6 +18,8 @@ const getMusicById = {
 const searchMusic = {
   query: joi.object({
     search: joi.string(),
+    limit: joi.number().integer(),
+    page: joi.number().integer(),
   }),
 };
 
