@@ -7,27 +7,20 @@ const { cache } = require('../services');
 const { PAGE_DEFAULT, LIMIT_DEFAULT } = require('../constants');
 
 const searchUser = catchAsync(async (req, res, next) => {
-  const { limit = 10, page = 1 , sortBy = 'createdAt:desc', search = ''} = req.query;
+  const { limit = 10, page = 1, sortBy = 'createdAt:desc', search = '' } = req.query;
 
   const skip = (+page - 1) * limit;
 
   const [field, value] = sortBy.split(':');
   const sort = { [field.trim()]: value.trim() === 'asc' ? 1 : -1 };
-  
-  const query = { isLocked : false };
+
+  const query = { isLocked: false };
 
   const regex = new RegExp(search.trim(), 'i');
-  query.$or = [
-    { fullname: regex },
-    { email: regex },
-  ];
+  query.$or = [{ fullname: regex }, { email: regex }];
 
   const [users, totalResults] = await Promise.all([
-    User.find(query)
-        .select('_id fullname email avatar')
-        .limit(+limit)
-        .skip(skip)
-        .sort(sort),
+    User.find(query).select('_id fullname email avatar').limit(+limit).skip(skip).sort(sort),
 
     User.countDocuments(query),
   ]);
@@ -51,16 +44,18 @@ const sendRequest = catchAsync(async (req, res, next) => {
 
   const receiver = await User.findById(receiverId);
 
-  if (receiver._id.equals(senderId)) {
-    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.cannotSendRequestToSelf'));
-  }
-
   if (!receiver) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('friend.notFound'));
   }
 
-  let receiverFriend = await Friend.findOne({ userId: receiverId });
-  let senderFriend = await Friend.findOne({ userId: senderId });
+  if (receiver._id.equals(senderId)) {
+    throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.cannotSendRequestToSelf'));
+  }
+
+  const [receiverFriend, senderFriend] = await Promise.all([
+    Friend.findOne({ userId: receiverId }),
+    Friend.findOne({ userId: senderId }),
+  ]);
 
   if (receiverFriend.friendList.includes(senderId)) {
     throw new ApiError(https.BAD_REQUEST, i18n.translate('friend.alreadyFriend'));
@@ -76,6 +71,10 @@ const sendRequest = catchAsync(async (req, res, next) => {
 
   receiverFriend.friendRequest.push(senderId);
   await receiverFriend.save();
+
+  const senderCacheKey = `suggestionFriends:${senderId}`;
+  const receiverCacheKey = `suggestionFriends:${receiverId}`;
+  await Promise.all([cache.del(senderCacheKey), cache.del(receiverCacheKey)]);
 
   res.json({
     message: i18n.translate('friend.sendRequestSuccess'),
@@ -427,7 +426,7 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
     return res.json({
       statusCode: https.OK,
       message: i18n.translate('friend.suggestFriendsSuccess'),
-      data: cachedSuggestions,
+      data: JSON.parse(cachedSuggestions),
     });
   }
 
@@ -471,7 +470,14 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
     'fullname email avatar',
   );
 
-  const excludedIds = [userId, ...userFriendsIds, ...userSentRequestsIds, ...userReceivedRequestsIds];
+  const mutualFriendIds = Object.keys(mutualFriendsCount);
+  const excludedIds = [
+    userId,
+    ...userFriendsIds,
+    ...userSentRequestsIds,
+    ...userReceivedRequestsIds,
+    ...mutualFriendIds,
+  ];
 
   const randomUsers = await User.aggregate([
     { $match: { _id: { $nin: excludedIds } } },
@@ -493,7 +499,7 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
     total: suggestedUsers.length,
   };
 
-  cache.set(cacheKey, result, { ttl: 10800 });
+  await cache.set(cacheKey, JSON.stringify(result), 'EX', 10800);
 
   res.status(https.OK).json({
     statusCode: https.OK,

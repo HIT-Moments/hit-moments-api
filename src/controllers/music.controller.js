@@ -45,10 +45,7 @@ const searchMusic = catchAsync(async (req, res, next) => {
   const query = { isDelete: false };
 
   const regex = new RegExp(search.trim(), 'i');
-  query.$or = [
-    { name: regex },
-    { author: regex },
-  ];
+  query.$or = [{ name: regex }, { author: regex }];
 
   const [music, totalResults] = await Promise.all([
     Music.find(query).limit(+limit).skip(skip).sort(sort),
