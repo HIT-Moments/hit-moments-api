@@ -17,7 +17,7 @@ const getAllFeedback = {
     limit: joi.number().integer(),
     page: joi.number().integer(),
   }),
-}
+};
 
 const updateFeedbackById = {
   params: joi.object({
