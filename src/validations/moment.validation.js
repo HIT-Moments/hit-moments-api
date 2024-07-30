@@ -55,6 +55,10 @@ const getMyMoments = {
 };
 
 const getMomentsByUser = {
+  query: joi.object({
+    limit: joi.number().integer(),
+    page: joi.number().integer(),
+  }),
   params: joi.object({
     userId: joi.string().custom(objectId),
   }),
