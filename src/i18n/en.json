@@ -129,7 +129,10 @@
     "duplicateParticipants": "Duplicate participants",
     "deleteSuccess": "Delete conversation successfully",
     "notFound": "Conversation not found",
-    "getConversationByIdSuccess": "Get conversation by Id successfully"
+    "getConversationByIdSuccess": "Get conversation by Id successfully",
+    "userIdRequired": "User Id is required",
+    "getConversationByUserForbidden": "You are not allowed to get this user's conversation",
+    "getConversationByUserSuccess": "Get conversation by user successfully"
   },
   "message": {
     "sendSucess": "Send message successfully",

@@ -2,31 +2,39 @@ const http = require('http');
 const express = require('express');
 const { Server } = require('socket.io');
 
+const { env } = require('../config');
+
 const app = express();
+
 const server = http.createServer(app);
+
 const io = new Server(server, {
   cors: {
-    origin: ['*', 'http://localhost:3000', 'https://hitmoments.com'],
+    origin: ['*'],
     methods: ['GET', 'POST'],
   },
 });
-
-const userSocketMap = {};
 
 const getReceiverSocketId = (receiverId) => {
   return userSocketMap[receiverId];
 };
 
-io.on('connection', (socket) => {
-  console.log('a user connected', socket.id);
-  const userId = socket.handshake.query.userId;
-  if (userId != 'undefined') userSocketMap[userId] = socket.id;
+const userSocketMap = {};
 
-  io.emit('getOnlineUsers', Object.keys(userSocketMap));
+io.on('connection', (socket) => {
+  const userId = socket.handshake.query.userId;
+
+  if (userId && userId !== 'undefined') {
+    userSocketMap[userId] = socket.id;
+    console.log(`${userId} connected ${socket.id}`);
+  }
+
   socket.on('disconnect', () => {
-    console.log('user disconnected', socket.id);
-    delete userSocketMap[userId];
-    io.emit('getOnlineUsers', Object.keys(userSocketMap));
+    console.log(`${userId} disconnected ${socket.id}`);
+
+    if (userSocketMap[userId] === socket.id) {
+      delete userSocketMap[userId];
+    }
   });
 });
 
