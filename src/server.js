@@ -11,8 +11,7 @@ const apiRoute = require('./routes/api');
 const { env, i18n } = require('./config');
 const { initAdmin, scheduleTasks } = require('./utils');
 const { xss, rateLimit, errorConverter, errorHandler, loggingBot } = require('./middlewares');
-
-const app = express();
+const { app, server } = require('./socket/socket');
 
 app.set('trust proxy', 1);
 app.use(express.json());
@@ -64,7 +63,7 @@ mongoose
     console.log('Initializing admin user successfully!');
   })
   .then(() => {
-    app.listen(env.port, () => {
+    server.listen(env.port, () => {
       scheduleTasks();
       console.log(`Server is running on port ${env.port}!`);
     });

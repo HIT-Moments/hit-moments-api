@@ -4,14 +4,16 @@ const { objectId } = require('./custom.validation');
 
 const sendMessage = {
   body: joi.object({
-    conversationId: joi.string().custom(objectId).required(),
     text: joi.string().required(),
+  }),
+  params: joi.object({
+    userId: joi.string().custom(objectId).required(),
   }),
 };
 
 const getMessages = {
   params: joi.object({
-    conversationId: joi.string().custom(objectId).required(),
+    userId: joi.string().custom(objectId).required(),
   }),
 };
 
