@@ -8,6 +8,8 @@ const conversationRoute = express.Router();
 
 conversationRoute.use(auth);
 
+conversationRoute.route('/me').get(conversationController.getMyConversations);
+
 conversationRoute
   .route('/:conversationId')
   .get(validate(conversationValidation.getConversationById), conversationController.getConversationById)
