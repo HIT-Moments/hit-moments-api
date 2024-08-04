@@ -81,6 +81,33 @@ const getConversationsByUser = catchAsync(async (req, res, next) => {
   });
 });
 
+const getMyConversations = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+
+  const conversations = await Conversation.find({ participants: userId })
+    .sort({ updatedAt: -1 })
+    .populate({ path: 'participants', select: 'fullname avatar' })
+    .populate({ path: 'messages', select: 'text', options: { sort: { createdAt: -1 }, limit: 1 } })
+    .exec();
+
+  const conversationsWithLastMessage = conversations.map((conversation) => {
+    const user = conversation.participants.find((participant) => participant._id.toString() !== userId);
+    return {
+      _id: conversation._id,
+      user,
+      lastMessage: conversation.messages[0]?.text || '',
+    };
+  });
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('conversation.getConversationByUserSuccess'),
+    data: {
+      conversations: conversationsWithLastMessage,
+    },
+  });
+});
+
 const deleteConversation = catchAsync(async (req, res, next) => {
   const { conversationId } = req.params;
 
@@ -99,4 +126,5 @@ module.exports = {
   deleteConversation,
   getConversationById,
   getConversationsByUser,
+  getMyConversations,
 };
