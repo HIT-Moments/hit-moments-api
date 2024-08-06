@@ -14,7 +14,14 @@ const getReaction = {
   }),
 };
 
+const getUserReactions = {
+  params: joi.object({
+    momentId: joi.string().custom(objectId).required(),
+  }),
+};
+
 module.exports = {
   sendReaction,
   getReaction,
+  getUserReactions,
 };
