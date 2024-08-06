@@ -115,7 +115,9 @@
   "react": {
     "createSuccess": "React created successfully",
     "notFound": "Post not found",
-    "getSuccess": "Get react successfully"
+    "getSuccess": "Get react successfully",
+    "cannotReactToOwnMoment": "Cannot react to own moment",
+    "getAllSuccess": "Get all react successfully"
   },
   "rateLimit": {
     "tooManyRequests": "Too many requests, please try again later."

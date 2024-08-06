@@ -115,7 +115,9 @@
   "react": {
     "createSuccess": "Gửi cảm xúc thành công",
     "notFound": "Không tìm thấy bài viết",
-    "getSuccess": "Lấy danh sách cảm xúc thành công"
+    "getSuccess": "Lấy danh sách cảm xúc thành công",
+    "cannotReactToOwnMoment": "Không thể tự gửi cảm xúc cho bài viết của mình",
+    "getAllSuccess": "Lấy danh sách cảm xúc đã gửi thành công"
   },
   "rateLimit": {
     "tooManyRequests": "Quá nhiều yêu cầu, vui lòng thử lại sau"

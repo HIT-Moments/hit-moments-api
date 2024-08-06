@@ -13,13 +13,17 @@ const sendReaction = catchAsync(async (req, res, next) => {
     throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
 
+  if (momentExisting.userId.toString() === userId.toString()) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('react.cannotReactToOwnMoment'));
+  }
+
   let reaction = await React.findOne({ userId, momentId });
 
   if (reaction) {
     reaction.reacts.push(react);
     await reaction.save();
   } else {
-    reaction = await React.create({ userId, ...req.body });
+    reaction = await React.create({ userId, momentId, reacts: [react] });
   }
 
   return res.status(httpStatus.CREATED).json({
@@ -39,7 +43,7 @@ const getReaction = catchAsync(async (req, res, next) => {
   const moment = await Moment.findById(momentId);
 
   if (!moment) {
-    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.notFound'));
+    throw new ApiError(httpStatus.NOT_FOUND, i18n.translate('moment.momentNotFound'));
   }
 
   if (moment.userId.toString() !== userId.toString()) {
@@ -61,7 +65,34 @@ const getReaction = catchAsync(async (req, res, next) => {
   });
 });
 
+const getUserReactions = catchAsync(async (req, res, next) => {
+  const userId = req.user._id;
+  const { momentId } = req.params;
+
+  const momentExisting = await Moment.findById(momentId);
+
+  if (!momentExisting) {
+    throw new ApiError(httpStatus.BAD_REQUEST, i18n.translate('moment.momentNotFound'));
+  }
+
+  const reactions = await React.find({ userId, momentId }).populate('reacts', 'userId');
+
+  const reactionDetails = reactions.map((reaction) => ({
+    momentId: reaction.momentId._id,
+    reacts: reaction.reacts || [],
+  }));
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('react.getAllSuccess'),
+    data: {
+      reactions: reactionDetails,
+    },
+  });
+});
+
 module.exports = {
   sendReaction,
   getReaction,
+  getUserReactions,
 };
