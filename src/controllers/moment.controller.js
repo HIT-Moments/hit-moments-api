@@ -152,6 +152,9 @@ const getMyMoments = catchAsync(async (req, res) => {
 });
 
 const getMomentsByUser = catchAsync(async (req, res) => {
+  const { limit = 10, page = 1 } = req.query;
+  const skip = (+page - 1) * limit;
+
   const { userId } = req.params;
 
   if (!userId) {
@@ -164,16 +167,25 @@ const getMomentsByUser = catchAsync(async (req, res) => {
     throw new ApiError(httpStatus.FORBIDDEN, i18n.translate('friend.notFriend'));
   }
 
-  const moments = await Moment.find({ userId, isDeleted: false })
-    .sort({ createdAt: -1 })
-    .populate({ path: 'userId', select: 'fullname avatar' })
-    .lean();
+  const [moments, totalMoments] = await Promise.all([
+    Moment.find({ userId, isDeleted: false })
+      .limit(limit)
+      .skip(skip)
+      .sort({ createdAt: -1 })
+      .populate({ path: 'userId', select: 'fullname avatar' })
+      .lean(),
+    Moment.countDocuments({ userId, isDeleted: false }),
+  ]);
 
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     message: i18n.translate('moment.getMomentsByUserSuccess'),
     data: {
       moments: transformPopulatedMoments(moments),
+      limit: +limit,
+      currentPage: +page,
+      totalPage: Math.ceil(totalMoments / +limit),
+      totalMoments,
     },
   });
 });

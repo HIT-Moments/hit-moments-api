@@ -131,7 +131,10 @@
     "duplicateParticipants": "Người tham gia bị trùng lặp",
     "deleteSuccess": "Xoá cuộc hội thoại thành công",
     "notFound": "Không tìm thấy cuộc hội thoại",
-    "getConversationByIdSuccess": "Lấy cuộc hội thoại theo Id thành công"
+    "getConversationByIdSuccess": "Lấy cuộc hội thoại theo Id thành công",
+    "userIdRequired": "Id người dùng không được để trống",
+    "getConversationByUserForbidden": "Bạn không có quyền truy cập cuộc hội thoại của người dùng này",
+    "getConversationByUserSuccess": "Lấy cuộc hội thoại của người dùng thành công"
   },
   "message": {
     "sendSucess": "Gửi tin nhắn thành công",

@@ -3,29 +3,36 @@ const https = require('http-status');
 const { i18n } = require('../config');
 const { ApiError, catchAsync } = require('../utils');
 const { Message, Conversation } = require('../models');
-const { getReceiverSocketId, io } = require('../sockets/socket');
+const { getReceiverSocketId, io } = require('../socket/socket');
 
 const sendMessage = catchAsync(async (req, res, next) => {
   const senderId = req.user._id;
-  const { conversationId, text } = req.body;
+  const { userId: receiverId } = req.params;
 
-  let conversation = await Conversation.findById(conversationId);
+  const conversation = await Conversation.findOne({
+    participants: { $all: [senderId, receiverId] },
+  });
 
   if (!conversation) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('conversation.notFound'));
   }
 
-  const message = await Message.create({ senderId, ...req.body });
+  const message = new Message({
+    senderId,
+    text: req.body.text,
+  });
 
   if (message) {
     conversation.messages.push(message);
-    await conversation.save();
   }
 
-  const receiverSocketId = getReceiverSocketId(conversationId);
+  await Promise.all([message.save(), conversation.save()]);
+
+  const receiverSocketId = getReceiverSocketId(receiverId);
 
   if (receiverSocketId) {
-    io.to(getReceiverSocketId).emit('message', message);
+    console.log('emitting');
+    io.to(receiverSocketId).emit('newMessage', message);
   }
 
   res.status(https.OK).json({
@@ -38,9 +45,12 @@ const sendMessage = catchAsync(async (req, res, next) => {
 });
 
 const getMessages = catchAsync(async (req, res, next) => {
-  const { conversationId } = req.params;
+  const userId = req.user._id;
+  const { userId: receiverId } = req.params;
 
-  let conversation = await Conversation.findById(conversationId).populate({
+  const conversation = await Conversation.findOne({
+    participants: { $all: [userId, receiverId] },
+  }).populate({
     path: 'messages',
     select: 'senderId text',
     populate: {
