@@ -50,7 +50,8 @@
     "getDetail": "Get details successfully",
     "getList": "Get list reports successfully",
     "deleteSuccess": "Delete reports successfully",
-    "existed": "Report already exists"
+    "existed": "Report already exists",
+    "cannotReportOwnMoment" : "Cannot report own moment"
   },
   "upload": {
     "unsupported": "Unsupported file format",
