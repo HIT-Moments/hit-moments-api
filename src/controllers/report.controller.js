@@ -9,8 +9,12 @@ const createReport = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { momentId } = req.body;
 
-  const momentExisting = await Report.findOne({ momentId: momentId });
+  const momentExisting = await Moment.findById(momentId);
   const reportExisting = await Report.findOne({ userId: userId, momentId: momentId });
+
+  if (momentExisting.userId.toString() === userId.toString()) {
+    throw new ApiError(https.FORBIDDEN, i18n.translate('report.cannotReportOwnMoment'));
+  }
 
   if (!momentExisting) {
     throw new ApiError(https.NOT_FOUND, i18n.translate('moment.momentNotFound'));

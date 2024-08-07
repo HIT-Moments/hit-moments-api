@@ -50,7 +50,8 @@
     "getList": "Lấy danh sách khiếu nại thành công",
     "getDetail": "Lấy đơn khiếu nại thành công",
     "deleteSuccess": "Xoá đơn khiếu nại thành công",
-    "existed": "Đơn khiếu nại đã tồn tại"
+    "existed": "Đơn khiếu nại đã tồn tại",
+    "cannotReportOwnMoment" : "Không thể khiếu nại bài viết của mình"
   },
   "upload": {
     "unsupported": "Không hỗ trợ định dạng",
