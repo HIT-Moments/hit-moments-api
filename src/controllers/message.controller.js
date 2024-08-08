@@ -31,7 +31,6 @@ const sendMessage = catchAsync(async (req, res, next) => {
   const receiverSocketId = getReceiverSocketId(receiverId);
 
   if (receiverSocketId) {
-    console.log('emitting');
     io.to(receiverSocketId).emit('newMessage', message);
   }
 
@@ -56,7 +55,6 @@ const getMessages = catchAsync(async (req, res, next) => {
     populate: {
       path: 'senderId',
       select: 'fullname avatar',
-      model: 'User',
     },
   });
 
@@ -64,23 +62,22 @@ const getMessages = catchAsync(async (req, res, next) => {
     throw new ApiError(https.NOT_FOUND, i18n.translate('conversation.notFound'));
   }
 
-  if (conversation && conversation.messages) {
-    conversation = conversation.toObject();
-    conversation.messages = conversation.messages.map((message) => {
-      const { senderId, text, ...rest } = message;
-      return {
-        ...rest,
-        sender: senderId,
-        text,
-      };
-    });
-  }
+  const message = conversation.messages.map((msg) => ({
+    _id: msg._id,
+    text: msg.text,
+    sender: {
+      _id: msg.senderId._id,
+      fullname: msg.senderId.fullname,
+      avatar: msg.senderId.avatar,
+    },
+    senderId: msg.senderId._id,
+  }));
 
-  res.json({
+  res.status(https.OK).json({
     statusCode: https.OK,
-    message: i18n.translate('conversation.foundSuccess'),
+    message: i18n.translate('message.getSuccess'),
     data: {
-      message: conversation.messages,
+      message,
     },
   });
 });
