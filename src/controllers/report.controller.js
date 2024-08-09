@@ -61,15 +61,34 @@ const getList = catchAsync(async (req, res, next) => {
   const query = {};
 
   const [reports, totalResults] = await Promise.all([
-    Report.find().limit(limit).skip(skip),
+    Report.find().limit(limit).skip(skip).populate('userId').populate('momentId').lean(),
     Report.countDocuments(query),
   ]);
+
+  const returnedReports = reports.map((report) => {
+    const user = report.userId;
+    const moment = report.momentId;
+    return {
+      ...report,
+      user: {
+        _id: user._id,
+        fullname: user.fullname,
+        avatar: user.avatar,
+      },
+      moment: {
+        _id: moment._id,
+        image: moment.image,
+      },
+      userId: undefined,
+      momentId: undefined,
+    };
+  });
 
   res.json({
     message: i18n.translate('report.getList'),
     statusCode: https.OK,
     data: {
-      reports,
+      reports: returnedReports,
       page: +page,
       limit: +limit,
       totalPages: Math.ceil(totalResults / +limit),
