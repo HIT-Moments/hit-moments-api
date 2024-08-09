@@ -22,7 +22,7 @@ const acceptRequest = {
   }),
 };
 
-const delinceRequest = {
+const declineRequest = {
   body: joi.object({
     requesterId: joi.string().required().custom(objectId),
   }),
@@ -62,7 +62,7 @@ module.exports = {
   sendRequest,
   deleteFriend,
   acceptRequest,
-  delinceRequest,
+  declineRequest,
   getListFriends,
   blockFriend,
   unblockFriend,

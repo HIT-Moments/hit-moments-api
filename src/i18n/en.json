@@ -51,7 +51,7 @@
     "getList": "Get list reports successfully",
     "deleteSuccess": "Delete reports successfully",
     "existed": "Report already exists",
-    "cannotReportOwnMoment" : "Cannot report own moment"
+    "cannotReportOwnMoment": "Cannot report own moment"
   },
   "upload": {
     "unsupported": "Unsupported file format",
@@ -138,8 +138,8 @@
     "getConversationByUserSuccess": "Get conversation by user successfully"
   },
   "message": {
-    "sendSucess": "Send message successfully",
-    "getSucess": "Get message successfully"
+    "sendSuccess": "Send message successfully",
+    "getSuccess": "Get message successfully"
   },
   "music": {
     "createSuccess": "Music added successfully",

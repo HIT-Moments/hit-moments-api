@@ -51,7 +51,7 @@
     "getDetail": "Lấy đơn khiếu nại thành công",
     "deleteSuccess": "Xoá đơn khiếu nại thành công",
     "existed": "Đơn khiếu nại đã tồn tại",
-    "cannotReportOwnMoment" : "Không thể khiếu nại bài viết của mình"
+    "cannotReportOwnMoment": "Không thể khiếu nại bài viết của mình"
   },
   "upload": {
     "unsupported": "Không hỗ trợ định dạng",
@@ -138,7 +138,7 @@
     "getConversationByUserSuccess": "Lấy cuộc hội thoại của người dùng thành công"
   },
   "message": {
-    "sendSucess": "Gửi tin nhắn thành công",
+    "sendSuccess": "Gửi tin nhắn thành công",
     "getSuccess": "Lấy tin nhắn thành công"
   },
   "music": {

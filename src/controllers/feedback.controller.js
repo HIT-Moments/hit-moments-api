@@ -55,7 +55,7 @@ const getAllFeedback = catchAsync(async (req, res, next) => {
     data: {
       feedbacks,
       limit: +limit,
-      currarentPage: +page,
+      currentPage: +page,
       totalPage: Math.ceil(totalResults / +limit),
       totalResults,
     },

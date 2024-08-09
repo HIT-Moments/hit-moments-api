@@ -154,10 +154,7 @@ const acceptRequest = catchAsync(async (req, res, next) => {
   const userCacheKey = `suggestionFriends:${userId}`;
   const requestCacheKey = `suggestionFriends:${requesterId}`;
 
-  await Promise.all([
-    cache.del(userCacheKey),
-    cache.del(requestCacheKey)
-  ]);
+  await Promise.all([cache.del(userCacheKey), cache.del(requestCacheKey)]);
 
   res.json({
     message: i18n.translate('friend.acceptRequestSuccess'),
@@ -168,7 +165,7 @@ const acceptRequest = catchAsync(async (req, res, next) => {
   });
 });
 
-const delinceRequest = catchAsync(async (req, res, next) => {
+const declineRequest = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
   const { requesterId } = req.body;
 
@@ -440,10 +437,10 @@ const cancelSentRequest = catchAsync(async (req, res, next) => {
 
 const suggestionFriends = catchAsync(async (req, res, next) => {
   const userId = req.user._id;
-  
+
   const { limit = LIMIT_DEFAULT, page = PAGE_DEFAULT } = req.query;
   const skip = (+page - 1) * limit;
-  
+
   const cacheKey = `suggestionFriends:${userId}:${page}:${limit}`;
   const cachedSuggestions = await cache.get(cacheKey);
 
@@ -456,21 +453,21 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
   }
 
   const userFriend = await Friend.findOne({ userId }).populate('friendList friendRequest blockList');
-  
-  const userFriendsIds = userFriend.friendList.map(friend => friend._id.toString());
+
+  const userFriendsIds = userFriend.friendList.map((friend) => friend._id.toString());
   const userSentRequestsIds = await Friend.find({ friendRequest: userId }).distinct('userId');
-  const userReceivedRequestsIds = userFriend.friendRequest.map(request => request._id.toString());
-  const userBlockListIds = userFriend.blockList.map(block => block._id.toString());
-  
-  const friendsPromises = userFriendsIds.map(friendId => Friend.findOne({ userId: friendId }).populate('friendList'));
+  const userReceivedRequestsIds = userFriend.friendRequest.map((request) => request._id.toString());
+  const userBlockListIds = userFriend.blockList.map((block) => block._id.toString());
+
+  const friendsPromises = userFriendsIds.map((friendId) => Friend.findOne({ userId: friendId }).populate('friendList'));
   const friends = await Promise.all(friendsPromises);
 
   const mutualFriendsCount = {};
 
-  friends.forEach(friend => {
+  friends.forEach((friend) => {
     if (friend) {
-      const friendFriendsIds = friend.friendList.map(f => f._id.toString());
-      friendFriendsIds.forEach(mutualFriendId => {
+      const friendFriendsIds = friend.friendList.map((f) => f._id.toString());
+      friendFriendsIds.forEach((mutualFriendId) => {
         if (
           mutualFriendId !== userId.toString() &&
           !userFriendsIds.includes(mutualFriendId) &&
@@ -484,17 +481,19 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
     }
   });
 
-  const suggestions = Object.keys(mutualFriendsCount).map(key => ({
+  const suggestions = Object.keys(mutualFriendsCount).map((key) => ({
     userId: key,
     mutualFriends: mutualFriendsCount[key],
   }));
 
   suggestions.sort((a, b) => b.mutualFriends - a.mutualFriends);
 
-  const suggestedUserIds = suggestions.map(s => s.userId);
+  const suggestedUserIds = suggestions.map((s) => s.userId);
   const totalSuggestedUsers = suggestedUserIds.length;
 
-  const suggestedUsersByMutualFriends = await User.find({ _id: { $in: suggestedUserIds.slice(skip, skip + limit) } }).select('fullname email avatar');
+  const suggestedUsersByMutualFriends = await User.find({
+    _id: { $in: suggestedUserIds.slice(skip, skip + limit) },
+  }).select('fullname email avatar');
 
   const excludedIds = [
     userId,
@@ -536,7 +535,7 @@ module.exports = {
   deleteFriend,
   listReceivedRequests,
   acceptRequest,
-  delinceRequest,
+  declineRequest,
   getListFriends,
   blockFriend,
   unblockFriend,
