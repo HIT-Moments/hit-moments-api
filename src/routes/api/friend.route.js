@@ -11,7 +11,7 @@ friendRoute.use(auth);
 friendRoute.route('/search-user').get(validate(friendValidation.searchUser), friendController.searchUser);
 friendRoute.route('/invite').post(validate(friendValidation.sendRequest), friendController.sendRequest);
 friendRoute.route('/confirm-request').post(validate(friendValidation.acceptRequest), friendController.acceptRequest);
-friendRoute.route('/delince-request').post(validate(friendValidation.delinceRequest), friendController.delinceRequest);
+friendRoute.route('/delince-request').post(validate(friendValidation.declineRequest), friendController.declineRequest);
 
 friendRoute.route('/list-blocks').get(friendController.getListBlock);
 friendRoute.route('/list-received-request').get(friendController.listReceivedRequests);

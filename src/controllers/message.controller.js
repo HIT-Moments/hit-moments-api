@@ -36,7 +36,7 @@ const sendMessage = catchAsync(async (req, res, next) => {
 
   res.status(https.OK).json({
     statusCode: https.OK,
-    message: i18n.translate('message.sendSucess'),
+    message: i18n.translate('message.sendSuccess'),
     data: {
       message,
     },
