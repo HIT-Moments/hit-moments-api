@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 
 const { i18n } = require('../config');
+const { USER_ROLE } = require('../constants');
 const { Moment, Friend, TemporaryMoment } = require('../models');
 const { ApiError, catchAsync, convertFacebookPosts } = require('../utils');
 
@@ -32,6 +33,10 @@ const getMoments = catchAsync(async (req, res) => {
     isDeleted,
     userId: { $in: [req.user.id, ...friendList] },
   };
+
+  if (req.user.role === USER_ROLE.ADMIN) {
+    delete query.userId;
+  }
 
   const [moments, totalMoments] = await Promise.all([
     Moment.find(query)
