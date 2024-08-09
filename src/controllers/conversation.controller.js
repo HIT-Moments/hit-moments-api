@@ -60,7 +60,7 @@ const getConversationsByUser = catchAsync(async (req, res, next) => {
   const conversations = await Conversation.find({ participants: userId })
     .sort({ updatedAt: -1 })
     .populate({ path: 'participants', select: 'fullname avatar' })
-    .populate({ path: 'messages', select: 'text', options: { sort: { createdAt: -1 }, limit: 1 } })
+    .populate({ path: 'messages', select: 'text', options: { sort: { createdAt: -1 } } })
     .exec();
 
   const conversationsWithLastMessage = conversations.map((conversation) => {
@@ -87,7 +87,7 @@ const getMyConversations = catchAsync(async (req, res, next) => {
   const conversations = await Conversation.find({ participants: userId })
     .sort({ updatedAt: -1 })
     .populate({ path: 'participants', select: 'fullname avatar' })
-    .populate({ path: 'messages', select: 'text', options: { sort: { createdAt: -1 }, limit: 1 } })
+    .populate({ path: 'messages', select: 'text', options: { sort: { createdAt: -1 } } })
     .exec();
 
   const conversationsWithLastMessage = conversations.map((conversation) => {
