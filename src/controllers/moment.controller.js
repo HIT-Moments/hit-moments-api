@@ -281,6 +281,45 @@ const transformPopulatedMoments = (moments) => {
   });
 };
 
+const getTotalMomentsCurrentMonth = catchAsync(async (req, res) => {
+  const today = new Date();
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const totalMomentsPerDay = await Moment.aggregate([
+    {
+      $match: {
+        createdAt: { $gte: firstDayOfMonth, $lte: lastDayOfMonth },
+      },
+    },
+    {
+      $group: {
+        _id: { $dayOfMonth: '$createdAt' },
+        date: { $first: '$createdAt' },
+        total: { $sum: 1 },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        date: 1,
+        total: 1,
+      },
+    },
+    {
+      $sort: { date: 1 },
+    },
+  ]);
+
+  res.status(httpStatus.OK).json({
+    statusCode: httpStatus.OK,
+    message: i18n.translate('moment.getTotalMomentsCurrentMonthSuccess'),
+    data: {
+      totalMomentsPerDay,
+    },
+  });
+});
+
 module.exports = {
   createMoment,
   getMoments,
@@ -292,4 +331,5 @@ module.exports = {
   restoreMoment,
   importMoments,
   moveMomentToPermanent,
+  getTotalMomentsCurrentMonth,
 };

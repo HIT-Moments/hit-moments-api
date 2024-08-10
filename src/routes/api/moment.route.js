@@ -2,7 +2,7 @@ const express = require('express');
 
 const { momentController } = require('../../controllers');
 const { momentValidation } = require('../../validations');
-const { auth, validate, upload } = require('../../middlewares');
+const { auth, author, validate, upload } = require('../../middlewares');
 
 const momentRoute = express.Router();
 
@@ -14,6 +14,8 @@ momentRoute
   .get(validate(momentValidation.getMoments), momentController.getMoments);
 
 momentRoute.route('/me').get(momentController.getMyMoments);
+
+momentRoute.route('/totals').get(author(['admin']), momentController.getTotalMomentsCurrentMonth);
 
 momentRoute
   .route('/import')
