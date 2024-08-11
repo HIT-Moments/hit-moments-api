@@ -503,24 +503,27 @@ const suggestionFriends = catchAsync(async (req, res, next) => {
     ...userBlockListIds,
   ];
 
-  let randomUsers = [];
-  if (suggestedUsersByMutualFriends.length < limit) {
-    const neededRandomUsers = limit - suggestedUsersByMutualFriends.length;
-    randomUsers = await User.aggregate([
-      { $match: { _id: { $nin: excludedIds } } },
-      { $sample: { size: neededRandomUsers } },
-      { $project: { fullname: 1, email: 1, avatar: 1 } },
-    ]);
-  }
+  const randomUsers = await User.aggregate([
+    { $match: { _id: { $nin: excludedIds } } },
+    { $sample: { size: 20 } },
+    { $project: { fullname: 1, email: 1, avatar: 1 } },
+  ]);
 
-  const suggestedUsers = [...suggestedUsersByMutualFriends, ...randomUsers];
+  let suggestedUsers;
+
+  if (suggestedUsersByMutualFriends.length >= 15) {
+    suggestedUsers = suggestedUsersByMutualFriends.slice(0, 20);
+  } else {
+    const neededRandomUsers = 20 - suggestedUsersByMutualFriends.length;
+    suggestedUsers = [...suggestedUsersByMutualFriends, ...randomUsers.slice(0, neededRandomUsers)];
+  }
 
   const result = {
     suggestedUsers,
-    total: totalSuggestedUsers,
+    total: suggestedUsers.length,
     page: +page,
     limit: +limit,
-    totalPages: Math.ceil(totalSuggestedUsers / +limit),
+    totalPages: Math.ceil(suggestedUsers.length / +limit),
   };
 
   res.status(https.OK).json({
