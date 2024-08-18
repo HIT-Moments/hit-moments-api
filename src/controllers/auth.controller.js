@@ -133,7 +133,9 @@ const updateProfile = catchAsync(async (req, res) => {
     user.avatar = req.file.path;
   }
 
-  req.body.formattedEmail = req.body.email ? formatEmail(req.body.email) : undefined;
+  if (req.body.email) {
+    req.body.formattedEmail = formatEmail(req.body.email);
+  }
 
   Object.assign(user, req.body);
 
